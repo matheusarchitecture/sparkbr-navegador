@@ -1,7 +1,7 @@
 {
   "name": "sparkbr-navegador",
   "productName": "SparkBR Navegador",
-  "version": "2.2.3",
+  "version": "2.2.4",
   "private": true,
   "description": "Navegador SparkBR com 23 aplicativos, conta principal existente e compartilhamento familiar.",
   "author": "SparkBR (Matheus Barcellos)",
@@ -33,7 +33,8 @@
       "server.mjs",
       "ecosystem.mjs",
       "package.json",
-      "LICENSE"
+      "LICENSE",
+      "LICENSE-NSIS.txt"
     ],
     "directories": {
       "output": "dist"
@@ -41,6 +42,14 @@
     "win": {
       "target": "nsis",
       "icon": "site/assets/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "SparkBR Navegador",
+      "license": "LICENSE-NSIS.txt"
     },
     "mac": {
       "target": "dmg"

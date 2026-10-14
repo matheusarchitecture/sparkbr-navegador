@@ -1,0 +1,27 @@
+SparkBR Navegador - Termos de Uso e Beneficios (versao 2.2.4)
+
+GRATIS PARA SEMPRE. Este navegador e open-source (licenca MIT) e nao cobra
+nada: sem mensalidade, sem anuncios de terceiros, sem limite de abas.
+
+O QUE VOCE GANHA AO INSTALAR:
+- Navegador proprio com Chromium: abre UOL, Globo, YouTube, Facebook,
+  TripAdvisor e qualquer site por completo, com videos e conteudo dinamico.
+- 23 aplicativos da familia (mercado, contas, agenda, saude e mais).
+- Conta unica SparkBR: entre com E-mail ou com o Google e use em todos os apps.
+- Abas ilimitadas, modo leitura, busca propria e painel da familia.
+
+LOGIN COM O GOOGLE:
+Ao clicar em "Continuar com o Google", abre uma janela segura do Google para
+voce entrar com sua conta. O SparkBR nunca ve sua senha do Google.
+
+PRIVACIDADE:
+O programa nao transfere seus dados para outros sistemas, exceto quando voce
+pede (ex.: entrar na conta, usar a IA). Politica completa em
+https://sparkbr.online/privacidade/
+
+TERMOS:
+Uso pessoal e familiar. O software e fornecido "COMO ESTA", sem garantias.
+Codigo-fonte em https://github.com/matheusarchitecture/sparkbr-navegador
+Assinatura de codigo gratuita via SignPath Foundation (em processo).
+
+Ao clicar em Avancar, voce concorda com estes termos.

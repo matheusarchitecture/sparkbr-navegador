@@ -41,7 +41,7 @@ function createWindow(){
       const localDev=!!process.env.SPARK_START_URL&&url.protocol==='http:'&&['localhost','127.0.0.1'].includes(url.hostname);
       if(url.protocol!=='https:'&&!localDev)event.preventDefault();
     });
-    contents.on('will-navigate',(event,url)=>{try{if(contents.getType()==='webview'){const u=new URL(url);const localDev=!!process.env.SPARK_START_URL&&u.protocol==='http:'&&['localhost','127.0.0.1'].includes(u.hostname);if(u.protocol!=='https:'&&!localDev)event.preventDefault()}}catch{event.preventDefault()}});
+    contents.on('will-navigate',(event,url)=>{try{if(contents.getType()==='webview'){const u=new URL(url);if(isGoogleAuth(u.href)){event.preventDefault();openAuthWindow(u.href);return}const localDev=!!process.env.SPARK_START_URL&&u.protocol==='http:'&&['localhost','127.0.0.1'].includes(u.hostname);if(u.protocol!=='https:'&&!localDev)event.preventDefault()}}catch{event.preventDefault()}});
     contents.setWindowOpenHandler(({url})=>{
       try{
         if(isGoogleAuth(url)){openAuthWindow(url);return{action:'deny'}}
