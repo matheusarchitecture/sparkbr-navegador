@@ -81,6 +81,14 @@ Sem o backend de conta acessível e o cookie de sessão emitido, o painel mostra
 
 O exemplo Nginx é apenas um trecho para o bloco HTTPS existente; não substitua a configuração completa do site.
 
+## Code signing policy
+
+Free code signing provided by [SignPath.io](https://about.signpath.io), certificate by [SignPath Foundation](https://signpath.org)
+
+- Committers and reviewers: the repository owner (`matheusarchitecture`).
+- Approvers: the repository owner (`matheusarchitecture`).
+- Privacy policy: This program will not transfer any information to other networked systems unless specifically requested by the user or the person installing or operating it. Accounts and family data stay in the project's own backend (`sparkbr.online`) only when the user signs in.
+
 ## IA
 
 A chave da IA deve ficar apenas no **.env** do servidor. Se **OPENAI_API_KEY** estiver vazia, o endpoint informa que a IA online não está configurada; não simula uma resposta generativa.
