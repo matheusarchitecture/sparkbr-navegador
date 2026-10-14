@@ -1,0 +1,27 @@
+{
+  "name": "Spark Dose",
+  "short_name": "Spark Dose",
+  "description": "Lembrete de medicamentos: Tomei, estoque e rotina. Spark.",
+  "start_url": "/apps/sparkdose/",
+  "scope": "/apps/sparkdose/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0f172a",
+  "theme_color": "#0284c7",
+  "lang": "pt-BR",
+  "dir": "ltr",
+  "icons": [
+    {
+      "src": "/apps/sparkdose/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/apps/sparkdose/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

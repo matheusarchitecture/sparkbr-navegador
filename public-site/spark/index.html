@@ -1,0 +1,2364 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <script defer src="/navegador/bridge/spark-bridge.js?v=2.1.0"></script>
+  <meta charset="UTF-8">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0f172a">
+<link rel="manifest" href="/spark/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/saude/icon-192.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/spark/sw.js").catch(function(){});});}</script>
+  <title>Spark Mercado — Lista, Voz e IA | Spark Apps</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #10B981;
+      --primary-dark: #059669;
+      --primary-light: #D1FAE5;
+      --accent: #3B82F6;
+      --accent-purple: #8B5CF6;
+      --danger: #EF4444;
+      --warning: #F59E0B;
+      --dark: #0F172A;
+      --surface: #FFFFFF;
+      --surface-subtle: #F8FAFC;
+      --border: #E2E8F0;
+      --text: #1E293B;
+      --text-muted: #64748B;
+      --whatsapp: #25D366;
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --radius-xl: 28px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+      --shadow-lg: 0 12px 24px -4px rgba(0,0,0,0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: #0F172A;
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: stretch;
+      overflow-x: hidden;
+    }
+
+    /* Mobile Container Frame */
+    .app-viewport {
+      width: 100%;
+      max-width: 480px;
+      background-color: #F8FAFC;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+      margin: auto;
+    }
+
+    @media (min-width: 768px) {
+      body {
+        padding: 20px;
+        background: radial-gradient(circle at 50% 20%, #1E293B 0%, #0F172A 100%);
+      }
+      .app-viewport {
+        border-radius: 36px;
+        height: 930px;
+        max-height: 95vh;
+        overflow: hidden;
+        border: 8px solid #334155;
+      }
+    }
+
+    /* Top Bar */
+    .top-header {
+      background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+      color: white;
+      padding: 16px 20px 12px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .top-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand-title {
+      font-size: 19px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .brand-badge {
+      background: linear-gradient(135deg, #10B981, #059669);
+      color: white;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .location-tag {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      color: #94A3B8;
+      background: rgba(255,255,255,0.08);
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+
+    /* Health Warning Banner */
+    .health-ticker {
+      background: #FEF2F2;
+      border-bottom: 1px solid #FECACA;
+      padding: 8px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11px;
+      color: #991B1B;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .health-ticker .ticker-badge {
+      background: #EF4444;
+      color: white;
+      padding: 1px 6px;
+      border-radius: 6px;
+      font-size: 10px;
+      margin-right: 6px;
+    }
+
+    /* Market Selector Strip */
+    .market-strip {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      padding-bottom: 2px;
+    }
+    .market-strip::-webkit-scrollbar { display: none; }
+
+    .market-chip {
+      flex: 0 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+      background: rgba(255,255,255,0.06);
+      color: #CBD5E1;
+      border: 1px solid rgba(255,255,255,0.1);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .market-chip.active {
+      background: #10B981;
+      color: white;
+      border-color: #10B981;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);
+    }
+    .market-chip .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    /* Main Scroll Area */
+    .main-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 14px 16px 95px;
+      position: relative;
+    }
+
+    /* Tabs Container */
+    .tab-content {
+      display: none;
+      animation: fadeIn 0.25s ease-out;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Bottom Navigation Bar */
+    .bottom-nav {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(12px);
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-around;
+      padding: 6px 4px 16px;
+      z-index: 60;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 10px;
+      font-weight: 600;
+      padding: 6px 6px;
+      border-radius: 12px;
+      transition: all 0.2s;
+      flex: 1;
+    }
+
+    .nav-item svg {
+      width: 20px;
+      height: 20px;
+      stroke-width: 2;
+      transition: transform 0.2s;
+    }
+
+    .nav-item.active {
+      color: var(--primary-dark);
+    }
+    .nav-item.active svg {
+      transform: translateY(-2px);
+      stroke: var(--primary-dark);
+    }
+
+    /* Cards & Components */
+    .card {
+      background: white;
+      border-radius: var(--radius-md);
+      padding: 15px;
+      margin-bottom: 12px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .card-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .pill {
+      font-size: 10px;
+      padding: 3px 8px;
+      border-radius: 20px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .pill-green { background: #D1FAE5; color: #065F46; }
+    .pill-blue { background: #DBEAFE; color: #1E40AF; }
+    .pill-purple { background: #EDE9FE; color: #5B21B6; }
+    .pill-red { background: #FEE2E2; color: #991B1B; }
+    .pill-orange { background: #FFEDD5; color: #9A3412; }
+
+    /* Summary Bar */
+    .summary-strip {
+      background: linear-gradient(135deg, #1E293B, #0F172A);
+      color: white;
+      border-radius: var(--radius-md);
+      padding: 12px 16px;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .summary-item {
+      display: flex;
+      flex-direction: column;
+    }
+    .summary-label {
+      font-size: 10px;
+      color: #94A3B8;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+    .summary-val {
+      font-size: 19px;
+      font-weight: 800;
+      color: #F8FAFC;
+    }
+    .summary-val.green { color: #34D399; }
+
+    /* Action Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 11px 16px;
+      border-radius: var(--radius-md);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+      width: 100%;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+      color: white;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+    .btn-primary:active { transform: scale(0.98); }
+    .btn-danger {
+      background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
+      color: white;
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+    }
+    .btn-whatsapp {
+      background: #25D366;
+      color: white;
+      box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+    }
+    .btn-secondary {
+      background: #F1F5F9;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    /* Food Safety Item Card */
+    .safety-item-card {
+      background: white;
+      border-radius: var(--radius-md);
+      padding: 13px;
+      margin-bottom: 10px;
+      border-left: 5px solid #CBD5E1;
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      box-shadow: var(--shadow-sm);
+      position: relative;
+    }
+    .safety-item-card.danger {
+      border-left: 5px solid #EF4444;
+      background: #FFFBFB;
+    }
+    .safety-item-card.warning {
+      border-left: 5px solid #F59E0B;
+      background: #FFFDF9;
+    }
+    .safety-item-card.good {
+      border-left: 5px solid #10B981;
+    }
+
+    .safety-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    .safety-name {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--text);
+    }
+    .safety-dates {
+      font-size: 11px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    .shelf-timeline {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 4px;
+    }
+    .shelf-bar-bg {
+      flex: 1;
+      height: 7px;
+      background: #E2E8F0;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .shelf-bar-fill {
+      height: 100%;
+      border-radius: 4px;
+    }
+
+    /* List Items */
+    .list-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid #F1F5F9;
+    }
+    .list-item:last-child { border-bottom: none; }
+
+    .item-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 1;
+    }
+    .item-checkbox {
+      width: 20px;
+      height: 20px;
+      border-radius: 6px;
+      border: 2px solid #CBD5E1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .item-checkbox.checked {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: white;
+    }
+    .item-info {
+      display: flex;
+      flex-direction: column;
+    }
+    .item-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .item-name.checked {
+      text-decoration: line-through;
+      color: var(--text-muted);
+    }
+    .item-meta {
+      font-size: 11px;
+      color: var(--text-muted);
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+    .item-price {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--primary-dark);
+      text-align: right;
+    }
+
+    /* Multimodal Section (Audio, Camera, QR) */
+    .ai-hero-card {
+      background: linear-gradient(135deg, #1E1B4B 0%, #312E81 100%);
+      color: white;
+      border-radius: var(--radius-lg);
+      padding: 18px;
+      margin-bottom: 14px;
+      box-shadow: 0 10px 25px -5px rgba(49, 46, 129, 0.4);
+    }
+    .ai-hero-title {
+      font-size: 16px;
+      font-weight: 800;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .ai-hero-desc {
+      font-size: 12px;
+      color: #C7D2FE;
+      line-height: 1.4;
+      margin-bottom: 12px;
+    }
+
+    .ai-modes-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 6px;
+    }
+    .ai-mode-btn {
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: var(--radius-md);
+      padding: 10px 4px;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
+      font-size: 10px;
+      font-weight: 700;
+      transition: all 0.2s;
+    }
+    .ai-mode-btn.active, .ai-mode-btn:active {
+      background: white;
+      color: #312E81;
+      transform: translateY(-2px);
+    }
+
+    /* Interaction Simulator Cards */
+    .interaction-box {
+      background: white;
+      border-radius: var(--radius-md);
+      padding: 14px;
+      border: 1px solid var(--border);
+      margin-bottom: 12px;
+    }
+
+    .mic-button-big {
+      width: 66px;
+      height: 66px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #EF4444, #DC2626);
+      color: white;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 14px auto;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+      transition: all 0.2s;
+    }
+    .mic-button-big.recording {
+      animation: pulseRecord 1.4s infinite;
+      background: #DC2626;
+    }
+    @keyframes pulseRecord {
+      0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.6); }
+      70% { transform: scale(1.08); box-shadow: 0 0 0 16px rgba(239, 68, 68, 0); }
+      100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+    }
+
+    .transcription-preview {
+      background: #F8FAFC;
+      border: 1px dashed #CBD5E1;
+      border-radius: var(--radius-sm);
+      padding: 10px;
+      font-size: 12px;
+      color: var(--text);
+      min-height: 48px;
+      margin-top: 8px;
+      font-style: italic;
+    }
+
+    /* WhatsApp Simulator */
+    .wa-chat-container {
+      background: #EFEAE2;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      border: 1px solid #D1D5DB;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 12px;
+    }
+    .wa-header {
+      background: #075E54;
+      color: white;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .wa-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #25D366;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      color: white;
+      font-size: 15px;
+    }
+    .wa-chat-body {
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 310px;
+      overflow-y: auto;
+    }
+    .wa-bubble {
+      max-width: 84%;
+      padding: 8px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      line-height: 1.35;
+      position: relative;
+    }
+    .wa-incoming {
+      background: white;
+      align-self: flex-start;
+      border-top-left-radius: 2px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    }
+    .wa-outgoing {
+      background: #DCF8C6;
+      align-self: flex-end;
+      border-top-right-radius: 2px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    }
+    .wa-bot-badge {
+      font-size: 10px;
+      font-weight: 800;
+      color: #059669;
+      margin-bottom: 2px;
+    }
+    .wa-time {
+      font-size: 9px;
+      color: #888;
+      text-align: right;
+      margin-top: 3px;
+    }
+
+    .code-block {
+      background: #0F172A;
+      color: #38BDF8;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      padding: 12px;
+      border-radius: var(--radius-sm);
+      overflow-x: auto;
+      margin-top: 8px;
+      line-height: 1.4;
+    }
+
+    /* Modal Sheet */
+    .modal-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(15, 23, 42, 0.7);
+      backdrop-filter: blur(4px);
+      z-index: 100;
+      display: none;
+      align-items: flex-end;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal-sheet {
+      background: white;
+      width: 100%;
+      border-top-left-radius: 28px;
+      border-top-right-radius: 28px;
+      padding: 22px 18px 30px;
+      max-height: 85%;
+      overflow-y: auto;
+      animation: slideUp 0.3s ease-out;
+    }
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+  </style>
+
+
+<link rel="stylesheet" href="/assets/brand.css?v=20261013">
+<link rel="stylesheet" href="/assets/app-shell.css?v=20261013b">
+<script defer data-spark-rebrand src="/assets/app-shell.js?v=20261013b"></script>
+</head>
+<body data-spark-page="spark" data-spark-layout="complex">
+
+  <div class="app-viewport">
+    
+    <!-- Top Fixed Header -->
+    <header class="top-header">
+      <div class="top-header-row">
+        <div class="brand-title">
+          <span style="font-size: 21px;">⚡</span>
+          <span>Spark Mercado</span>
+          <span class="brand-badge">Food Safety AI</span>
+        </div>
+        <div class="location-tag">
+          <span>📍</span>
+          <span>Ribeirão Preto & Cravinhos</span>
+        </div>
+      </div>
+
+      <!-- Supermarket selector in Ribeirão Preto -->
+      <div class="market-strip">
+        <div class="market-chip active" onclick="selectMarket('savegnago')">
+          <span class="dot" style="background:#E11D48;"></span>
+          <span>Savegnago (Maurílio Biagi)</span>
+        </div>
+        <div class="market-chip" onclick="selectMarket('tonin')">
+          <span class="dot" style="background:#EA580C;"></span>
+          <span>Tonin Superatacado</span>
+        </div>
+        <div class="market-chip" onclick="selectMarket('jau')">
+          <span class="dot" style="background:#D97706;"></span>
+          <span>Jaú Serve (Fiúsa)</span>
+        </div>
+        <div class="market-chip" onclick="selectMarket('cenourao')">
+          <span class="dot" style="background:#16A34A;"></span>
+          <span>Cenourão Hortifrúti</span>
+        </div>
+        <div class="market-chip" onclick="selectMarket('gricki')">
+          <span class="dot" style="background:#2563EB;"></span>
+          <span>Gricki (Ipiranga)</span>
+        </div>
+        <div class="market-chip" onclick="selectMarket('atacadao')">
+          <span class="dot" style="background:#0ea5e9;"></span>
+          <span>Atacadão (Via Norte)</span>
+        </div>
+        <div class="market-chip" onclick="selectMarket('assai')">
+          <span class="dot" style="background:#f97316;"></span>
+          <span>Assaí</span>
+        </div>
+        <div class="market-chip" onclick="selectMarket('bigcompra')">
+          <span class="dot" style="background:#8b5cf6;"></span>
+          <span>Big Compra</span>
+        </div>
+        <div class="market-chip" onclick="selectMarket('mialich')">
+          <span class="dot" style="background:#14b8a6;"></span>
+          <span>Mialich</span>
+        </div>
+        <div class="market-chip" id="chip-gps" onclick="ativarLocalizacao()" style="border-style:dashed">
+          <span class="dot" style="background:#16a34a;"></span>
+          <span>📍 Perto de mim</span>
+        </div>
+        <div class="market-chip" onclick="selectMarket('carrefour')">
+          <span class="dot" style="background:#1d4ed8;"></span>
+          <span>Carrefour</span>
+        </div>
+      </div>
+    </header>
+
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+
+      <!-- ================= TAB 1: LISTA & CARRINHO ================= -->
+      <div id="tab-lista" class="tab-content active">
+        
+        <!-- Summary KPI -->
+        <div class="summary-strip">
+          <div class="summary-item">
+            <span class="summary-label">Itens na Lista</span>
+            <span class="summary-val" id="kpi-count">6 itens</span>
+          </div>
+          <div class="summary-item" style="text-align: right;">
+            <span class="summary-label">Total no <span id="kpi-market-name">Savegnago</span></span>
+            <span class="summary-val green" id="kpi-total">R$ 78,40</span>
+          </div>
+        </div>
+
+        <!-- Quick AI Input Bar -->
+        <div class="card" style="padding: 10px; margin-bottom: 10px;">
+          <div style="display: flex; gap: 8px;">
+            <input type="text" id="quick-input" placeholder="Adicionar item (ex: 2 leites, cafe)..." style="flex:1; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 9px 12px; font-size: 13px; font-family: inherit; outline: none;">
+            <button class="btn btn-primary" onclick="addQuickItem()" style="width: auto; padding: 9px 14px;">+ Add</button>
+            <button class="btn btn-primary" id="quick-mic" title="Segure e fale" style="width: auto; padding: 9px 12px;">&#127908;</button>
+          </div>
+        </div>
+
+        <div class="card" id="add-ia-box" style="display:none; padding: 10px; margin-bottom: 10px; border: 2px solid #0ea5e9;">
+          <div style="font-size:12px;font-weight:800;color:#0369a1;margin-bottom:4px">✨ IA entendeu — confira e insira:</div>
+          <div id="add-ia-list"></div>
+          <div style="display:flex;gap:8px;margin-top:8px">
+            <button class="btn btn-primary" onclick="addInsereIA()" style="flex:1">✅ Inserir na lista</button>
+            <button class="btn btn-secondary" onclick="addLimpaIA()">Limpar</button>
+          </div>
+        </div>
+
+        <!-- Smart Comparison Callout -->
+        <div class="card" style="background: linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 100%); border-color: #A7F3D0;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <div style="font-size: 12px; font-weight: 800; color: #065F46;">💡 Comparador em Tempo Real (RP)</div>
+              <div style="font-size: 11px; color: #047857;" id="savings-tip">No Tonin Superatacado esta lista fica <b>R$ 6,80 mais barata</b> (-8.6%).</div>
+            </div>
+            <button class="pill pill-green" style="border:none; cursor:pointer;" onclick="switchBestMarket()">Otimizar</button>
+          </div>
+        </div>
+
+        <!-- Shopping List Items -->
+        <div class="card">
+          <div class="card-title">
+            <span>Produtos Selecionados</span>
+            <span class="pill pill-blue">Catálogo Real Sincronizado</span>
+          </div>
+
+          <div id="shopping-list-items">
+            <!-- Populated via JS -->
+          </div>
+        </div>
+
+        <!-- Checkout Action Button -->
+        <div style="margin-top: 14px; display: flex; flex-direction: column; gap: 8px;">
+          <button class="btn btn-primary" onclick="openCheckoutModal()">
+            <span>🚀 Finalizar e Enviar para Mercado</span>
+            <span style="background: rgba(0,0,0,0.15); padding: 2px 8px; border-radius: 10px;" id="btn-total-preview">R$ 78,40</span>
+          </button>
+          <button class="btn btn-whatsapp" onclick="syncWithWhatsAppGroup()">
+            <span>📱 Sincronizar com Grupo da Família</span>
+          </button>
+        </div>
+
+        <!-- Finalizar compra + nota fiscal (tudo na mesma tela) -->
+        <div class="card" id="spark-final-box" style="margin-top:10px;border:2px solid #16a34a;">
+          <div class="card-title"><span>✅ Finalizar compra</span><span class="pill pill-green">lista + nota + financeiro + validades</span></div>
+          <div style="font-size:11px;color:var(--text-muted);margin-bottom:8px;">Finaliza a compra desta lista, registra no Financeiro e atualiza a geladeira/validades. A nota fiscal (foto ou XML) entra aqui também e corrige a lista com os preços reais.</div>
+          <div id="spark-final-msg" style="font-size:11px;color:#0369a1;margin-bottom:8px;">Tudo pronto pra fechar.</div>
+          <div id="spark-ultima-compra" style="font-size:12px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:7px 9px;margin-bottom:8px;">🧾 <b>Total gasto na compra:</b> carregando...</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;">
+            <button class="btn btn-primary" onclick="sparkFinalizarUnificado()" style="flex:1;background:#16a34a;">✅ Finalizar compra</button>
+          </div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;">
+            <button class="btn btn-secondary" onclick="sparkNotaAqui('foto')" style="flex:1;">🧾 Foto da notinha</button>
+            <button class="btn btn-secondary" onclick="sparkNotaAqui('xml')" style="flex:1;">🧾 XML da NFP-SP</button>
+          </div>
+          <div style="font-size:10px;color:#64748b;margin-top:6px;">CPF na nota: <b id="spark-final-cpf">carregando...</b> (conta 👤 > CPF). Dica: peça o CPF no caixa antes da foto.</div>
+        </div>
+
+      </div>
+
+        <!-- Historico: lista virou despesa, tela livre -->
+        <div class="card" id="spark-hist-box" style="margin-top:10px;border:2px solid #6366f1;">
+          <div class="card-title"><span>🧾 Minhas compras</span><span class="pill" style="background:#eef2ff;color:#4338ca;">lista virou despesa</span></div>
+          <div style="font-size:11px;color:var(--text-muted);margin-bottom:8px;">Ao finalizar, a lista entra aqui completa e a tela libera p/ próxima compra. Tudo soma com o que já tem.</div>
+          <div id="spark-hist-lista"><div style="font-size:11px;color:#64748b;">Carregando...</div></div>
+        </div>
+
+        <!-- Receitas com o que tem (estoque + Saude + video) -->
+        <div class="card" id="spark-rec-box" style="margin-top:10px;border:2px solid #f59e0b;">
+          <div class="card-title"><span>🍳 Receitas com o que tem</span><span class="pill pill-orange">da tua compra</span></div>
+          <div id="spark-rec-ia" style="font-size:11px;background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:7px 9px;margin-bottom:8px;">🤖 O chef IA sugere aqui pelo teu estoque...</div>
+          <div style="font-size:10px;color:#64748b;margin-bottom:6px;">Meta da família (3): <b>≈6.700 kcal/dia</b> · <a href="https://sparkbr.online/saude/" target="_blank" style="color:#0284c7;">🏋️ treinos no Saúde (gasta e abate)</a></div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;">
+            <button class="btn btn-secondary" onclick="sparkReceitas('pronto')" style="flex:1;font-size:11px;">✅ Pronto agora</button>
+            <button class="btn btn-secondary" onclick="sparkReceitas('quase')" style="flex:1;font-size:11px;">🛒 Falta pouco</button>
+            <button class="btn btn-secondary" onclick="sparkReceitas('semana')" style="flex:1;font-size:11px;">📅 Semana</button>
+            <button class="btn btn-secondary" onclick="sparkReceitas('mes')" style="flex:1;font-size:11px;">🗓 Mês</button>
+            <button class="btn btn-secondary" onclick="sparkReceitas('hoje')" style="flex:1;font-size:11px;">🍽 Hoje p/ 3</button>
+            <button class="btn btn-secondary" onclick="sparkDiario()" style="flex:1;font-size:11px;">📆 Dias até acabar</button>
+          </div>
+          <div id="spark-rec-lista"><div style="font-size:11px;color:#64748b;">Carregando pelo estoque...</div></div>
+        </div>
+
+      <!-- ================= TAB 2: IA MULTIMODAL ================= -->
+      <div id="tab-ia" class="tab-content">
+        
+        <div class="ai-hero-card">
+          <div class="ai-hero-title">
+            <span>🧠</span>
+            <span>Entrada Multimodal Inteligente</span>
+          </div>
+          <div class="ai-hero-desc">
+            Alimente a lista falando naturalmente, tirando foto do armário ou escaneando o QR Code da Nota Fiscal Paulista.
+          </div>
+          <div class="ai-modes-grid">
+            <button class="ai-mode-btn active" id="btn-mode-audio" onclick="setAIMode('audio')">
+              <span style="font-size: 18px;">🎙️</span>
+              <span>Áudio / Voz</span>
+            </button>
+            <button class="ai-mode-btn" id="btn-mode-vision" onclick="setAIMode('vision')">
+              <span style="font-size: 18px;">📸</span>
+              <span>Foto Despensa</span>
+            </button>
+            <button class="ai-mode-btn" id="btn-mode-qr" onclick="setAIMode('qr')">
+              <span style="font-size: 18px;">🧾</span>
+              <span>QR Code NFC-e</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Mode 1: Audio / Whisper -->
+        <div id="ai-panel-audio" class="interaction-box">
+          <div class="card-title">
+            <span>Comando de Voz com IA</span>
+            <span class="pill pill-red" id="mic-status-pill">Pronto</span>
+          </div>
+          <p style="font-size: 12px; color: var(--text-muted); text-align: center;">
+            Grave um áudio dizendo o que precisa comprar ou use um exemplo:
+          </p>
+          
+          <button class="mic-button-big" id="mic-btn" onclick="toggleAudioRecording()">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+              <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+              <line x1="12" y1="19" x2="12" y2="23"></line>
+              <line x1="8" y1="23" x2="16" y2="23"></line>
+            </svg>
+          </button>
+
+          <div style="display: flex; gap: 6px; margin-bottom: 8px;">
+            <button class="btn btn-secondary" style="font-size: 11px; padding: 6px;" onclick="simulateAudio(1)">Simular: "Áudio do Marido"</button>
+            <button class="btn btn-secondary" style="font-size: 11px; padding: 6px;" onclick="simulateAudio(2)">Simular: "Churrasco de Domingo"</button>
+          </div>
+
+          <div class="transcription-preview" id="audio-transcript-box">
+            Transcrição em tempo real aparecerá aqui...
+          </div>
+
+          <div id="ai-parsed-json" style="display:none; margin-top: 10px;">
+            <div style="font-size: 11px; font-weight: 700; color: #059669; margin-bottom: 4px;">✨ Itens extraídos pela IA:</div>
+            <div class="code-block" id="parsed-entities-code"></div>
+          </div>
+        </div>
+
+        <!-- Mode 2: Vision / Pantry Photo -->
+        <div id="ai-panel-vision" class="interaction-box" style="display: none;">
+          <div class="card-title">
+            <span>Visão Computacional da Geladeira/Despensa</span>
+            <span class="pill pill-purple">Gemini Multimodal</span>
+          </div>
+          <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 10px;">
+            Envie uma foto da prateleira ou geladeira. A IA identifica produtos em falta ou baixos níveis de embalagem.
+          </p>
+
+          <div style="border: 2px dashed #CBD5E1; border-radius: var(--radius-md); padding: 20px; text-align: center; background: #F8FAFC; cursor: pointer;" onclick="simulateVisionDetection()">
+            <div style="font-size: 32px; margin-bottom: 6px;">📷</div>
+            <div style="font-size: 13px; font-weight: 700;">Toque para enviar ou simular foto</div>
+            <div style="font-size: 11px; color: var(--text-muted);">Despensa, porta da geladeira ou lista manuscrita</div>
+          </div>
+
+          <div id="vision-results-box" style="display: none; margin-top: 12px;">
+            <div style="font-size: 12px; font-weight: 800; color: #1E293B; margin-bottom: 6px;">🔎 Diagnóstico Visual da IA:</div>
+            <div style="background: #F1F5F9; border-radius: var(--radius-sm); padding: 10px; font-size: 11px; line-height: 1.5;">
+              ✔️ <b>Leite Piracanjuba:</b> Nível crítico detectado (&lt; 200ml restante)<br>
+              ✔️ <b>Ovos:</b> Apenas 2 unidades restantes no compartimento<br>
+              ✔️ <b>Manteiga Aviação:</b> Pote vazio avistado na gaveta<br>
+              ✔️ <b>Maionese Hellmann's:</b> Embalagem aberta com data antiga
+            </div>
+          </div>
+        </div>
+
+        <!-- Mode 3: QR Code NFC-e SEFAZ SP -->
+        <div id="ai-panel-qr" class="interaction-box" style="display: none;">
+          <div class="card-title">
+            <span>Scanner de Cupom Fiscal (NFC-e SP)</span>
+            <span class="pill pill-green">SEFAZ São Paulo</span>
+          </div>
+          <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 10px;">
+            Escaneie o QR Code impresso no cupom do <b>Savegnago</b> ou <b>Tonin</b> para cadastrar automaticamente tudo que comprou na sua despensa virtual.
+          </p>
+
+          <div style="background: #1E293B; color: white; border-radius: var(--radius-md); padding: 18px; text-align: center;">
+            <div style="width: 120px; height: 120px; margin: 0 auto 10px; border: 2px solid #10B981; border-radius: 12px; display: flex; align-items: center; justify-content: center; background: #0F172A;">
+              <span style="font-size: 50px;">🏁</span>
+            </div>
+            <div style="font-size: 11px; color: #94A3B8;">Chave SEFAZ: 3526 1045 2883 0001 5500 1000 4829 1819</div>
+          </div>
+
+          <button class="btn btn-secondary" style="margin-top: 10px;" onclick="simulateNFCEExtraction()">
+            <span>🧾 Simular Leitura Cupom Savegnago RP</span>
+          </button>
+
+          <div id="nfce-success-box" style="display: none; margin-top: 12px; background: #ECFDF5; border: 1px solid #A7F3D0; border-radius: var(--radius-sm); padding: 10px;">
+            <div style="font-size: 12px; font-weight: 800; color: #065F46;">✅ Cupom Validado na SEFAZ SP!</div>
+            <div style="font-size: 11px; color: #047857; margin-top: 3px;">
+              Loja: Savegnago Supermercados Ltda - Loja Maurílio Biagi<br>
+              <b>7 produtos importados</b> com datas de validade estimadas e taxa de consumo ativada.
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ================= TAB 3: WHATSAPP BOT ================= -->
+      <div id="tab-whatsapp" class="tab-content">
+        
+        <div class="card" style="margin-bottom: 10px; padding: 10px;">
+          <div class="card-title" style="margin-bottom: 3px;">
+            <span>Integração de Grupos WhatsApp</span>
+            <span class="pill pill-green">Evolution API / Webhook</span>
+          </div>
+          <p style="font-size: 11px; color: var(--text-muted);">
+            Todos da casa mandam áudios e textos no grupo; o bot consolida os itens no catálogo do supermercado em tempo real.
+          </p>
+        </div>
+
+        <!-- WhatsApp Mock View -->
+        <div class="wa-chat-container">
+          <div class="wa-header">
+            <div class="wa-avatar">🛒</div>
+            <div>
+              <div style="font-weight: 700; font-size: 13px;">Compras da Família Silva</div>
+              <div style="font-size: 10px; opacity: 0.85;">Você, Carlos, Ana e Spark Bot</div>
+            </div>
+          </div>
+
+          <div class="wa-chat-body" id="wa-chat-stream">
+            <div class="wa-bubble wa-incoming">
+              <div style="font-weight: 700; color: #B45309; font-size: 10px;">Carlos (Marido)</div>
+              <div>Gente, acabou o pó de café e a manteiga. Botei na lista?</div>
+              <div class="wa-time">10:14</div>
+            </div>
+
+            <div class="wa-bubble wa-outgoing">
+              <div class="wa-bot-badge">⚡ Spark AI Bot</div>
+              <div>✅ Adicionado: <b>1x Café Pilão 500g</b> (R$ 18,90) e <b>1x Manteiga Aviação 200g</b> (R$ 14,50). Comparado no <i>Savegnago RP</i>!</div>
+              <div class="wa-time">10:14</div>
+            </div>
+
+            <!-- Health Warning from Bot -->
+            <div class="wa-bubble wa-outgoing" style="background: #FEE2E2; border: 1px solid #FCA5A5;">
+              <div class="wa-bot-badge" style="color: #DC2626;">🚨 ALERTA DE SAÚDE - SPARK IA</div>
+              <div style="color: #991B1B;">⚠️ <b>Atenção com a Maionese:</b> O pote de Hellmann's aberto na geladeira atingiu <b>32 dias</b>. Pelas normas da ANVISA, molhos emulsionados abertos têm limite de 30 dias na geladeira para evitar proliferação de <i>Salmonella</i>. <b>Recomendo descartar!</b><br>👉 Deseja que eu adicione um pote novo na lista?</div>
+              <div class="wa-time">10:18</div>
+            </div>
+
+            <div class="wa-bubble wa-incoming">
+              <div style="font-weight: 700; color: #0284C7; font-size: 10px;">Ana (Filha)</div>
+              <div>Sim, Spark, põe uma maionese nova no Savegnago!</div>
+              <div class="wa-time">10:19</div>
+            </div>
+
+            <div class="wa-bubble wa-outgoing">
+              <div class="wa-bot-badge">⚡ Spark AI Bot</div>
+              <div>✅ Feito! <b>1x Maionese Hellmann's Tradicional 500g</b> adicionada à lista do Savegnago (R$ 9,89). Carrinho atualizado! 🛡️</div>
+              <div class="wa-time">10:19</div>
+            </div>
+          </div>
+
+          <div style="padding: 8px 10px; background: #F0F2F5; display: flex; gap: 6px; border-top: 1px solid #E2E8F0;">
+            <input type="text" id="wa-input" placeholder="Envie msg para simular o bot..." style="flex:1; border: 1px solid #CBD5E1; border-radius: 20px; padding: 7px 12px; font-size: 12px; outline: none;">
+            <button onclick="sendSimulatedWAMessage()" style="background: #25D366; color: white; border: none; border-radius: 50%; width: 34px; height: 34px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px;">➤</button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ================= TAB 4: SEGURANÇA ALIMENTAR & VALIDADES (NOVA!) ================= -->
+      <div id="tab-safety" class="tab-content">
+        
+        <div class="card" style="background: linear-gradient(135deg, #FEF2F2 0%, #FEE2E2 100%); border-color: #FECACA;">
+          <div class="card-title" style="margin-bottom: 4px;">
+            <span style="color: #991B1B;">🛡️ Monitor de Validades & Saúde</span>
+            <span class="pill pill-red">Prevenção Sanitária</span>
+          </div>
+          <p style="font-size: 11px; color: #7F1D1D; line-height: 1.4;">
+            Alimentos abertos estragam rapidamente mesmo dentro da geladeira. A IA calcula a <b>Validade Aberta (PAO)</b> e avisa para evitar intoxicação alimentar por <i>Salmonella</i>, fungos e bolor.
+          </p>
+        </div>
+
+        <!-- OCR de Validade na Tampa -->
+        <div class="card">
+          <div class="card-title">
+            <span>📷 Scanner de Data no Rótulo / Tampa</span>
+            <span class="pill pill-purple">OCR Gemini Vision</span>
+          </div>
+          <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 10px;">
+            Bata uma foto do carimbo de validade na tampa ou fundo do pote para registrar a data exata.
+          </p>
+          <button class="btn btn-secondary" onclick="simulateExpiryOCR()">
+            <span>📸 Simular Foto da Tampa (OCR de Validade)</span>
+          </button>
+          <div id="ocr-result-box" style="display: none; margin-top: 10px; background: #F8FAFC; border: 1px dashed #CBD5E1; border-radius: var(--radius-sm); padding: 10px; font-size: 11px;">
+            🔍 <b>Texto lido pelo OCR:</b> <i>"VAL 28/10/26 LOTE 091B 14:22"</i><br>
+            ✅ <b>Data gravada no sistema:</b> 28 de Outubro de 2026.<br>
+            💡 <i>Dica da IA:</i> Se aberto hoje, consumir em no máximo 30 dias na geladeira.
+          </div>
+        </div>
+
+        <!-- Recipe Suggestion Modal / Box -->
+        <div id="recipe-suggestion-box" style="display: none; margin-top: 14px; background: #ECFDF5; border: 1px solid #A7F3D0; border-radius: var(--radius-md); padding: 12px;">
+          <div style="font-size: 12px; font-weight: 800; color: #065F46;">👨‍🍳 Receita da IA Anti-Desperdício:</div>
+          <div style="font-size: 11px; color: #047857; margin-top: 4px; line-height: 1.4;">
+            <b>Torrada Gratinada de Forno Rápida:</b><br>
+            Use o pão de forma, espalhe o molho Pomarola aberto e cubra com as fatias de queijo muçarela que vencem em 2 dias. Forno a 200°C por 8 minutos!
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ================= TAB 5: PARCERIA RP & VPS ================= -->
+      </main>
+
+    <!-- Bottom Navigation Tabs -->
+    <nav class="bottom-nav">
+      <button class="nav-item active" onclick="switchTab('lista', this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        <span>Lista</span>
+      </button>
+
+      <button class="nav-item" onclick="switchTab('ia', this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2a10 10 0 1 0 10 10H12V2z"/><path d="M12 12L2.1 12a10 10 0 0 0 9.9 10V12z"/><circle cx="12" cy="12" r="3"/></svg>
+        <span>IA / Voz</span>
+      </button>
+
+      <button class="nav-item" onclick="switchTab('whatsapp', this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+        <span>WhatsApp</span>
+      </button>
+
+      <button class="nav-item" onclick="switchTab('safety', this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <span>Validades ⚠️</span>
+      </button>
+
+
+    </nav>
+    <button id="spark-hub-btn" onclick="location.href='https://sparkbr.online/'" title="Voltar p/ área principal Spark" style="position:fixed;bottom:142px;right:10px;z-index:9000;background:#f59e0b;color:#fff;border:none;border-radius:50%;width:44px;height:44px;font-size:20px;font-weight:800;box-shadow:0 2px 8px rgba(0,0,0,.25)">⚡</button>
+
+    <!-- Checkout Modal Sheet -->
+    <div class="modal-overlay" id="checkout-modal">
+      <div class="modal-sheet">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+          <div style="font-size: 16px; font-weight: 800;">Confirmar Pedido Automatizado</div>
+          <button onclick="closeCheckoutModal()" style="background: none; border: none; font-size: 20px; cursor: pointer; color: #94A3B8;">✕</button>
+        </div>
+
+        <div style="background: #F1F5F9; border-radius: var(--radius-sm); padding: 10px; margin-bottom: 12px;">
+          <div style="font-size: 11px; color: var(--text-muted);">Supermercado Destino:</div>
+          <div style="font-size: 14px; font-weight: 800; color: var(--text);" id="modal-market-name">Savegnago - Loja Maurílio Biagi</div>
+          <div style="font-size: 10px; color: #059669; font-weight: 700; margin-top: 2px;">⚡ Conexão direta com ERP/Televendas da Loja</div>
+        </div>
+
+        <div style="margin-bottom: 12px; font-size: 12px;">
+          <div style="display: flex; justify-content: space-between; padding: 4px 0;">
+            <span style="color: var(--text-muted);">Subtotal dos Produtos</span>
+            <span style="font-weight: 700;" id="modal-subtotal">R$ 78,40</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; padding: 4px 0;">
+            <span style="color: var(--text-muted);">Taxa de Entrega (Expressa RP)</span>
+            <span style="font-weight: 700; color: #16A34A;">Grátis (Parceria)</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; padding: 8px 0; border-top: 1px dashed var(--border); margin-top: 6px; font-size: 14px; font-weight: 800;">
+            <span>Total Final</span>
+            <span style="color: var(--primary-dark);" id="modal-total">R$ 78,40</span>
+          </div>
+        </div>
+
+        <button class="btn btn-primary" style="margin-bottom: 6px;" onclick="dispatchOrderNow()">
+          Disparar Pedido p/ Sistema do Mercado
+        </button>
+        <button class="btn btn-whatsapp" onclick="dispatchOrderViaWhatsApp()">
+          Enviar Lista Formatada no WhatsApp do Mercado
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // State of the Application
+    const state = {
+      activeMarket: 'savegnago',
+      markets: {
+        savegnago: { name: 'Savegnago (Maurílio Biagi)', color: '#E11D48', rate: '6%', multiplier: 1.0 },
+        tonin: { name: 'Tonin Superatacado (Castelo Branco)', color: '#EA580C', rate: '5%', multiplier: 0.913 },
+        jau: { name: 'Jaú Serve (Av. Fiúsa)', color: '#D97706', rate: '7%', multiplier: 1.035 },
+        cenourao: { name: 'Cenourão Hortifrúti (Quintino)', color: '#16A34A', rate: '8%', multiplier: 1.06 },
+        gricki: { name: 'Supermercado Gricki (Ipiranga)', color: '#2563EB', rate: '6%', multiplier: 0.96 },
+        atacadao: { name: 'Atacadão (Via Norte)', color: '#0ea5e9', rate: 'atacado', multiplier: 0.90 },
+        assai: { name: 'Assaí Atacadista', color: '#f97316', rate: 'atacado', multiplier: 0.90 },
+        bigcompra: { name: 'Big Compra', color: '#8b5cf6', rate: '6%', multiplier: 0.95 },
+        mialich: { name: 'Mialich', color: '#14b8a6', rate: '6%', multiplier: 0.97 },
+        carrefour: { name: 'Carrefour', color: '#1d4ed8', rate: '6%', multiplier: 1.02 }
+      },
+      items: [
+        { id: 1, name: 'Leite Integral Piracanjuba 1L', qty: 2, unit: 'cx', basePrice: 4.89, checked: false, ean: '7898215150012' },
+        { id: 2, name: 'Café Torrado Pilão Tradicional 500g', qty: 1, unit: 'pct', basePrice: 18.90, checked: false, ean: '7891000245100' },
+        { id: 3, name: 'Arroz Branco Tio João Tipo 1 5kg', qty: 1, unit: 'pct', basePrice: 28.50, checked: false, ean: '7896006711102' },
+        { id: 4, name: 'Manteiga com Sal Aviação 200g', qty: 1, unit: 'pote', basePrice: 14.50, checked: false, ean: '7896084700010' },
+        { id: 5, name: 'Sabão em Pó OMO Lavagem Perfeita 1.6kg', qty: 1, unit: 'cx', basePrice: 21.90, checked: false, ean: '7891150047321' },
+        { id: 6, name: 'Ovos Brancos Mantiqueira c/ 20 un', qty: 1, unit: 'bandeja', basePrice: 15.90, checked: false, ean: '7898912301099' }
+      ],
+      isRecording: false
+    };
+
+    // Initialize App
+    document.addEventListener('DOMContentLoaded', () => {
+      try { const m = localStorage.getItem('spark_market_spark'); if (m && state.markets[m]) state.activeMarket = m; } catch (_) {}
+      renderShoppingList(); updateKPIs(); try{window.sparkSync&&window.sparkSync()}catch(_){}
+      try { setTimeout(sparkCarregaValidades, 2500); } catch (_) {}
+      try { setTimeout(sparkMostraUltimaCompra, 2000); } catch (_) {}
+      try { setTimeout(sparkComprasHist, 2400); } catch (_) {}
+      try { setTimeout(function(){ sparkReceitas('pronto'); }, 5000); } catch (_) {}
+      try {
+        const c = localStorage.getItem('spark_cpf') || '';
+        const el = document.getElementById('spark-final-cpf');
+        if (el) el.textContent = c ? c.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4') : 'não salvo — toque em 👤';
+      } catch (_) {}
+    });
+
+    // Navigation Switcher
+    function switchTab(tabId, el) {
+      document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+      
+      const target = document.getElementById('tab-' + tabId);
+      if (target) target.classList.add('active');
+      if (el) el.classList.add('active');
+    }
+
+    // Select Supermarket
+    function selectMarket(marketKey) {
+      state.activeMarket = marketKey;
+      try { localStorage.setItem('spark_market_spark', marketKey); } catch (_) {}
+      document.querySelectorAll('.market-chip').forEach(c => c.classList.remove('active'));
+      event.currentTarget.classList.add('active');
+      renderShoppingList(); updateKPIs(); try{window.sparkSync&&window.sparkSync(true)}catch(_){}
+    }
+
+    // Preco efetivo: travado (real pago) ou estimado (base x mercado)
+    function sparkEffU(it, mult) {
+      try {
+        const pr = parseFloat(it.precoReal);
+        if (it.precoReal != null && !isNaN(pr)) return pr;
+      } catch (_) {}
+      return (parseFloat(it.basePrice) || 0) * mult;
+    }
+    // Render list
+    function renderShoppingList() {
+      const container = document.getElementById('shopping-list-items');
+      const mult = state.markets[state.activeMarket].multiplier;
+      
+      container.innerHTML = state.items.map(item => {
+        const effU = sparkEffU(item, mult);
+        const itemPrice = (effU * item.qty).toFixed(2).replace('.', ',');
+        const unitPrice = (effU).toFixed(2).replace('.', ',');
+        return `
+          <div class="list-item">
+            <div class="item-left">
+              <div class="item-checkbox ${item.checked ? 'checked' : ''}" onclick="toggleCheck(${item.id})">
+                ${item.checked ? '✓' : ''}
+              </div>
+              <div class="item-info">
+                <span class="item-name ${item.checked ? 'checked' : ''}" onclick="sparkRename(${item.id})" style="cursor:pointer" title="Toque p/ renomear">${item.name}</span>
+                <span class="item-meta">
+                  <span>${item.qty} ${item.unit}</span>
+                  <span>•</span>
+                  <span>R$ ${unitPrice}/${item.unit}</span>
+                  <span>•</span>
+                  <span class="pill pill-blue" style="font-size:9px; padding:1px 5px;">EAN: ${item.ean.slice(-5)}</span>
+                </span>
+              </div>
+            </div>
+            <div class="item-price" onclick="sparkPrice(${item.id})" style="cursor:pointer" title="Toque p/ corrigir o preço">R$ ${itemPrice}</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function toggleCheck(id) {
+      const it = state.items.find(i => i.id === id);
+      if (it) {
+        it.checked = !it.checked;
+        renderShoppingList(); updateKPIs(); try{window.sparkSync&&window.sparkSync()}catch(_){}
+      }
+    }
+
+    function updateKPIs() {
+      const mult = state.markets[state.activeMarket].multiplier;
+      let total = 0;
+      state.items.forEach(i => {
+        if (!i.checked) {
+          total += (sparkEffU(i, mult) * i.qty);
+        }
+      });
+
+      const formattedTotal = 'R$ ' + total.toFixed(2).replace('.', ',');
+      document.getElementById('kpi-total').textContent = formattedTotal;
+      document.getElementById('btn-total-preview').textContent = formattedTotal;
+      document.getElementById('kpi-count').textContent = state.items.length + ' itens';
+      document.getElementById('kpi-market-name').textContent = state.markets[state.activeMarket].name.split(' ')[0];
+
+      // Recomendacao: mercado mais barato da lista
+      let bestKey = state.activeMarket, bestTotal = total;
+      Object.keys(state.markets).forEach(function (k) {
+        const t = total * (state.markets[k].multiplier / mult);
+        if (t < bestTotal) { bestTotal = t; bestKey = k; }
+      });
+      const savingsBox = document.getElementById('savings-tip');
+      const bestName = state.markets[bestKey].name;
+      if (bestKey === state.activeMarket) {
+        savingsBox.innerHTML = `🏆 <b>Recomendado: ${bestName}</b> \u2014 voce ja esta no mais barato (${formattedTotal})!`;
+      } else {
+        const diff2 = total - bestTotal;
+        savingsBox.innerHTML = `🏆 <b>Recomendado: ${bestName}</b> \u2014 la fica <b>R$ ${bestTotal.toFixed(2).replace('.', ',')}</b> (economia de R$ ${diff2.toFixed(2).replace('.', ',')})! <br><button onclick="selectMarketByName('${bestKey}')" style="margin-top:6px;background:#16a34a;color:#fff;border:none;border-radius:10px;padding:10px 16px;font-weight:800;font-size:13px;cursor:pointer">Usar ${bestName} ✅</button> \u2B06`;
+      }
+    }
+
+    async function ativarLocalizacao() {
+      const chip = document.getElementById('chip-gps');
+      if (!navigator.geolocation) { alert('Aparelho sem GPS.'); return; }
+      chip.innerHTML = '<span>⌛ Localizando...</span>';
+      navigator.geolocation.getCurrentPosition(async function (pos) {
+        try {
+          window._sparkGeo = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+          const r = await fetch('/spark-api/estabelecimentos?lat=' + pos.coords.latitude + '&lng=' + pos.coords.longitude).then(x => x.json());
+          const locs = r.locais || r || [];
+          const nome = locs.length ? locs[0].nome : 'lista';
+          chip.innerHTML = '<span>📍 ' + nome.slice(0, 26) + '</span>';
+          try { if (typeof carregarLocais === 'function') carregarLocais(); } catch (_) {}
+        } catch (_) { chip.innerHTML = '<span>📍 Perto de mim</span>'; }
+      }, function () { alert('Permita a localização no navegador para ver o mais perto.'); chip.innerHTML = '<span>📍 Perto de mim</span>'; }, { timeout: 12000 });
+    }
+    function switchBestMarket() {
+      selectMarketByName('tonin');
+    }
+
+    function selectMarketByName(marketKey) {
+      state.activeMarket = marketKey;
+      const chips = document.querySelectorAll('.market-chip');
+      chips.forEach(c => {
+        const norm = function (t) { try { return t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''); } catch (_) { return t.toLowerCase(); } };
+        if (norm(c.textContent).includes(norm(marketKey))) {
+          c.classList.add('active');
+        } else {
+          c.classList.remove('active');
+        }
+      });
+      renderShoppingList(); updateKPIs(); try{window.sparkSync&&window.sparkSync()}catch(_){}
+    }
+
+    const SUGGEST = [
+["Arroz Branco Tipo 1 5kg","pct",28.50],["Feijao Carioca 1kg","pct",8.90],["Cafe Torrado 500g","pct",18.90],
+["Leite Integral 1L","cx",4.99],["Acucar Cristal 5kg","pct",19.90],["Oleo de Soja 900ml","un",7.50],
+["Macarrao Espaguete 500g","pct",4.50],["Molho de Tomate 340g","un",3.50],["Farinha de Trigo 1kg","pct",5.50],
+["Sal Refinado 1kg","pct",3.00],["Batata 2kg","pct",9.90],["Cebola 1kg","kg",5.90],["Tomate 1kg","kg",7.90],
+["Banana Prata 1kg","kg",6.50],["Sardinha Enlatada 125g","un",6.50],["Milho Verde 200g","un",5.50],
+["Detergente Liquido 500ml","un",2.50],["Sabonete 90g","un",3.50],["Sabao em Po 800g","pct",12.90],
+["Esponja Multiuso 4un","pct",4.50],["Agua Sanitaria 1L","un",4.90],["Pao de Forma 500g","pct",7.50],
+["Bolacha Cream Cracker 400g","pct",6.00],["Tapioca 1kg","pct",9.90],["Presunto Fatiado 400g","pct",18.90],
+["Queijo Mussarela 400g","pct",24.90],["Ovos Brancos c/20","bandeja",15.90],["Manteiga 200g","pote",14.50],
+["Frango Inteiro 1kg","kg",11.90],["Carne Moida 1kg","kg",32.90],["Acem 1kg","kg",29.90],
+["Linguica 1kg","kg",22.90],["Salsicha 1kg","kg",13.90],["Peito de Frango 1kg","kg",21.90],
+["Arroz Integral 1kg","pct",7.90],["Feijao Preto 1kg","pct",9.50],["Lentilha 500g","pct",8.90],
+["Aveia 500g","pct",9.90],["Granola 500g","pct",16.90],["Leite em Po 400g","pct",17.90],
+["Achocolatado 800g","pct",15.90],["Biscoito Recheado 400g","pct",7.90],["Maizena 500g","pct",8.90],
+["Fermento 100g","un",4.90],["Vinagre 750ml","un",5.90],["Azeite 500ml","un",24.90],
+["Maionese 500g","un",12.90],["Ketchup 400g","un",9.90],["Mostarda 200g","un",7.90],
+["Ervilha 200g","un",4.90],["Palmito 300g","un",14.90],["Atum 170g","un",9.90],
+["Sardinha 125g","un",6.50],["Cerveja Lata 350ml","un",3.90],["Refrigerante 2L","un",9.90],
+["Suco 1L","cx",7.90],["Agua Mineral 5L","un",12.90],["Pao Frances 1kg","kg",14.90],
+["Bolo 400g","un",12.90],["Margarian 500g","pote",8.90],["Requeijao 200g","un",9.90],
+["Iogurte 1L","un",11.90],["Queijo Prato 400g","pct",26.90],["Mortadela 400g","pct",12.90],
+["Salsicha Hot Dog 500g","pct",9.90],["Hamburguer 500g","pct",14.90],["Nuggets 500g","pct",13.90],
+["Batata Congelada 2kg","pct",24.90],["Pizza Congelada 400g","un",16.90],["Sorvete 2L","un",26.90],
+["Cebola Roxa 1kg","kg",7.90],["Alho 200g","pct",6.90],["Pimentao 1kg","kg",9.90],
+["Cenoura 1kg","kg",6.90],["Beterraba 1kg","kg",5.90],["Repolho 1kg","kg",4.90],
+["Alface 1un","un",3.50],["Couve 1un","un",3.50],["Brocolis 1un","un",6.90],
+["Mamao 1kg","kg",7.90],["Maca 1kg","kg",9.90],["Laranja 1kg","kg",5.90],
+["Limao 1kg","kg",4.90],["Melancia 1kg","kg",3.90],["Abacaxi 1un","un",7.90],["Shampoo 400ml","un",14.90],["Condicionador 400ml","un",15.90],["Creme Dental 90g","un",8.90],["Escova Dental","un",6.90],["Protetor Solar FPS30 200ml","un",39.90],["Termometro Digital","un",19.90],["Vitamina C 1g 10cps","pct",12.90],["Band-aid 40un","pct",11.90]
+];
+    function normTx(t) { try { return t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''); } catch (_) { return (t || '').toLowerCase(); } }
+    function suggestWire() {
+      const inp = document.getElementById('quick-input');
+      if (!inp || inp.dataset.sug) return;
+      inp.dataset.sug = '1';
+      const box = document.createElement('div');
+      box.id = 'sug-box';
+      box.style.cssText = 'position:relative;';
+      inp.parentNode.insertBefore(box, inp);
+      box.appendChild(inp);
+      const dd = document.createElement('div');
+      dd.id = 'sug-dd';
+      dd.style.cssText = 'position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid #cbd5e1;border-radius:10px;z-index:60;max-height:220px;overflow:auto;display:none;box-shadow:0 8px 24px rgba(0,0,0,.15)';
+      box.appendChild(dd);
+      inp.addEventListener('input', function () {
+        const q = normTx(inp.value.trim());
+        if (q.length < 2) { dd.style.display = 'none'; return; }
+        const found = SUGGEST.filter(p => normTx(p[0]).includes(q)).slice(0, 8);
+        if (!found.length) { dd.style.display = 'none'; return; }
+        dd.innerHTML = found.map((p, ix) => '<div data-ix="' + SUGGEST.indexOf(p) + '" style="padding:9px 12px;font-size:13px;border-bottom:1px solid #f1f5f9;cursor:pointer"><b>' + p[0] + '</b> <span style="color:#64748b">R$ ' + p[2].toFixed(2).replace('.', ',') + '/' + p[1] + '</span></div>').join('');
+        dd.style.display = 'block';
+        dd.querySelectorAll('div[data-ix]').forEach(el => el.onclick = function () {
+          const p = SUGGEST[parseInt(el.dataset.ix)];
+          state.items.unshift({ id: Date.now(), name: p[0], qty: 1, unit: p[1], basePrice: p[2], checked: false, ean: '' });
+          inp.value = ''; dd.style.display = 'none';
+          renderShoppingList(); updateKPIs(); try{window.sparkSync&&window.sparkSync()}catch(_){}
+        });
+      });
+      document.addEventListener('click', function (e) { if (!box.contains(e.target)) dd.style.display = 'none'; });
+    }
+    document.addEventListener('DOMContentLoaded', suggestWire);
+    var _sugT = null;
+    function sparkSugFetch(q) {
+      return fetch('/spark-api/alimentos/busca?q=' + encodeURIComponent(q)).then(function (r) { return r.json(); }).catch(function () { return null; });
+    }
+    function sparkSugBox() {
+      var b = document.getElementById('quick-sug');
+      if (!b) {
+        var inp = document.getElementById('quick-input');
+        if (!inp || !inp.parentNode) return null;
+        b = document.createElement('div');
+        b.id = 'quick-sug';
+        b.style.cssText = 'display:none;flex-direction:column;gap:4px;margin-top:6px;max-height:220px;overflow:auto;';
+        inp.parentNode.parentNode.insertBefore(b, inp.parentNode.nextSibling);
+        try { inp.setAttribute('autocomplete', 'off'); } catch (_) {}
+      }
+      return b;
+    }
+    function sparkSugHide() { try { var b = document.getElementById('quick-sug'); if (b) b.style.display = 'none'; } catch (_) {} }
+    function sparkSugShow(q) {
+      var box = sparkSugBox(); if (!box) return;
+      q = String(q || '').trim();
+      if (q.length < 2) { sparkSugHide(); return; }
+      sparkSugFetch(q).then(function (d) {
+        try {
+          var arr = (d && d.itens) || [];
+          if (!arr.length) { sparkSugHide(); return; }
+          box.innerHTML = arr.slice(0, 8).map(function (x, ix) {
+            var pr = (x.preco_medio != null) ? ('R$ ' + Number(x.preco_medio).toFixed(2).replace('.', ',')) : 's/ preco';
+            return '<div data-ix="' + ix + '" class="sug-row" style="display:flex;gap:8px;align-items:center;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:7px 9px;font-size:12px;cursor:pointer">'
+              + '<div style="flex:1;min-width:0"><b>' + addEsc(x.nome) + '</b>'
+              + '<div style="color:#64748b;font-size:11px">' + Number(x.kcal || 0) + ' kcal - ' + addEsc(x.base || '') + ' - ' + pr + '</div></div>'
+              + '<div style="color:#16a34a;font-weight:800">+ add</div></div>';
+          }).join('');
+          box._arr = arr;
+          box.style.display = 'flex';
+          var rows = box.querySelectorAll('.sug-row');
+          for (var i = 0; i < rows.length; i++) {
+            (function (el) {
+              el.onmousedown = function () {
+                try {
+                  var x = box._arr[parseInt(el.getAttribute('data-ix'), 10)];
+                  if (!x) return;
+                  state.items.unshift({ id: Date.now(), name: x.nome, qty: 1, unit: 'un', basePrice: (x.preco_medio != null ? x.preco_medio : 0), checked: false, ean: '' });
+                  var inp = document.getElementById('quick-input'); if (inp) inp.value = '';
+                  sparkSugHide();
+                  renderShoppingList(); updateKPIs(); try { window.sparkSync && window.sparkSync(true); } catch (_) {}
+                  addMsg(x.nome + ' na lista!');
+                } catch (_) {}
+              };
+            })(rows[i]);
+          }
+        } catch (_) {}
+      });
+    }
+    function sparkSugInit() {
+      try {
+        var inp = document.getElementById('quick-input');
+        if (!inp || inp._sugOn) return; inp._sugOn = true;
+        inp.addEventListener('input', function () {
+          try {
+            if (_sugT) clearTimeout(_sugT);
+            var v = inp.value.trim();
+            if (v.length < 2) { sparkSugHide(); return; }
+            _sugT = setTimeout(function () { sparkSugShow(v); }, 300);
+          } catch (_) {}
+        });
+      } catch (_) {}
+    }
+    try { sparkSugInit(); } catch (_) {}
+    try { document.addEventListener('DOMContentLoaded', sparkSugInit); } catch (_) {}
+    try { setTimeout(sparkSugInit, 1500); } catch (_) {}
+    async function addQuickItem() {
+      try {
+        var _nv = String((document.getElementById('quick-input') || {}).value || '').toLowerCase();
+        var _nav = /(abrir|abra|ir para|va para|mostrar|mostre|area|quero|leva)/.test(_nv);
+        if (_nav) {
+          var _map = [['dieta|nutri', '/saude/'], ['agua', '/agua/'], ['treino', '/saude/'], ['mercado|lista|compra', '/spark/'], ['perfil|conta', '/saude/'], ['saude', '/saude/'], ['familia', '/familia/'], ['financeiro|finan|gasto', '/financeiro/'], ['farmacia', '/farmacia/'], ['posto', '/posto/']];
+          for (var _i = 0; _i < _map.length; _i++) {
+            var _ks = _map[_i][0].split('|');
+            for (var _k = 0; _k < _ks.length; _k++) {
+              if (_nv.indexOf(_ks[_k]) >= 0) { location.href = _map[_i][1]; return; }
+            }
+          }
+        }
+      } catch (_) {}
+
+      const input = document.getElementById('quick-input');
+      const val = input.value.trim();
+      if (!val) return;
+      try {
+        const r = await fetch('/spark-api/ia/entender', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ texto: val }) });
+        const en = await r.json();
+        if (en && en.ok && en.itens && en.itens.length) {
+          addMostraIA(en.itens, val);
+          input.value = '';
+          return;
+        }
+      } catch (_) {}
+      const newItem = {
+        id: Date.now(),
+        name: val,
+        qty: 1,
+        unit: 'un',
+        basePrice: 11.50,
+        checked: false,
+        ean: '789' + Math.floor(1000000000 + Math.random() * 9000000000)
+      };
+
+      state.items.unshift(newItem);
+      input.value = '';
+      renderShoppingList(); updateKPIs(); try{window.sparkSync&&window.sparkSync()}catch(_){}
+    }
+    async function sparkPrecoMedio(nome) {
+      try {
+        const r = await fetch('/spark-api/precos?item=' + encodeURIComponent(String(nome || '').toLowerCase())).then(x => x.json()).catch(() => null);
+        if (r && r.media) return parseFloat(r.media) || 0;
+      } catch (_) {}
+      return 0;
+    }
+    async function addMostraIA(itens, txt) {
+      try {
+        window.pendingEntities = itens.map(function (o) { return { name: o.nome, qty: o.qtd, unit: 'un', basePrice: 0 }; });
+        window.pendingEntities.forEach(function (o) {
+          sparkPrecoMedio(o.name).then(function (m) {
+            try {
+              if (m > 0) {
+                o.basePrice = m;
+                if (typeof addRenderIA === 'function') addRenderIA();
+                if (typeof updateKPIs === 'function') { try { updateKPIs(); } catch (_) {} }
+              }
+            } catch (_) {}
+          });
+        });
+        var codeBox = document.getElementById('parsed-entities-code');
+        var jsonContainer = document.getElementById('ai-parsed-json');
+        var tbox = document.getElementById('audio-transcript-box');
+        if (tbox && txt) tbox.textContent = '"' + txt + '"';
+        if (codeBox) codeBox.textContent = JSON.stringify(window.pendingEntities, null, 2);
+        if (jsonContainer) jsonContainer.style.display = 'block';
+      } catch (_) {}
+      try { addRenderIA(); } catch (_) {}
+      addMsg((window.pendingEntities || []).length + ' itens! Confira e toque Inserir.');
+    }
+    function addEsc(s) { try { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); } catch (_) { return ''; } }
+    function addRenderIA() {
+      var box = document.getElementById('add-ia-box'), list = document.getElementById('add-ia-list');
+      if (!box || !list) return;
+      var arr = window.pendingEntities || [];
+      if (!arr.length) { box.style.display = 'none'; return; }
+      list.innerHTML = arr.map(function (o, ix) {
+        return '<div style="display:flex;align-items:center;gap:6px;padding:7px 0;border-bottom:1px solid #f1f5f9">'
+          + '<div style="flex:1;min-width:0"><div onclick="addRenIA(' + ix + ')" style="font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + addEsc(o.name) + '</div>'
+          + '<div onclick="addPrecoIA(' + ix + ')" style="font-size:11px;color:#0284c7">R$ ' + Number(o.basePrice || 0).toFixed(2).replace('.', ',') + ' (toque p/ pre\u00e7o)</div></div>'
+          + '<button onclick="addQtdIA(' + ix + ',1)" style="border:1px solid #e2e8f0;background:#fff;border-radius:8px;min-width:28px;height:28px;font-weight:800">+</button>'
+          + '<span style="font-size:13px;font-weight:800;min-width:22px;text-align:center">' + o.qty + '</span>'
+          + '<button onclick="addQtdIA(' + ix + ',-1)" style="border:1px solid #e2e8f0;background:#fff;border-radius:8px;min-width:28px;height:28px;font-weight:800">\u2212</button>'
+          + '<button onclick="addDelIA(' + ix + ')" style="border:1px solid #fecaca;background:#fff;border-radius:8px;min-width:28px;height:28px">\uD83D\uDDD1</button>'
+          + '</div>';
+      }).join('');
+      box.style.display = 'block';
+      try { box.scrollIntoView({ block: 'nearest' }); } catch (_) {}
+    }
+    function addQtdIA(ix, d) { try { var a = window.pendingEntities || []; if (!a[ix]) return; a[ix].qty = Math.max(1, (parseFloat(a[ix].qty) || 1) + d); addRenderIA(); } catch (_) {} }
+    function addDelIA(ix) { try { var a = window.pendingEntities || []; a.splice(ix, 1); window.pendingEntities = a; addRenderIA(); } catch (_) {} }
+    function addRenIA(ix) { try { var a = window.pendingEntities || []; if (!a[ix]) return; var v = prompt('Nome do item:', a[ix].name); if (v === null) return; v = String(v).trim().slice(0, 80); if (v.length < 2) return; a[ix].name = v; addRenderIA(); } catch (_) {} }
+    function addPrecoIA(ix) { try { var a = window.pendingEntities || []; if (!a[ix]) return; var cur = String(a[ix].basePrice || 0).replace('.', ','); var v = prompt('Pre\u00e7o de ' + a[ix].name + ':', cur); if (v === null) return; v = parseFloat(String(v).replace('R$', '').replace(',', '.').trim()); if (isNaN(v) || v < 0 || v > 99999) return; a[ix].basePrice = Math.round(v * 100) / 100; addRenderIA(); } catch (_) {} }
+    function addInsereIA() {
+      try {
+        var a = window.pendingEntities || [];
+        if (!a.length) return;
+        a.forEach(function (ent) {
+          state.items.unshift({ id: Date.now() + Math.random(), name: ent.name, qty: ent.qty, unit: ent.unit || 'un', basePrice: ent.basePrice || 0, checked: false, ean: '' });
+        });
+        window.pendingEntities = [];
+        addRenderIA();
+        renderShoppingList(); updateKPIs(); try { window.sparkSync(); } catch (_) {}
+        addMsg(a.length + ' na lista! \u2705');
+      } catch (_) {}
+    }
+    function addLimpaIA() { try { window.pendingEntities = []; addRenderIA(); } catch (_) {} }
+    if (typeof toast === 'undefined') {
+      var toast = function (t) {
+        try {
+          var d = document.getElementById('spark-toast');
+          if (!d) {
+            d = document.createElement('div');
+            d.id = 'spark-toast';
+            d.style.cssText = 'position:fixed;left:50%;bottom:120px;transform:translateX(-50%);background:#0f172a;color:#fff;font-size:13px;font-weight:700;padding:10px 16px;border-radius:12px;z-index:99999;max-width:88vw;text-align:center;box-shadow:0 4px 14px rgba(0,0,0,.3)';
+            document.body.appendChild(d);
+          }
+          d.textContent = String(t == null ? '' : t);
+          d.style.display = 'block';
+          try { if (d._t) clearTimeout(d._t); } catch (_) {}
+          d._t = setTimeout(function () { try { d.style.display = 'none'; } catch (_) {} }, 3200);
+        } catch (_) {}
+      };
+    }
+    function addMsg(t) { try { toast(t); } catch (_) { try { var m = document.getElementById('spark-msg'); if (m) m.textContent = t; } catch (_) {} } }
+    var addRec = null, addChunks = [], addHolding = false, addLock = false, addT0 = 0;
+    function addPickMime() {
+      try {
+        var cands = ['audio/webm;codecs=opus', 'audio/webm', 'audio/mp4', 'audio/ogg;codecs=opus'];
+        for (var i = 0; i < cands.length; i++) { try { if (window.MediaRecorder && MediaRecorder.isTypeSupported(cands[i])) return cands[i]; } catch (_) {} }
+      } catch (_) {}
+      return '';
+    }
+    async function sparkAddVozFim() {
+      if (!addHolding) return; addHolding = false;
+      try { var _qm1 = document.getElementById('quick-mic'); if (_qm1) _qm1.innerHTML = '&#127908;'; } catch (_) {}
+      if (!addLock && (Date.now() - addT0 < 350)) { addLock = true; addMsg('Gravando sem segurar... toque para enviar.'); return; }
+      addLock = false;
+      try { if (addRec && addRec.state !== 'inactive') addRec.stop(); } catch (_) {}
+    }
+    async function sparkAddVozIni(ev) {
+      if (ev) { try { ev.preventDefault(); } catch (_) {} }
+      if (addLock && addRec && addRec.state !== 'inactive') { addLock = false; addHolding = false; try { addRec.stop(); } catch (_) {} return; }
+      addHolding = true; addChunks = []; addT0 = Date.now();
+      addMsg('Ouvindo... solte para enviar.');
+      try { var _qm0 = document.getElementById('quick-mic'); if (_qm0) _qm0.textContent = 'REC Gravando... solte'; } catch (_) {}
+      try {
+        var stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        var mime = addPickMime();
+        addRec = mime ? new MediaRecorder(stream, { mimeType: mime }) : new MediaRecorder(stream);
+        addRec.ondataavailable = function (e) { try { if (e.data && e.data.size) addChunks.push(e.data); } catch (_) {} };
+        addRec.onstop = async function () {
+          try { stream.getTracks().forEach(function (t) { try { t.stop(); } catch (_) {} }); } catch (_) {}
+          if (!addChunks.length) { addMsg('Nada gravado. Segure e fale.'); return; }
+          try {
+            var blob = new Blob(addChunks, { type: (addRec.mimeType || 'audio/webm') });
+            if (blob.size < 8000) { addMsg('Audio curto: segure o botao e fale por 2 segundos.'); return; }
+            var ext = 'webm';
+            try { if ((addRec.mimeType || '').indexOf('mp4') >= 0) ext = 'm4a'; else if ((addRec.mimeType || '').indexOf('ogg') >= 0) ext = 'ogg'; } catch (_) {}
+            addMsg('Transcrevendo...');
+            var tr = await fetch('/spark-api/ia/transcrever?ext=' + ext, { method: 'POST', headers: { 'Content-Type': blob.type || 'audio/webm' }, body: blob });
+            var tj = await tr.json();
+            if (!tj || !tj.ok) { addMsg('Nao entendi o audio. Fale de novo.'); return; }
+            addMsg('Entendendo lista...');
+            var enr = await fetch('/spark-api/ia/entender', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ texto: tj.texto }) });
+            var en = await enr.json();
+            if (!en || !en.ok || !en.itens || !en.itens.length) { addMsg('Disse: "' + (tj.texto || '').slice(0, 80) + '" - sem itens.'); return; }
+            addMostraIA(en.itens, tj.texto);
+            try { var _qi = document.getElementById('quick-input'); if (_qi) { _qi.value = tj.texto || ''; sparkSugShow((_qi.value || '').trim()); } } catch (_) {}
+          } catch (_) { addMsg('Falha de rede no audio.'); }
+        };
+        addRec.start();
+      } catch (_) { addHolding = false; addMsg('Microfone bloqueado. Libere no cadeado.'); }
+    }
+    try {
+      var qm = document.getElementById('quick-mic');
+      if (qm) { qm.addEventListener('pointerdown', sparkAddVozIni); qm.addEventListener('pointerup', sparkAddVozFim); qm.addEventListener('pointerleave', function () { try { if (addLock) return; } catch (_) {} sparkAddVozFim(); }); }
+    } catch (_) {}
+
+    // Food Safety Interactions
+    function discardAndReplace(itemName, price) {
+      alert(`🗑️ PRODUTO DESCARTADO!
+
+${itemName} foi removido da geladeira para prevenir contaminação.
+
+✅ 1 unidade nova foi adicionada à lista do Savegnago!`);
+      state.items.unshift({
+        id: Date.now(),
+        name: itemName,
+        qty: 1,
+        unit: 'pote',
+        basePrice: price,
+        checked: false,
+        ean: '7891000315544'
+      });
+      switchTab('lista', document.querySelectorAll('.nav-item')[0]);
+      renderShoppingList(); updateKPIs(); try{window.sparkSync&&window.sparkSync()}catch(_){}
+    }
+
+    function suggestRecipeForExpiringItem(ingredient) {
+      document.getElementById('recipe-suggestion-box').style.display = 'block';
+    }
+
+    function markItemOpened(itemName) {
+      alert(`⏱️ CRONÔMETRO DE SEGURANÇA ATIVADO!
+
+${itemName} foi marcado como ABERTO hoje.
+Prazo seguro para consumo na geladeira: 4 dias.
+A IA te avisará no WhatsApp 24 horas antes do limite!`);
+    }
+
+    function simulateExpiryOCR() {
+      document.getElementById('ocr-result-box').style.display = 'block';
+    }
+
+    // AI Modes
+    function setAIMode(mode) {
+      document.querySelectorAll('.ai-mode-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById('btn-mode-' + mode).classList.add('active');
+
+      document.getElementById('ai-panel-audio').style.display = (mode === 'audio' ? 'block' : 'none');
+      document.getElementById('ai-panel-vision').style.display = (mode === 'vision' ? 'block' : 'none');
+      document.getElementById('ai-panel-qr').style.display = (mode === 'qr' ? 'block' : 'none');
+    }
+
+    // Audio Simulator & Real Recorder
+    function toggleAudioRecording() {
+      const btn = document.getElementById('mic-btn');
+      const pill = document.getElementById('mic-status-pill');
+      const box = document.getElementById('audio-transcript-box');
+
+      if (!state.isRecording) {
+        state.isRecording = true;
+        btn.classList.add('recording');
+        pill.textContent = 'Gravando...';
+        pill.className = 'pill pill-red';
+        box.textContent = 'Ouvindo sua voz em português...';
+
+        setTimeout(() => {
+          if (state.isRecording) {
+            simulateAudio(1);
+          }
+        }, 3000);
+      } else {
+        state.isRecording = false;
+        btn.classList.remove('recording');
+        pill.textContent = 'Processando IA';
+        pill.className = 'pill pill-blue';
+      }
+    }
+
+    let pendingEntities = [];
+
+    function simulateAudio(type) {
+      const btn = document.getElementById('mic-btn');
+      const pill = document.getElementById('mic-status-pill');
+      const box = document.getElementById('audio-transcript-box');
+      const jsonContainer = document.getElementById('ai-parsed-json');
+      const codeBox = document.getElementById('parsed-entities-code');
+
+      btn.classList.remove('recording');
+      state.isRecording = false;
+      pill.textContent = 'Transcrito (Whisper)';
+      pill.className = 'pill pill-green';
+
+      if (type === 1) {
+        box.textContent = '"Spark, a maionese estragou e joguei fora. Põe uma maionese nova, duas caixas de suco Natural One de laranja e pão de forma."';
+        pendingEntities = [
+          { name: "Maionese Hellmann's Tradicional 500g", qty: 1, unit: 'pote', basePrice: 9.89, ean: '7891000315544' },
+          { name: 'Suco Natural One Laranja 900ml', qty: 2, unit: 'garrafa', basePrice: 12.90, ean: '7898950481023' },
+          { name: 'Pão de Forma Pullman Tradicional 480g', qty: 1, unit: 'pct', basePrice: 8.70, ean: '7891095000101' }
+        ];
+      } else {
+        box.textContent = '"Spark, amanhã vai ter churrasco. Adiciona carvão vegetal 3kg, 1kg de picanha bovina e duas caixas de cerveja Heineken lata."';
+        pendingEntities = [
+          { name: 'Picanha Bovina Resfriada Friboi 1kg', qty: 1, unit: 'kg', basePrice: 69.90, ean: '7891515001120' },
+          { name: 'Cerveja Heineken Puro Malte 350ml (Pack c/ 12)', qty: 2, unit: 'pack', basePrice: 48.90, ean: '7896045505050' },
+          { name: 'Carvão Vegetal Ecológico 3kg', qty: 1, unit: 'saco', basePrice: 16.50, ean: '7898000112233' }
+        ];
+      }
+
+      codeBox.textContent = JSON.stringify(pendingEntities, null, 2);
+      jsonContainer.style.display = 'block';
+    }
+
+    function commitAIExtractedItems() {
+      pendingEntities.forEach(ent => {
+        state.items.unshift({
+          id: Date.now() + Math.random(),
+          name: ent.name,
+          qty: ent.qty,
+          unit: ent.unit,
+          basePrice: ent.basePrice,
+          checked: false,
+          ean: ent.ean
+        });
+      });
+      document.getElementById('ai-parsed-json').style.display = 'none';
+      switchTab('lista', document.querySelector('.nav-item'));
+      renderShoppingList(); updateKPIs(); try{window.sparkSync&&window.sparkSync()}catch(_){}
+    }
+
+    // Vision Simulator
+    function simulateVisionDetection() {
+      document.getElementById('vision-results-box').style.display = 'block';
+    }
+
+    function addVisionItemsToList() {
+      const itemsToAdd = [
+        { name: 'Leite Integral Piracanjuba 1L', qty: 2, unit: 'cx', basePrice: 4.89, ean: '7898215150012' },
+        { name: 'Ovos Brancos Mantiqueira c/ 20 un', qty: 1, unit: 'bandeja', basePrice: 15.90, ean: '7898912301099' },
+        { name: "Maionese Hellmann's 500g", qty: 1, unit: 'pote', basePrice: 9.89, ean: '7891000315544' }
+      ];
+
+      itemsToAdd.forEach(it => {
+        state.items.unshift({ ...it, id: Date.now() + Math.random(), checked: false });
+      });
+
+      switchTab('lista', document.querySelector('.nav-item'));
+      renderShoppingList(); updateKPIs(); try{window.sparkSync&&window.sparkSync()}catch(_){}
+    }
+
+    // NFC-e Simulator
+    function simulateNFCEExtraction() {
+      document.getElementById('nfce-success-box').style.display = 'block';
+    }
+
+    // WhatsApp Mock Chat
+    function sendSimulatedWAMessage() {
+      const input = document.getElementById('wa-input');
+      const val = input.value.trim();
+      if (!val) return;
+
+      const chatStream = document.getElementById('wa-chat-stream');
+
+      // User Bubble
+      const userBubble = document.createElement('div');
+      userBubble.className = 'wa-bubble wa-incoming';
+      userBubble.innerHTML = `
+        <div style="font-weight: 700; color: #16A34A; font-size: 10px;">Você</div>
+        <div>${val}</div>
+        <div class="wa-time">Agora</div>
+      `;
+      chatStream.appendChild(userBubble);
+      input.value = '';
+
+      // Bot Response after 700ms
+      setTimeout(() => {
+        const botBubble = document.createElement('div');
+        botBubble.className = 'wa-bubble wa-outgoing';
+        botBubble.innerHTML = `
+          <div class="wa-bot-badge">⚡ Spark AI Bot</div>
+          <div>Comando compreendido! Analisei no catálogo do <b>Savegnago RP</b> e verifiquei o status de validade e reposição da despensa! 🛡️🛒</div>
+          <div class="wa-time">Agora</div>
+        `;
+        chatStream.appendChild(botBubble);
+        chatStream.scrollTop = chatStream.scrollHeight;
+      }, 700);
+
+      chatStream.scrollTop = chatStream.scrollHeight;
+    }
+
+    function syncWithWhatsAppGroup() {
+      alert("✅ Webhook conectado! Mensagem de sincronização e relatório de validades disparados para o grupo da família.");
+      switchTab('whatsapp', document.querySelectorAll('.nav-item')[2]);
+    }
+
+    // Checkout Modal
+    function openCheckoutModal() {
+      const market = state.markets[state.activeMarket];
+      const mult = market.multiplier;
+      let total = 0;
+      state.items.forEach(i => {
+        if (!i.checked) total += (sparkEffU(i, mult) * i.qty);
+      });
+
+      const formatted = 'R$ ' + total.toFixed(2).replace('.', ',');
+      document.getElementById('modal-market-name').textContent = market.name;
+      document.getElementById('modal-subtotal').textContent = formatted;
+      document.getElementById('modal-total').textContent = formatted;
+      document.getElementById('checkout-modal').classList.add('active');
+    }
+
+    function closeCheckoutModal() {
+      document.getElementById('checkout-modal').classList.remove('active');
+    }
+
+    async function dispatchOrderNow() {
+      try {
+        const r = await sparkFinalizarCompra(true);
+        alert(r.msg);
+      } catch (_) {
+        alert('Compra anotada no app! (sem conta logada, histórico só neste aparelho)');
+      }
+      closeCheckoutModal();
+    }
+    // Compra completa: TODOS os itens da lista (a compra do QR foi completa), preco real exibido, registra compra+validades, marca tudo como pego
+    async function sparkFinalizarCompra(silencioso) {
+      const tk = localStorage.getItem('spark_token') || '';
+      const mult = (state.markets[state.activeMarket] || {}).multiplier || 1;
+      let total = 0;
+      const itens = [];
+      state.items.forEach(i => { const vu = sparkEffU(i, mult); total += vu * (parseFloat(i.qty) || 1); itens.push({ nome: i.name, qtd: i.qty, valor: Math.round(vu * (parseFloat(i.qty) || 1) * 100) / 100 }); });
+      total = Math.round(total * 100) / 100;
+      if (!itens.length) return { ok: false, msg: 'Lista vazia. Adicione itens antes de finalizar.' };
+      if (!tk) return { ok: false, msg: 'Entre na conta (👤) antes de finalizar — senão o Financeiro não registra.' };
+      const mercado = (state.markets[state.activeMarket] || {}).name || 'Mercado';
+      await fetch('/spark-api/compras', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tk }, body: JSON.stringify({ mercado: mercado, total: total, itens: itens }) });
+      try { await fetch('/spark-api/validades', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tk }, body: JSON.stringify({ itens: itens.map(x => ({ nome: x.nome, qtd: x.qtd })) }) }); } catch (_) {}
+      state.items = [];
+      renderShoppingList(); updateKPIs(); try { window.sparkSync && window.sparkSync(true); } catch (_) {}
+      try { sparkCarregaValidades(); } catch (_) {}
+      try { sparkComprasHist(); } catch (_) {}
+      return { ok: true, msg: `✅ Compra registrada: ${mercado} — R$ ${total.toFixed(2).replace('.', ',')} (${itens.length} itens). Foi p/ despesa abaixo e a lista liberou! ✅` };
+    }
+    async function sparkMostraUltimaCompra() {
+      try {
+        const tk = localStorage.getItem('spark_token') || '';
+        const el = document.getElementById('spark-ultima-compra');
+        if (!el) return;
+        if (!tk) { el.innerHTML = '🧾 <b>Total gasto na compra:</b> entre na conta (👤) pra ver.'; return; }
+        const c = await fetch('/spark-api/compras', { headers: { 'Authorization': 'Bearer ' + tk } }).then(x => x.json()).catch(() => null);
+        if (!c || !c.ok || !(c.compras || []).length) { el.innerHTML = '🧾 <b>Total gasto na compra:</b> nenhuma ainda. Finalize acima.'; return; }
+        const u = c.compras[0];
+        const d = new Date(u.criado * 1000).toLocaleDateString('pt-BR');
+        el.innerHTML = '🧾 <b>Total gasto na compra:</b> R$ ' + parseFloat(u.total).toFixed(2).replace('.', ',') + ' · ' + String(u.mercado).replace(/[<>&]/g, '') + ' · ' + d + ' <span style="color:#16a34a;">(no Financeiro ✅)</span>';
+      } catch (_) {}
+    }
+    async function sparkFinalizarUnificado() {
+      const box = document.getElementById('spark-final-msg');
+      try { if (box) box.textContent = 'Finalizando...'; } catch (_) {}
+      try {
+        const r = await sparkFinalizarCompra(false);
+        try { if (box) box.textContent = r.msg; } catch (_) {}
+        if (!r.ok) alert(r.msg); else { try { sparkMostraUltimaCompra(); } catch (_) {} try { sparkComprasHist(); } catch (_) {} }
+      } catch (_) { try { if (box) box.textContent = 'Falha de rede. Tente de novo.'; } catch (_) {} }
+    }
+    function sparkNotaAqui(tipo) {
+      try {
+        if (tipo === 'xml') { const x = document.getElementById('spark-xml'); if (x) { x.click(); return; } }
+        const f = document.getElementById('spark-nota'); if (f) f.click();
+        else alert('Abra a aba do Agente (IA) uma vez para ativar o leitor, depois volte aqui.');
+      } catch (_) {}
+    }
+    // Despensa x Geladeira (completo e adaptativo): fechado=despensa, aberto=geladeira com contagem PAO
+    function sparkLinhaVal(v, aberto) {
+      const nm = String(v.nome).replace(/[<>&]/g, '');
+      const stTx = v.status === 'DANGER' ? 'Descartar' : (v.status === 'WARN' ? 'Atenção' : 'OK');
+      const stCor = v.status === 'DANGER' ? '#dc2626' : (v.status === 'WARN' ? '#d97706' : '#16a34a');
+      let info = 'x' + v.qtd;
+      if (aberto) info += ' · aberto há ' + (v.dias_aberto != null ? v.dias_aberto : 0) + 'd de ' + v.prazo_dias + 'd';
+      else info += v.restam != null ? ' · vale ~' + v.restam + 'd' : '';
+      info += ' · <b style="color:' + stCor + '">' + stTx + '</b>';
+      return '<div style="border-bottom:1px solid #f1f5f9;padding:7px 2px;font-size:11px;display:flex;gap:6px;align-items:center;justify-content:space-between;flex-wrap:wrap;">'
+        + '<div style="flex:1;min-width:140px;"><b>' + nm + '</b><br><span style="color:#64748b;">' + info + '</span></div>'
+        + '<div style="display:flex;gap:4px;flex-wrap:wrap;">'
+        + (!aberto ? '<button onclick="sparkValAbrir(' + v.id + ',' + v.qtd + ')" style="font-size:10px;border:1px solid #16a34a;background:#f0fdf4;color:#15803d;border-radius:8px;padding:6px 10px;font-weight:700;">✅ Abri</button>' : '')
+        + '<button onclick="sparkValConsumir(' + v.id + ',' + v.qtd + ')" style="font-size:10px;border:1px solid #fecaca;background:#fff;border-radius:8px;padding:6px 10px;">Consumido</button>'
+        + '</div></div>';
+    }
+    async function sparkCarregaValidades() {
+      try {
+        const tk = localStorage.getItem('spark_token') || '';
+        if (!tk) return;
+        const H = { 'Authorization': 'Bearer ' + tk };
+        const r = await fetch('/spark-api/validades', { headers: H }).then(x => x.json()).catch(() => null);
+        if (!r || !r.ok) return;
+        let compraH = '';
+        try {
+          const c = await fetch('/spark-api/compras', { headers: H }).then(x => x.json()).catch(() => null);
+          if (c && c.ok && c.compras && c.compras.length) {
+            const u = c.compras[0];
+            const d = new Date(u.criado * 1000).toLocaleDateString('pt-BR');
+            const n = (u.itens || []).length;
+            compraH = '<div style="font-size:11px;color:#475569;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:7px 9px;margin-bottom:8px;">🧾 <b>Despesa da compra:</b> ' + String(u.mercado).replace(/[<>&]/g, '') + ' — <b>R$ ' + parseFloat(u.total).toFixed(2).replace('.', ',') + '</b> · ' + d + ' · ' + n + ' itens <span style="color:#16a34a;">(no Financeiro ✅)</span></div>';
+          }
+        } catch (_) {}
+        const host = document.getElementById('tab-safety');
+        if (!host) return;
+        let box = document.getElementById('spark-val-reais');
+        if (!box) {
+          box = document.createElement('div');
+          box.id = 'spark-val-reais';
+          host.insertBefore(box, host.firstChild);
+        }
+        const abertos = r.validades.filter(v => v.aberto);
+        const fechados = r.validades.filter(v => !v.aberto);
+        function uniRow(v) {
+          const nm = String(v.nome).replace(/[<>&]/g, '');
+          const fim = !!v.consumido, ab = !!v.aberto;
+          const pill = fim ? '<span class="pill" style="background:#f1f5f9;color:#64748b;">✔ consumido</span>'
+            : (ab ? '<span class="pill pill-blue">🧊 aberto</span>' : '<span class="pill pill-green">🥫 fechado</span>');
+          const stTx = v.status === 'DANGER' ? 'Descartar' : (v.status === 'WARN' ? 'Atenção' : (fim ? '' : 'OK'));
+          const stCor = v.status === 'DANGER' ? '#dc2626' : (v.status === 'WARN' ? '#d97706' : '#16a34a');
+          let info = 'x' + v.qtd;
+          if (fim) { try { const d = new Date(v.consumido_em * 1000).toLocaleDateString('pt-BR'); info += ' · consumido em ' + d; } catch (_) {} }
+          else if (ab) info += ' · aberto há ' + (v.dias_aberto != null ? v.dias_aberto : 0) + 'd de ' + v.prazo_dias + 'd';
+          else info += v.restam != null ? ' · vale ~' + v.restam + 'd' : '';
+          return '<div class="list-item"' + (fim ? ' style="opacity:.55;"' : '') + '>'
+            + '<div class="item-left">'
+            + '<img data-fi="' + nm + '" class="spark-fi" loading="lazy" onerror="this.style.display=\'none\'" style="width:34px;height:34px;object-fit:cover;border-radius:8px;flex:none;display:none;">'
+            + '<div class="item-checkbox ' + (ab && !fim ? 'checked' : '') + '"' + (!fim ? ' onclick="sparkValAbrir(' + v.id + ',' + v.qtd + ')"' : '') + '>' + (ab && !fim ? '✓' : '') + '</div>'
+            + '<div class="item-info"><span class="item-name">' + nm + '</span>'
+            + '<span class="item-meta"><span>' + info + '</span>' + (stTx ? '<span>•</span><span style="color:' + stCor + ';font-weight:700;">' + stTx + '</span>' : '') + '</span>'
+            + '<div style="margin-top:2px;">' + pill + '</div>'
+            + '</div></div>'
+            + (!fim ? '<div style="display:flex;align-items:center;gap:4px">'
+            + (!ab ? '<button onclick="sparkValAbrir(' + v.id + ',' + v.qtd + ')" style="border:1px solid #bbf7d0;background:#f0fdf4;color:#15803d;border-radius:8px;min-width:30px;height:28px;font-size:11px;font-weight:700;">✅</button>' : '')
+            + '<button onclick="sparkValConsumir(' + v.id + ',' + v.qtd + ')" style="border:1px solid #fecaca;background:#fff;border-radius:8px;min-width:30px;height:28px;font-size:11px;">✔</button>'
+            + '</div>' : '')
+            + '</div>';
+        }
+        const nA = r.validades.filter(v => v.aberto && !v.consumido).length;
+        const nF = r.validades.filter(v => !v.aberto && !v.consumido).length;
+        const nC = r.validades.filter(v => v.consumido).length;
+        let h = compraH;
+        h += '<div class="card" style="border:2px solid #0ea5e9;"><div class="card-title"><span>📋 Lista completa (' + r.validades.length + ')</span><span class="pill pill-blue">comprou + tem + abriu</span></div>';
+        h += '<div style="font-size:10px;color:#64748b;margin-bottom:4px;">Tudo que entrou (compra + Já tenho em casa), com estado. ✅ abre · ✔ consome (fica no histórico).</div>';
+        h += '<div style="display:flex;gap:6px;flex-wrap:wrap;font-size:11px;margin-bottom:6px;"><span>🧊 ' + nA + ' abertos</span><span>🥫 ' + nF + ' fechados</span><span>✔ ' + nC + ' consumidos</span></div>';
+        h += '<div id="spark-dias-linha" style="font-size:11px;background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:7px 9px;margin-bottom:6px;">⏳ Calculando dias de refeição...</div>';
+        try { sparkResumoDias(); } catch (_) {}
+        h += '<div style="margin:0 0 4px;"><button onclick="sparkTenhoEmCasa()" style="font-size:11px;background:#fff;border:1px dashed #16a34a;color:#15803d;border-radius:8px;padding:7px 10px;font-weight:700;">➕ Já tenho em casa (carne, mistura...)</button></div>';
+        if (!r.validades.length) h += '<div style="font-size:11px;color:#64748b;">Vazio. Finalize uma compra ou leia a nota.</div>';
+        r.validades.forEach(v => { h += uniRow(v); });
+        h += '</div>';
+        box.innerHTML = h;
+        try { sparkFotosFill(box); } catch (_) {}
+      } catch (_) {}
+    }
+    function sparkPerguntaQtd(oq, tem) {
+      try {
+        if ((parseFloat(tem) || 1) <= 1) return 1;
+        const t = prompt(oq + ' (tem ' + tem + ')', '1');
+        if (t === null || t === undefined) return 0;
+        return parseFloat(String(t).replace(',', '.')) || 0;
+      } catch (_) { return 0; }
+    }
+    async function sparkValAbrir(id, tem) {
+      try {
+        const q = sparkPerguntaQtd('Quantos abriu?', tem);
+        if (!(q > 0)) return;
+        const tk = localStorage.getItem('spark_token') || '';
+        await fetch('/spark-api/validades/abrir', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tk }, body: JSON.stringify({ id: id, qtd: q }) });
+        sparkCarregaValidades();
+      } catch (_) {}
+    }
+    async function sparkValConsumir(id, tem) {
+      try {
+        const q = sparkPerguntaQtd('Quantos consumiu/usou?', tem);
+        if (!(q > 0)) return;
+        const tk = localStorage.getItem('spark_token') || '';
+        await fetch('/spark-api/validades/consumir', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tk }, body: JSON.stringify({ id: id, qtd: q }) });
+        sparkCarregaValidades();
+      } catch (_) {}
+    }
+
+    // ---------- Receitas com o que tem ----------
+    async function sparkRecAPI(plano, ia) {
+      const tk = localStorage.getItem('spark_token') || '';
+      const r = await fetch('/spark-api/receitas/sugerir', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tk }, body: JSON.stringify({ plano: plano, ia: !!ia }) }).then(x => x.json()).catch(() => null);
+      return r;
+    }
+    function sparkRecRow(z, idx) {
+      const yt = 'https://www.youtube.com/results?search_query=' + encodeURIComponent('receita ' + z.nome);
+      const pc = z.pct >= 80 ? '#16a34a' : (z.pct >= 50 ? '#d97706' : '#64748b');
+      const img = z.foto ? '<img src="' + z.foto + '" loading="lazy" onerror="this.style.display=\'none\'" style="width:56px;height:56px;object-fit:cover;border-radius:10px;flex:none;">' : '';
+      return '<div style="border-bottom:1px solid #f1f5f9;padding:8px 2px;">'
+        + '<div style="display:flex;gap:8px;align-items:center;">' + img
+        + '<div style="flex:1;min-width:0;"><b style="font-size:12px;">' + String(z.nome).replace(/[<>&]/g, '') + '</b><br>'
+        + '<span style="font-size:10px;color:#64748b;">⏱ ' + (z.tempo || '?') + 'min · ' + (z.dif || '') + ' · ' + (z.porcoes || '?') + ' porções</span><br>'
+        + '<span style="font-size:11px;font-weight:800;color:' + pc + '">' + z.pct + '% com o que tem</span>'
+        + (z.urg ? ' <span style="font-size:10px;color:#d97706;">🔥 usa o que vence!</span>' : '') + '</div></div>'
+        + '<div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:6px;">'
+        + '<button onclick="sparkRecVer(' + idx + ')" style="font-size:10px;border:1px solid #bae6fd;background:#fff;border-radius:8px;padding:5px 9px;">👁 Ver</button>'
+        + '<a href="' + yt + '" target="_blank" style="font-size:10px;border:1px solid #fecaca;background:#fff;border-radius:8px;padding:5px 9px;text-decoration:none;">▶ Vídeo</a>'
+        + (z.falta.length ? '<button onclick="sparkRecFalta(' + idx + ')" style="font-size:10px;border:1px solid #16a34a;background:#f0fdf4;color:#15803d;border-radius:8px;padding:5px 9px;font-weight:700;">➕ Falta na lista</button>' : '<span style="font-size:10px;color:#16a34a;font-weight:700;">✅ tudo em casa</span>')
+        + '</div>'
+        + '<div id="spark-rec-d' + idx + '" style="display:none;font-size:11px;margin-top:6px;background:#f8fafc;border-radius:8px;padding:7px 9px;">'
+        + (z.tem.length ? '<div>✅ Tem: ' + z.tem.map(t => String(t).replace(/[<>&]/g, '')).join(' · ') + '</div>' : '')
+        + ((z.troca || []).length ? '<div>🔄 Adapta: ' + z.troca.map(t => String(t).replace(/[<>&]/g, '')).join(' · ') + '</div>' : '')
+        + ((z.tempero || []).length ? '<div>🌿 Tempero (dispensa): ' + z.tempero.map(t => String(t).replace(/[<>&]/g, '')).join(' · ') + '</div>' : '')
+        + (z.falta.length ? '<div>🛒 Falta: ' + z.falta.map(t => String(t).replace(/[<>&]/g, '')).join(' · ') + '</div>' : '')
+        + (z.preparo.length ? '<div style="margin-top:4px;">👨‍🍳 ' + z.preparo.map((p, i) => (i + 1) + '. ' + String(p).replace(/[<>&]/g, '')).join('<br>') + '</div>' : '')
+        + '<div style="margin-top:6px;"><a href="https://sparkbr.online/saude/" target="_blank" style="font-size:10px;color:#0284c7;">↗ Abrir receita no Saúde (mesmo banco, com fotos)</a></div>'
+        + '</div></div>';
+    }
+    async function sparkReceitas(modo) {
+      const box = document.getElementById('spark-rec-lista');
+      const iab = document.getElementById('spark-rec-ia');
+      try { if (box) box.innerHTML = '<div style="font-size:11px;color:#64748b;">Cruzando com despensa + geladeira...</div>'; } catch (_) {}
+      try {
+        const plano = (modo === 'mes') ? 'mes' : 'semana';
+        const r = await sparkRecAPI(plano, false);
+        if (!r || !r.ok) { if (box) box.innerHTML = '<div style="font-size:11px;">Entre na conta (👤) pra ver receitas do teu estoque.</div>'; return; }
+        window._recData = r;
+        if (modo === 'hoje') {
+          const dia = sparkDia3();
+          if (!dia) { if (box) box.innerHTML = '<div style="font-size:11px;">Sem dados ainda.</div>'; return; }
+          let h = '<div style="font-size:12px;font-weight:800;margin-bottom:4px;">🍽 Hoje p/ 3 pessoas (família) — só com o que tem</div>';
+          const sai = {};
+          dia.forEach(s => {
+            if (!s.z) { h += '<div style="font-size:11px;color:#64748b;margin:6px 0;"><b>' + s.titulo + ':</b> nada viável hoje.</div>'; return; }
+            const z = s.z, yt = 'https://www.youtube.com/results?search_query=' + encodeURIComponent('receita ' + z.nome);
+            const ok = z.pct >= 80;
+            h += '<div style="border:1px solid #e2e8f0;border-radius:10px;padding:8px;margin:6px 0;">'
+              + '<div style="font-size:12px;font-weight:800;">' + s.titulo + '</div>'
+              + '<div style="display:flex;gap:8px;align-items:center;margin-top:4px;">'
+              + (z.foto ? '<img src="' + z.foto + '" loading="lazy" onerror="this.style.display=\'none\'" style="width:52px;height:52px;object-fit:cover;border-radius:10px;flex:none;">' : '')
+              + '<div style="flex:1;"><b style="font-size:12px;">' + String(z.nome).replace(/[<>&]/g, '') + '</b><br>'
+              + '<span style="font-size:10px;color:#64748b;">rende ' + s.esc.por + ' → p/ 3: <b>×' + String(s.esc.f).replace('.', ',') + '</b> · ' + z.pct + '% com o que tem' + (ok ? '' : ' · ⚠️ falta: ' + z.falta.map(t => String(t).replace(/[<>&]/g, '')).join(', ')) + '</span></div></div>'
+              + '<div style="font-size:10px;color:#475569;margin-top:4px;">📦 Sai do estoque (≈): ' + z.tem.map(t => String(sparkQtdEscala(t, s.esc.f)).replace(/[<>&]/g, '')).join(' · ') + '</div>'
+              + '<div style="display:flex;gap:4px;margin-top:6px;"><a href="' + yt + '" target="_blank" style="font-size:10px;border:1px solid #fecaca;background:#fff;border-radius:8px;padding:5px 9px;text-decoration:none;">▶ Vídeo</a>'
+              + (z.falta.length ? '<button onclick="sparkRecFaltaIdx(\'' + z.id + '\')" style="font-size:10px;border:1px solid #16a34a;background:#f0fdf4;color:#15803d;border-radius:8px;padding:5px 9px;font-weight:700;">➕ Falta na lista</button>' : '<span style="font-size:10px;color:#16a34a;font-weight:700;">✅ tudo em casa</span>') + '</div></div>';
+            z.tem.forEach(t => { sai[t] = true; });
+          });
+          if (box) box.innerHTML = h;
+          window._dia3 = dia;
+          return;
+        }
+        let arr = r.pronto, tit = '✅ Dá pra fazer AGORA (' + arr.length + ')';
+        if (modo === 'quase') { arr = r.falta_pouco; tit = '🛒 Falta pouco (' + arr.length + ')'; }
+        if (modo === 'semana' || modo === 'mes') { arr = r.plano; tit = (modo === 'mes' ? '🗓 Plano do mês (' : '📅 Plano da semana (') + arr.length + ')'; }
+        window._recView = arr;
+        let h = '<div style="font-size:12px;font-weight:800;margin-bottom:4px;">' + tit + ' · estoque: ' + r.estoque_n + ' itens</div>';
+        if (!arr.length) h += '<div style="font-size:11px;color:#64748b;">Nada aqui ainda — finaliza uma compra que eu preencho.</div>';
+        arr.forEach((z, i) => { h += sparkRecRow(z, i); });
+        if ((modo === 'semana' || modo === 'mes') && r.comprar.length) {
+          h += '<div style="font-size:11px;margin-top:8px;background:#fffbeb;border-radius:8px;padding:7px 9px;">🧾 Pro plano todo falta comprar: ' + r.comprar.map(c => String(c[0]).replace(/[<>&]/g, '')).join(' · ') + '<div style="margin-top:6px;"><button onclick="sparkRecPlanoComprar()" style="font-size:11px;background:#16a34a;color:#fff;border:none;border-radius:8px;padding:8px 12px;font-weight:700;">➕ Jogar tudo na lista</button></div></div>';
+        }
+        if (box) box.innerHTML = h;
+        try {
+          if (window._recIAok) { if (iab && window._recIAtxt) iab.innerHTML = window._recIAtxt; }
+          else if (!window._recIArun) {
+          window._recIArun = true;
+          if (iab) iab.innerHTML = '🤖 Chef IA pensando no teu estoque...';
+          sparkRecAPI(plano, true).then(rr => {
+            try {
+              window._recIAok = !!(rr && rr.ia_ok && rr.ia);
+              if (rr && rr.ia_ok && rr.ia) {
+                const ia = rr.ia;
+                iab.innerHTML = '🤖 <b>Hoje:</b> ' + String(ia.hoje || '').replace(/[<>&]/g, '')
+                  + '<br>💡 ' + ((ia.dicas || []).map(d => String(d).replace(/[<>&]/g, '')).join('<br>💡 '))
+                  + (ia.trocas && ia.trocas.length ? '<br>🔄 ' + ia.trocas.map(t => String(t).replace(/[<>&]/g, '')).join('<br>🔄 ') : '')
+                  + (ia.durar ? '<br>⏳ ' + String(ia.durar).replace(/[<>&]/g, '') : '')
+                  + (ia.mais && ia.mais.length ? '<br>➕ ' + ia.mais.map(t => String(t).replace(/[<>&]/g, '')).join('<br>➕ ') : '');
+                try { window._recIAtxt = iab.innerHTML; } catch (_) {}
+              } else if (iab) iab.innerHTML = '🤖 Chef IA ocupado agora — as listas acima já valem pelo estoque.';
+            } catch (_) {}
+          }).finally(() => { try { window._recIArun = false; } catch (_) {} });
+          }
+        } catch (_) {}
+      } catch (_) { try { if (box) box.innerHTML = '<div style="font-size:11px;">Falha de rede.</div>'; } catch (_) {} }
+    }
+    function sparkRecEvento(id, tipo) {
+      try {
+        const tk = localStorage.getItem('spark_token') || '';
+        if (!tk || !id) return;
+        fetch('/spark-api/receitas/evento', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tk }, body: JSON.stringify({ id: id, tipo: tipo }) }).catch(() => {});
+      } catch (_) {}
+    }
+    function sparkRecVer(idx) {
+      try {
+        const d = document.getElementById('spark-rec-d' + idx);
+        if (d) d.style.display = (d.style.display === 'none' ? 'block' : 'none');
+        const t = (window._recView || [])[idx];
+        if (t && t.id) sparkRecEvento(t.id, 'ver');
+      } catch (_) {}
+    }
+    async function sparkRecAddNomes(nomes) {
+      try {
+        const st = (typeof state !== 'undefined') ? state : window.state;
+        if (!st) return 0;
+        let n = 0;
+        for (const nm of nomes) {
+          try {
+            let base = 0;
+            try {
+              const pr = await fetch('/spark-api/precos?item=' + encodeURIComponent(String(nm).toLowerCase())).then(x => x.json()).catch(() => null);
+              if (pr && pr.media) base = parseFloat(pr.media) || 0;
+            } catch (_) {}
+            st.items.unshift({ id: Date.now() + Math.random() + n, name: String(nm).slice(0, 60), qty: 1, unit: 'un', basePrice: base, checked: false, ean: '' });
+            n++;
+          } catch (_) {}
+        }
+        try { renderShoppingList(); } catch (_) {}
+        try { if (window.updateKPIs) updateKPIs(); } catch (_) {}
+        try { if (window.sparkSync) sparkSync(true); } catch (_) {}
+        return n;
+      } catch (_) { return 0; }
+    }
+    async function sparkRecFalta(idx) {
+      try {
+        const t = (window._recView || [])[idx];
+        if (!t || !t.falta.length) return;
+        if (t.id) sparkRecEvento(t.id, 'falta');
+        const n = await sparkRecAddNomes(t.falta);
+        alert(n + ' faltantes na lista! (' + t.nome + ')');
+      } catch (_) {}
+    }
+    async function sparkRecFaltaIdx(id) {
+      try {
+        const pool = ((window._recData.pronto || []).concat(window._recData.falta_pouco || [], window._recData.plano || []));
+        const t = pool.find(x => x.id === id);
+        if (!t || !t.falta.length) return;
+        if (t.id) sparkRecEvento(t.id, 'falta');
+        const n = await sparkRecAddNomes(t.falta);
+        alert(n + ' faltantes na lista! (' + t.nome + ')');
+      } catch (_) {}
+    }
+    async function sparkRecPlanoComprar() {
+      try {
+        const r = window._recData;
+        if (!r || !r.comprar.length) return;
+        const n = await sparkRecAddNomes(r.comprar.map(c => c[0]));
+        alert(n + ' itens do plano na lista!');
+      } catch (_) {}
+    }
+    async function sparkTenhoEmCasa() {
+      try {
+        const nome = prompt('O que tu já tem em casa? (ex: carne moida, mistura)', '');
+        if (!nome || nome.trim().length < 2) return;
+        let qtd = prompt('Quantos? (ex: 2 ou 1,5)', '1');
+        if (qtd === null) return;
+        qtd = parseFloat(String(qtd).replace(',', '.')) || 1;
+        const tk = localStorage.getItem('spark_token') || '';
+        const r = await fetch('/spark-api/validades', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tk }, body: JSON.stringify({ itens: [{ nome: nome.trim().slice(0, 60), qtd: qtd }] }) }).then(x => x.json()).catch(() => null);
+        if (r && r.ok) { try { if (window.sparkCarregaValidades) sparkCarregaValidades(); } catch (_) {} alert('Na despensa! ✅'); }
+        else alert('Entre na conta (👤) primeiro.');
+      } catch (_) {}
+    }
+    function sparkEscala(z) {
+      try {
+        const por = parseFloat(z.porcoes) || 2;
+        let f = 3 / por;
+        f = Math.max(0.3, Math.round(f * 2) / 2);
+        return { por: por, f: f };
+      } catch (_) { return { por: 2, f: 1.5 }; }
+    }
+    function sparkQtdEscala(linha, f) {
+      try {
+        const m = String(linha).match(/^\s*(\d+(?:[.,]\d+)?)(\s*\/\s*\d+(?:[.,]\d+)?)?\s*([a-zA-ZçãõáéíóúâêôàüÇÃÕÁÉÍÓÚÂÊÔÀÜ]+)?/);
+        if (!m) return String(linha);
+        let q = parseFloat(m[1].replace(',', '.'));
+        if (m[2]) { const d = parseFloat(m[2].replace(/[^\d.,]/g, '').replace(',', '.')); if (d > 0) q = q / d; }
+        const un = (m[3] || '').trim();
+        let v = q * f;
+        v = v >= 10 ? Math.round(v) : Math.round(v * 2) / 2;
+        return String(v).replace('.', ',') + (un ? ' ' + un : '') + ' ' + String(linha).slice(m[0].length).trim();
+      } catch (_) { return String(linha); }
+    }
+    function sparkRefeicao(tag, usados, pool) {
+      try {
+        const cand = pool.filter(z => (z.tags || []).includes(tag) && !usados.has(z.id));
+        const z = cand[0] || pool.find(z => !usados.has(z.id));
+        if (z) usados.add(z.id);
+        return z || null;
+      } catch (_) { return null; }
+    }
+    function sparkDia3() {
+      try {
+        const r = window._recData;
+        if (!r) return null;
+        const pool = (r.pronto || []).concat(r.falta_pouco || []).filter(z => z.pct >= 50);
+        const usados = new Set();
+        const slots = [
+          ['☀️ Café da manhã', 'cafe-da-manha', 'lanche'],
+          ['🍛 Almoço', 'almoco', 'jantar'],
+          ['☕ Café da tarde', 'lanche', 'cafe-da-manha'],
+          ['🌙 Janta', 'jantar', 'almoco']
+        ];
+        return slots.map(([titulo, t1, t2]) => {
+          let z = sparkRefeicao(t1, usados, pool) || sparkRefeicao(t2, usados, pool);
+          if (!z) return { titulo: titulo, z: null };
+          const e = sparkEscala(z);
+          return { titulo: titulo, z: z, esc: e };
+        });
+      } catch (_) { return null; }
+    }
+    async function sparkResumoDias() {
+      try {
+        const tk = localStorage.getItem('spark_token') || '';
+        const el = document.getElementById('spark-dias-linha');
+        if (!el || !tk) return;
+        const r = await fetch('/spark-api/despensa/resumo', { headers: { 'Authorization': 'Bearer ' + tk } }).then(x => x.json()).catch(() => null);
+        if (!r || !r.ok || !r.dias_media) { el.innerHTML = '⏳ Sem base p/ estimar ainda.'; return; }
+        el.innerHTML = '⏳ Dá ≈ <b>' + r.dias_media + ' dias</b> de refeição p/ 3 (' + r.refeicoes_total + ' refeições) · acaba 1º: <b>' + String((r.primeiro || {}).nome || '').replace(/[<>&]/g, '') + '</b> (~' + ((r.primeiro || {}).dias || '?') + 'd) <span style="color:#0284c7;">· IA diz como esticar abaixo nas receitas 👇</span>';
+      } catch (_) {}
+    }
+    async function sparkDiario() {
+      try {
+        const box = document.getElementById('spark-rec-lista');
+        if (box) box.innerHTML = '<div style="font-size:11px;color:#64748b;">Simulando dia a dia no estoque...</div>';
+        const tk = localStorage.getItem('spark_token') || '';
+        const r = await fetch('/spark-api/receitas/diario', { headers: { 'Authorization': 'Bearer ' + tk } }).then(x => x.json()).catch(() => null);
+        if (!r || !r.ok) { if (box) box.innerHTML = '<div style="font-size:11px;">Entre na conta (👤).</div>'; return; }
+        const tn = { 'cafe-da-manha': '☀️ Café', 'almoco': '🍛 Almoço', 'lanche': '☕ Tarde', 'jantar': '🌙 Janta' };
+        let h = '<div style="font-size:12px;font-weight:800;margin-bottom:4px;">📆 Dá ≈ <b>' + r.dias_completos + ' dias</b> completos p/ 3 · acaba no dia ' + r.acaba_dia + '</div>';
+        r.dias.forEach(d => {
+          const ok = d.refs.every(p => p.nome);
+          h += '<div style="border:1px solid #e2e8f0;border-radius:10px;padding:8px;margin:6px 0;' + (ok ? '' : 'opacity:.75;') + '">'
+            const kd = d.kcal_dia || 0;
+            const kst = kd >= 1800 ? '💪 na meta' : (kd > 0 ? '⚠️ leve (' + kd + ' kcal/pessoa, meta ≈2.230)' : '');
+            + '<div style="font-size:12px;font-weight:800;">Dia ' + d.dia + (ok ? ' ✅' : ' ⚠️ incompleto') + ' <span style="font-size:10px;color:#64748b;">≈' + kd + ' kcal/dia ' + kst + '</span></div>';
+          d.refs.forEach(p => {
+            if (!p.nome) { h += '<div style="font-size:11px;color:#b91c1c;">• ' + (tn[p.tag] || p.tag) + ': sem viável — comprar p/ repor</div>'; return; }
+            const yt = 'https://www.youtube.com/results?search_query=' + encodeURIComponent('receita ' + p.nome);
+            h += '<div style="font-size:11px;margin-top:3px;">• <b>' + (tn[p.tag] || p.tag) + ':</b> ' + String(p.nome).replace(/[<>&]/g, '') + ' (×' + String(p.fator).replace('.', ',') + ') <a href="' + yt + '" target="_blank" style="color:#0284c7;">▶</a></div>';
+          });
+          h += '</div>';
+        });
+        if (r.zerados.length) h += '<div style="font-size:11px;margin-top:8px;background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:7px 9px;">🛒 <b>P/ repor e continuar:</b> ' + r.zerados.map(s => String(s).replace(/[<>&]/g, '')).join(' · ') + '<div style="margin-top:6px;"><button onclick="sparkRecAddRep()" style="font-size:11px;background:#16a34a;color:#fff;border:none;border-radius:8px;padding:8px 12px;font-weight:700;">➕ Jogar reposição na lista</button></div></div>';
+        if (box) box.innerHTML = h;
+        window._diarioRep = r.zerados || [];
+      } catch (_) {}
+    }
+    async function sparkRecAddRep() {
+      try {
+        const n = await sparkRecAddNomes(window._diarioRep || []);
+        alert(n + ' itens de reposição na lista!');
+      } catch (_) {}
+    }
+    async function sparkComprasHist() {
+      try {
+        const tk = localStorage.getItem('spark_token') || '';
+        const el = document.getElementById('spark-hist-lista');
+        if (!el) return;
+        if (!tk) { el.innerHTML = '<div style="font-size:11px;">Entre na conta (👤).</div>'; return; }
+        const c = await fetch('/spark-api/compras', { headers: { 'Authorization': 'Bearer ' + tk } }).then(x => x.json()).catch(() => null);
+        if (!c || !c.ok || !(c.compras || []).length) { el.innerHTML = '<div style="font-size:11px;color:#64748b;">Nenhuma finalizada ainda.</div>'; return; }
+        el.innerHTML = c.compras.map((cp, ix) =>
+          '<div style="border-bottom:1px solid #f1f5f9;padding:7px 2px;font-size:11px;">'
+          + '<div style="display:flex;justify-content:space-between;gap:6px;flex-wrap:wrap;"><b>' + String(cp.mercado).replace(/[<>&]/g, '') + '</b><b style="color:#16a34a;">R$ ' + parseFloat(cp.total).toFixed(2).replace('.', ',') + '</b></div>'
+          + '<div style="color:#64748b;">' + new Date(cp.criado * 1000).toLocaleDateString('pt-BR') + ' · ' + (cp.itens || []).length + ' itens <button onclick="sparkHistVer(' + ix + ')" style="font-size:10px;color:#0284c7;background:none;border:none;">ver</button></div>'
+          + '<div id="spark-hist-d' + ix + '" style="display:none;color:#475569;">' + (cp.itens || []).map(t => String(t.nome || t.name || '').replace(/[<>&]/g, '') + ' x' + (t.qtd || t.qty || 1)).join(' · ') + '</div></div>'
+        ).join('');
+      } catch (_) {}
+    }
+    function sparkHistVer(ix) {
+      try {
+        const d = document.getElementById('spark-hist-d' + ix);
+        if (d) d.style.display = (d.style.display === 'none' ? 'block' : 'none');
+      } catch (_) {}
+    }
+    function sparkFotoCache() { try { return JSON.parse(localStorage.getItem('spark_fotos') || '{}'); } catch (_) { return {}; } }
+    function sparkFotosFill(box) {
+      try {
+        const tk = localStorage.getItem('spark_token') || '';
+        if (!tk || !box) return;
+        const cache = sparkFotoCache();
+        const imgs = [...box.querySelectorAll('img.spark-fi')];
+        const nomes = [...new Set(imgs.map(i => i.getAttribute('data-fi')).filter(n => n && !cache[n]))];
+        imgs.forEach(i => { const u = cache[i.getAttribute('data-fi')]; if (u) { i.src = u; i.style.display = 'block'; } });
+        if (!nomes.length) return;
+        fetch('/spark-api/foto/lote', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tk }, body: JSON.stringify({ nomes: nomes }) }).then(x => x.json()).then(j => {
+          try {
+            const c2 = sparkFotoCache();
+            Object.keys((j && j.fotos) || {}).forEach(k => { if (j.fotos[k]) c2[k] = j.fotos[k]; });
+            try { localStorage.setItem('spark_fotos', JSON.stringify(c2)); } catch (_) {}
+            imgs.forEach(i => { const u = (j.fotos || {})[i.getAttribute('data-fi')]; if (u) { i.src = u; i.style.display = 'block'; } });
+          } catch (_) {}
+        }).catch(() => {});
+      } catch (_) {}
+    }
+    function dispatchOrderViaWhatsApp() {
+      let msg = `*PEDIDO AUTOMATIZADO - SPARK MERCADO AI*%0A`;
+      msg += `Supermercado: ${state.markets[state.activeMarket].name}%0A%0A`;
+      msg += `*ITENS DO PEDIDO:*%0A`;
+      state.items.forEach(i => {
+        if (!i.checked) {
+          msg += `• ${i.qty}x ${i.name} (EAN: ${i.ean})%0A`;
+        }
+      });
+      msg += `%0A*Total Estimado:* ${document.getElementById('kpi-total').textContent}%0A`;
+      msg += `Local de Entrega: Região de Ribeirão Preto / Cravinhos, SP`;
+
+      window.open(`https://api.whatsapp.com/send?phone=5516999999999&text=${msg}`, '_blank');
+      closeCheckoutModal();
+    }
+
+    
+  </script>
+<script src="spark_real.js?v=20261011g"></script><script>window.SPARK_GOOGLE_ID='468525623041-knelde8kgjcmhcaa5hqjv0i3pns6ldpl.apps.googleusercontent.com';</script><script src="spark_conta.js?v=20"></script><script src="spark_cards.js?v=3"></script>
+<script src="/navegador/bridge/spark-family.js?v=2.1.0"></script>
+</body>
+</html>

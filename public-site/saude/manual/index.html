@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Manual do Spark Saúde — passo a passo</title>
+<meta name="description" content="Aprenda a usar o Spark Saúde: dieta servidor com 212 alimentos, habitos agua sono peso treino, selos, push 18h, PWA instalar, afiliados 30%, desafio 7d, corporate, QR Pix com garantia.">
+<link rel="canonical" href="https://sparkbr.online/setup/manual/">
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;color:#0f172a;background:#f8fafc}
+.top{background:linear-gradient(135deg,#f43f5e,#8b5cf6);color:#fff;padding:28px 20px 34px;text-align:center}
+.top h1{margin:0;font-size:24px;font-weight:900}.top p{margin:8px 0 0;font-size:13px;opacity:.9}
+.top a{color:#fff;font-weight:800}
+.wrap{max-width:560px;margin:-18px auto 0;padding:0 14px 60px}
+.step{background:#fff;border:1px solid #f1f5f9;border-radius:22px;padding:18px;margin-bottom:14px;box-shadow:0 8px 24px rgba(0,0,0,.05)}
+.step h2{margin:0 0 6px;font-size:16px}.step h2 b{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:9999px;background:linear-gradient(135deg,#f43f5e,#8b5cf6);color:#fff;font-size:13px;margin-right:8px}
+.step p,.step li{font-size:13.5px;line-height:1.65;color:#475569}.step ul,.step ol{margin:8px 0 0;padding-left:18px}
+.step img{width:100%;max-width:300px;display:block;margin:12px auto 4px;border-radius:20px;border:1px solid #e2e8f0;box-shadow:0 6px 18px rgba(0,0,0,.08)}
+.tip{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:14px;padding:10px 12px;font-size:12.5px;color:#166534;margin-top:10px}
+.warn{background:#fff7ed;border:1px solid #fed7aa;border-radius:14px;padding:10px 12px;font-size:12.5px;color:#9a3412;margin-top:10px}
+footer{text-align:center;color:#94a3b8;font-size:12px;padding:20px}
+code{background:#f1f5f9;padding:1px 6px;border-radius:6px;font-size:12.5px}
+</style>
+
+<link rel="stylesheet" href="/assets/brand.css?v=20261013">
+<link rel="stylesheet" href="/assets/app-shell.css?v=20261013b">
+<script defer data-spark-rebrand src="/assets/app-shell.js?v=20261013b"></script>
+</head>
+<body data-spark-page="saude-manual" data-spark-layout="auxiliary">
+<div class="top"><h1>Manual do Spark Saúde</h1><p>Do zero ao shape em 16 passos · <a href="/setup/">Abrir o app</a></p></div>
+<div class="wrap">
+
+<div class="step"><h2><b>1</b>Monte seu programa</h2>
+<p>Abra o app, preencha <b>nome, peso atual e meta</b>. Idade, altura, peso e meta ajudam a IA mas <b>não são obrigatórios</b>. Escolha <b>Secar</b> ou <b>Ganho de Massa</b>, seu nível e tempo por dia. Toque em <b>Gerar Motor Algorítmico</b>.</p>
+<img src="img/01-setup.png" alt="Tela inicial do Spark Saúde">
+<div class="tip">As medidas (cintura, braços...) são opcionais, mas deixam a IA 3x mais precisa.</div></div>
+
+<div class="step"><h2><b>2</b>Entenda seu dashboard</h2>
+<p>Você vê <b>peso atual → meta</b>, <b>TMB/TDEE</b> (quanto seu corpo gasta), <b>IMC</b>, gráfico de evolução, medidas e o <b>plano de 12 meses com datas reais</b>. Toque em qualquer exercício para ver a execução.</p>
+<img src="img/02-dashboard.png" alt="Dashboard do Spark Saúde">
+<div class="tip">Dieta e hábitos ficam salvos na <b>dieta servidor</b> (na sua conta). Pode trocar de celular que o histórico continua.</div></div>
+
+<div class="step"><h2><b>3</b>Use a IA Coach</h2>
+<p>Toque em <b>Analisar</b> no cartão IA Coach. Você recebe <b>score de 0-100</b>, situação atual, <b>ritmo e previsão de chegada</b>, alertas (platô, ritmo inseguro...) e ajustes de treino, dieta e recuperação. Dá pra <b>compartilhar no WhatsApp</b>.</p>
+<img src="img/03-ia.png" alt="IA Coach do Spark Saúde">
+<div class="tip">A IA detecta até <b>recomposição corporal</b>: peso igual + cintura menor = músculo no lugar da gordura!</div></div>
+
+<div class="step" id="dieta"><h2><b>4</b>Dieta: registrar, quantidade livre e excluir</h2>
+<p>Em <b>Dieta</b> você vê META do dia, CONSUMIDO e o que RESTA. Tudo fica na <b>dieta servidor</b> (não some se limpar o celular).</p>
+<ol>
+<li>Toque em <b>+ Registrar</b>.</li>
+<li>Busque a comida (ex: ovo, frango, tapioca).</li>
+<li>Em <b>quantidade livre</b> digite quanto comeu: <code>0.5</code>, <code>1</code>, <code>2</code> ou até <code>20</code>. Tem botões rápidos 1 / 2 / 5 / 10 / 20.</li>
+<li>Toque <b>Adicionar</b>. Se ficar sem internet, entra na <b>fila pendente</b> e sobe sozinho quando voltar.</li>
+</ol>
+<p><b>Excluir:</b> no histórico de <b>Hoje</b>, toque na <b>lixeira</b> ao lado do item. Dias passados são travados (só leitura) para não bagunçar seu histórico.</p>
+<p><b>Ver 7 / 30 dias:</b> em Dieta toque nas abas <b>Hoje / 7d / 30d</b>. O app busca do servidor.</p>
+<img src="img/04-dieta.png" alt="Tela de dieta">
+<img src="img/05-registrar.png" alt="Registrar refeição">
+<div class="tip">Ontem não some mais: o app usa data local (não UTC) e guarda tudo no servidor.</div></div>
+
+<div class="step" id="alimentos"><h2><b>5</b>212 alimentos, substitutos e alergias</h2>
+<p>O app tem <b>212 alimentos</b> em 10 categorias: proteína, carbo, fruta, verdura, legume, laticínio, gordura, doce, bebida e mais.</p>
+<ul>
+<li>Use a <b>busca + filtro por categoria</b> no Registrar.</li>
+<li>Toque num alimento para ver <b>calorias, porção, substitutos e alergênicos</b>. Ex: sem ovo? Troque por tofu / whey / iogurte.</li>
+<li>Em <b>Perfil &gt; alergias/restrições</b>, marque o que você não come. O app <b>esconde</b> esses itens e a sugestão diária já troca sozinha.</li>
+<li>A <b>Sugestão do dia</b> (café, almoço, pré-treino, jantar) respeita alergia e gira todo dia. Botão <b>Outra sugestão</b> troca até 3x/dia.</li>
+</ul>
+<div class="warn">Café da manhã nunca sugere frango. Se tiver restrição forte, o app usa cardápio simples só com o que você pode.</div></div>
+
+<div class="step" id="saude"><h2><b>6</b>Saúde e diabetes: como o app cuida de você</h2>
+<p>Em <b>Perfil</b> marque <b>Diabetes</b> e/ou <b>Hipertensão</b> + suas alergias. É opcional, mas muda tudo:</p>
+<ul>
+<li>Com <b>diabetes</b>: doces somem da sugestão, frutas doces ganham alerta e a lista prioriza baixo índice glicêmico.</li>
+<li>Com <b>hipertensão</b>: alimentos muito salgados ganham alerta.</li>
+<li>A IA <b>não dá diagnóstico</b>, só adapta treino e dieta com margem segura (sem déficit agressivo, mínimo 1500 kcal e corte máx 250 kcal).</li>
+</ul>
+<div class="warn">O app organiza sua rotina e <b>não substitui médico, nutricionista ou educador físico</b>. Com dor, tontura, diabetes descompensada ou IMC ≥ 30, procure um profissional.</div></div>
+
+<div class="step" id="habitos"><h2><b>7</b>Hábitos: água, sono, peso e treino + selos</h2>
+<p>Abra a aba <b>Hábitos</b> (topo: água / sono / sequência).</p>
+<ol>
+<li><b>Água:</b> toque <b>+250</b> ou <b>+500</b> a cada copo. <b>Zerar</b> só vale hoje.</li>
+<li><b>Sono:</b> digite horas dormidas (ex: 7.5).</li>
+<li><b>Peso:</b> digite peso do dia (ex: 70.5). Vale para o gráfico.</li>
+<li><b>Treino:</b> marque <b>treino feito + minutos</b> (ex: 30 min) e toque <b>Salvar</b>. Fora de Hoje o botão some (histórico é só leitura).</li>
+</ol>
+<p><b>Selos:</b> vitrine colorida = conquistado, cinza = falta. Exemplos: primeiro check-in, 5L de água no dia, 7 noites com 7h+ de sono, sequência 7d e 30d. Veja também seu <b>ranking de sequência</b> e o <b>histórico Hoje / 7 / 30d</b>.</p>
+<div class="tip">Só o dia atual registra. Ontem não volta para editar — é de propósito, para seu histórico ser confiável.</div></div>
+
+<div class="step" id="push"><h2><b>8</b>Push 18h: lembrete que chega no celular</h2>
+<p>O <b>push 18h</b> é um aviso do app (“Hora de registrar!”). É <b>push de verdade</b> (chega mesmo com app fechado), não só alarme na tela.</p>
+<p><b>Como ativa — Android:</b></p>
+<ol>
+<li>No app, vá em <b>Hábitos &gt; Lembrete 18h</b> e ligue a chavinha.</li>
+<li>Toque <b>Permitir</b> quando o Chrome pedir.</li>
+<li>Se bloquear sem querer, toque no <b>cadeado ao lado do endereço → Permissões → Notificações → Permitir</b>.</li>
+</ol>
+<p><b>Como ativa — iPhone:</b> push no iPhone só funciona com o app <b>instalado</b> (ver passo 9) e <b>iOS 16.4+</b>. Depois de instalar: abra pelo ícone, vá em <b>Hábitos &gt; Lembrete</b> e toque <b>Permitir</b>.</p>
+<p><b>Como muda o horário:</b> em Hábitos toque no horário (ex: <code>18:00</code>), digite o novo <code>HH:MM</code> e salve. O servidor dispara todo minuto no horário de Brasília.</p>
+<div class="tip">Sem permissão não chega nada. Se trocar de celular, ative de novo no aparelho novo.</div></div>
+
+<div class="step" id="pwa"><h2><b>9</b>PWA instalar: app na tela inicial</h2>
+<p><b>PWA instalar</b> = instalar o Setup sem loja, direto do navegador. Fica mais rápido e funciona offline.</p>
+<ul>
+<li><b>Android (Chrome):</b> abra <code>/setup/</code> → menu ⋮ → <b>Instalar app / Adicionar à tela inicial</b> → <b>Instalar</b>.</li>
+<li><b>iPhone (Safari):</b> abra <code>/setup/</code> → <b>Compartilhar</b> → <b>Adicionar à Tela de Início</b> → <b>Adicionar</b>.</li>
+<li><b>Computador:</b> ícone de instalar na barra de endereço.</li>
+</ul>
+<p>No app, <b>Hábitos &gt; Instalar</b> mostra checklist do que falta. Funciona offline após a primeira abertura.</p></div>
+
+<div class="step"><h2><b>10</b>Crie sua conta e perfil</h2>
+<p>Toque no <b>bonequinho</b> no topo: crie a conta grátis (nome, apelido, e-mail, senha). Depois edite o <b>perfil: foto, bio, cidade, objetivo + alergias e condições de saúde</b>. A conta libera comunidade, dieta servidor e IA online.</p>
+<img src="img/07-conta.png" alt="Criar conta">
+<img src="img/08-perfil.png" alt="Editar perfil"></div>
+
+<div class="step"><h2><b>11</b>Treine com execução correta</h2>
+<p>Na timeline, toque em <b>qualquer exercício</b>: veja músculos, passo a passo, erro comum e o botão <b>Ver execução em vídeo</b>.</p>
+<img src="img/06-exercicio.png" alt="Execução de exercício"></div>
+
+<div class="step" id="desafio"><h2><b>12</b>Comunidade + Desafio 7d</h2>
+<p>Em <b>Comunidade</b>, fale no <b>chat</b> com quem treina junto e veja quem está <b>online</b>. Escreva <b>@coach + sua dúvida</b> e a IA do servidor responde na conversa.</p>
+<img src="img/09-social.png" alt="Chat da comunidade">
+<p><b>Desafio 7d:</b> grupo oficial no WhatsApp para fazer 7 dias seguidos (treino + dieta + água). Entre pelo link em <b>Afiliados &gt; Materiais &gt; Comunidade</b>. Regras: poste seu check diário, sem spam, sem oferta fora do dia.</p>
+<div class="tip">Quem completa 7d ganha selo de sequência e entra no ranking.</div></div>
+
+<div class="step"><h2><b>13</b>Faça o check-in mensal</h2>
+<p>Todo mês toque em <b>Atualizar Check-in Mensal</b> e informe peso + medidas. O plano dos próximos meses <b>se recalibra sozinho</b>. Se passar 30 dias, ative o <b>lembrete</b> no cartão IA Coach.</p>
+<div class="warn">Seus dados de dieta/hábitos ficam na sua conta no servidor; estado local (rascunhos) pode ser apagado em recomeçar.</div></div>
+
+<div class="step" id="pix"><h2><b>14</b>QR Pix PRO + garantia 7 dias</h2>
+<p>O plano PRO libera IA completa, dieta servidor ilimitada e histórico 30d. Pagamento é <b>QR Pix</b> manual:</p>
+<ol>
+<li>No app toque <b>Ser PRO / Gerar Pix</b> e escolha mensal / trimestral / anual.</li>
+<li>Aparece o <b>QR Pix + Copiar BR Code</b>. Pague no app do banco.</li>
+<li>A tela fica <b>AGUARDANDO</b> e vira <b>APROVADO</b> sozinha (atualiza a cada 5s). Guarde o comprovante no WhatsApp indicado.</li>
+</ol>
+<p><b>Garantia:</b> 7 dias incondicional. Não gostou? Chame no WhatsApp com o comprovante que devolvemos. Chave Pix oficial e WhatsApp estão na tela de pagamento — não pague fora dela.</p></div>
+
+<div class="step" id="afiliados"><h2><b>15</b>Afiliados 30%: indique e ganhe</h2>
+<p><b>Afiliados 30%</b> = você recebe <b>30% de cada venda</b> feita com seu link (ex: anual R$199,90 → ~R$59,97). Pagamento via Pix direto, mínimo R$50, prazo de garantia 7d.</p>
+<ol>
+<li>Cadastre-se em <b>/setup/afiliados/</b> com apelido + e-mail + Pix.</li>
+<li>Pegue seu link <code>/setup/pro/?ref=seuapelido</code> e o QR no painel.</li>
+<li>Divulgue nos materiais prontos (<b>/setup/afiliados/materiais/</b>: 5 vídeos verticais, stories, QRs, textos). Use <code>?ref=</code> dentro do grupo do desafio.</li>
+<li>Acompanhe em <b>/setup/afiliados/painel/</b>: cliques, vendas, comissão pendente/paga e ranking.</li>
+</ol>
+<div class="tip">Como a Hotmart, mas Pix direto + WhatsApp: taxa zero de plataforma, cookie 30 dias.</div></div>
+
+<div class="step" id="corporate"><h2><b>16</b>Corporate: academias e empresas</h2>
+<p><b>Corporate</b> é o plano para academia / empresa acompanhar alunos e equipe:</p>
+<ul>
+<li>Alunos vinculam a <b>empresa/academia</b> no perfil.</li>
+<li>O gestor vê em <b>/setup/corp/</b> (login admin): total alunos, ativos, treinos e evolução — <b>sem expor dados pessoais</b>.</li>
+<li>Exporta <b>CSV</b>, pitch a partir de <b>R$499/mês</b>. Ideal para desafio interno e retenção.</li>
+</ul>
+<div class="tip">Dono de academia? Cadastre-se como afiliado + fale no WhatsApp para ativar o painel corporate.</div></div>
+
+</div>
+<footer>Spark Saúde · <a href="/setup/">abrir o app</a> · <a href="/setup/afiliados/">afiliados</a> · <a href="/setup/corp/">corporate</a> · <a href="/">site principal</a></footer>
+</body>
+</html>

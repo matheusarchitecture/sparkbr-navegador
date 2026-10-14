@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <script defer src="/navegador/bridge/spark-bridge.js?v=2.1.0"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b0716">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>AstroMatch ✦ Encontros pelos astros</title>
+<link rel="manifest" href="manifest.json">
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+:root{--bg:#0b0716;--card:#161026;--surf:#201836;--line:#2e2450;--txt:#f5f1ff;--mut:#9a90b8;
+--pri:#a855f7;--grad:linear-gradient(135deg,#7c3aed,#ec4899);--ok:#22c55e;--bad:#ef4444;--sup:#38bdf8;--gold:#fbbf24}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;background:#050309;color:var(--txt);font:15px/1.4 -apple-system,"Segoe UI",Roboto,sans-serif;overscroll-behavior:none}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
+input,select,textarea{font:inherit;color:var(--txt);background:var(--surf);border:1px solid var(--line);border-radius:12px;padding:12px 14px;width:100%;outline:none}
+input:focus,select:focus,textarea:focus{border-color:var(--pri)}
+textarea{resize:none;height:84px}
+label{display:block;font-size:12px;color:var(--mut);margin:12px 0 5px}
+.hidden{display:none!important}
+#app{position:fixed;inset:0;max-width:460px;margin:0 auto;background:var(--bg);overflow:hidden;
+background-image:radial-gradient(circle at 15% 0,rgba(124,58,237,.22),transparent 45%),radial-gradient(circle at 90% 100%,rgba(236,72,153,.16),transparent 45%)}
+.screen{position:absolute;inset:0;display:flex;flex-direction:column;padding-top:env(safe-area-inset-top)}
+.btn{background:var(--grad);padding:13px 18px;border-radius:14px;font-weight:700;width:100%;text-align:center}
+.btn.ghost{background:var(--surf);border:1px solid var(--line);font-weight:600}
+.btn.danger{background:#3b1220;border:1px solid #6b1d33;color:#fca5a5}
+.btn.sm{padding:9px 14px;width:auto;font-size:13px}
+.btn:disabled{opacity:.5}
+.logo{font-weight:800;font-size:22px;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;letter-spacing:.5px}
+/* auth */
+#auth{overflow-y:auto;padding:28px 22px calc(28px + env(safe-area-inset-bottom))}
+#auth .hero{text-align:center;margin:18px 0 22px}
+#auth .hero .logo{font-size:38px}
+#auth .hero p{color:var(--mut);margin-top:6px}
+.steps{display:flex;gap:6px;margin:6px 0 10px}.steps i{flex:1;height:4px;border-radius:4px;background:var(--line)}.steps i.on{background:var(--pri)}
+.row{display:flex;gap:10px}.row>*{flex:1}
+.link{color:var(--pri);font-weight:600;text-decoration:underline}
+.err{color:#fca5a5;font-size:13px;margin-top:10px;min-height:18px}
+.chk{display:flex;gap:10px;align-items:flex-start;margin-top:14px;font-size:13px;color:var(--mut)}.chk input{width:auto;margin-top:3px}
+/* topbar / nav */
+.top{display:flex;align-items:center;justify-content:space-between;padding:12px 18px 6px}
+nav{display:flex;border-top:1px solid var(--line);background:rgba(11,7,22,.92);padding-bottom:env(safe-area-inset-bottom)}
+nav button{flex:1;padding:11px 0 9px;color:var(--mut);font-size:11px;position:relative}
+nav button.on{color:#fff}nav button .ic{display:block;font-size:22px;line-height:1.1}
+.badge{position:absolute;top:5px;left:calc(50% + 8px);background:var(--bad);color:#fff;border-radius:10px;font-size:10px;padding:1px 6px;font-weight:700}
+.tab{flex:1;min-height:0;display:flex;flex-direction:column}
+.scroll{overflow-y:auto;flex:1;padding:6px 18px 24px}
+/* deck */
+#deck{position:relative;flex:1;margin:6px 14px 0;min-height:0}
+.card{position:absolute;inset:0;border-radius:22px;overflow:hidden;background:var(--card);box-shadow:0 10px 40px rgba(0,0,0,.5);touch-action:none;will-change:transform}
+.card.behind{transform:scale(.95) translateY(10px);opacity:.7;pointer-events:none}
+.card .ph{position:absolute;inset:0;background:#000}
+.card .ph img{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none;-webkit-user-drag:none}
+.card .ph img.blur{transform:scale(1.15)}
+.bars{position:absolute;top:8px;left:10px;right:10px;display:flex;gap:4px;z-index:3}
+.bars i{flex:1;height:3px;border-radius:3px;background:rgba(255,255,255,.35)}.bars i.on{background:#fff}.bars i.lk{background:rgba(251,191,36,.7)}
+.shade{position:absolute;left:0;right:0;bottom:0;height:62%;background:linear-gradient(transparent,rgba(5,3,9,.96));pointer-events:none}
+.info{position:absolute;left:0;right:0;bottom:0;padding:16px 16px 14px;z-index:3}
+.info h2{font-size:26px;font-weight:800}.info h2 span{font-weight:500;font-size:22px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 6px}
+.chip{background:rgba(255,255,255,.14);backdrop-filter:blur(8px);border-radius:20px;padding:4px 10px;font-size:12px;font-weight:600}
+.bio{font-size:13px;color:#e4dcf7;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.score{position:absolute;top:22px;right:12px;z-index:4;background:var(--grad);border-radius:20px;padding:5px 11px;font-weight:800;font-size:13px;box-shadow:0 4px 14px rgba(0,0,0,.4)}
+.infobtn{position:absolute;right:12px;bottom:14px;z-index:5;width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.16);backdrop-filter:blur(8px);font-size:17px}
+.lockov{position:absolute;inset:0;z-index:4;pointer-events:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:rgba(5,3,9,.35)}
+.lockov .lk{font-size:44px}.lockov .btn{pointer-events:auto;width:auto;padding:11px 20px;background:var(--gold);color:#2b1b00}
+.tapl,.tapr{position:absolute;top:0;bottom:30%;width:38%;z-index:2}.tapl{left:0}.tapr{right:0}
+.stamp{position:absolute;top:60px;z-index:6;font-size:30px;font-weight:900;border:4px solid;border-radius:10px;padding:2px 12px;opacity:0;letter-spacing:2px}
+.stamp.like{left:18px;color:var(--ok);transform:rotate(-14deg)}.stamp.nope{right:18px;color:var(--bad);transform:rotate(14deg)}.stamp.sup{left:50%;margin-left:-50px;color:var(--sup)}
+.actions{display:flex;justify-content:center;align-items:center;gap:16px;padding:12px 0 12px}
+.act{width:58px;height:58px;border-radius:50%;background:var(--card);border:1px solid var(--line);font-size:26px;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(0,0,0,.4)}
+.act.s{width:48px;height:48px;font-size:20px}.act:active{transform:scale(.92)}
+.empty{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:12px;color:var(--mut);padding:30px}
+.empty .big{font-size:54px}
+/* lists */
+.li{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--line)}
+.av{width:54px;height:54px;border-radius:50%;object-fit:cover;background:var(--surf);flex:none}
+.li .t{flex:1;min-width:0}.li .t b{display:block}.li .t small{color:var(--mut);display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.li .un{background:var(--pri);border-radius:12px;font-size:11px;font-weight:700;padding:2px 8px}
+h3{font-size:16px;margin:18px 0 8px}.sub{color:var(--mut);font-size:13px}
+/* profile photos */
+.pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
+.pt{position:relative;aspect-ratio:3/4;border-radius:14px;overflow:hidden;background:var(--surf)}
+.pt img{width:100%;height:100%;object-fit:cover}
+.pt .tag{position:absolute;left:5px;bottom:5px;font-size:10px;font-weight:800;padding:3px 7px;border-radius:10px;background:rgba(0,0,0,.65)}
+.pt .tag.free{background:var(--ok);color:#052e12}.pt .tag.paid{background:var(--gold);color:#2b1b00}
+.pt .x{position:absolute;top:5px;right:5px;width:24px;height:24px;border-radius:50%;background:rgba(0,0,0,.65);font-size:12px}
+.pt .tg{position:absolute;inset:0}
+.pt.add{border:2px dashed var(--line);display:flex;align-items:center;justify-content:center;font-size:30px;color:var(--mut);aspect-ratio:3/4}
+.mychart{display:flex;gap:8px;margin:8px 0}.mychart div{flex:1;background:var(--surf);border-radius:14px;padding:10px;text-align:center}
+.mychart small{display:block;color:var(--mut);font-size:11px}.mychart b{font-size:15px}
+.sw{display:flex;align-items:center;justify-content:space-between;padding:10px 0}
+/* overlays */
+.ov{position:absolute;inset:0;z-index:20;background:var(--bg);display:flex;flex-direction:column;padding-top:env(safe-area-inset-top)}
+.modal{position:absolute;inset:0;z-index:30;background:rgba(5,3,9,.78);display:flex;align-items:flex-end;justify-content:center}
+.sheet{background:var(--card);border-radius:24px 24px 0 0;width:100%;max-height:88%;overflow-y:auto;padding:20px 20px calc(22px + env(safe-area-inset-bottom));border-top:1px solid var(--line)}
+.sheet h2{font-size:20px;margin-bottom:4px}
+.ctr{text-align:center}
+.qr{background:#fff;border-radius:16px;padding:10px;width:230px;height:230px;margin:14px auto;display:flex;align-items:center;justify-content:center;color:#222;font-size:12px;text-align:center}
+.qr img{width:100%;height:100%}
+.code{font:11px monospace;word-break:break-all;background:var(--surf);border-radius:10px;padding:10px;max-height:74px;overflow:auto;margin:8px 0;user-select:all}
+.price{font-size:30px;font-weight:800;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.asp{padding:10px 12px;border-radius:12px;background:var(--surf);margin-top:8px;font-size:13px;border-left:4px solid var(--mut)}
+.asp.good{border-color:var(--ok)}.asp.mid{border-color:var(--gold)}.asp.hard{border-color:var(--bad)}.asp b{display:block;margin-bottom:2px}
+.bigscore{font-size:54px;font-weight:900;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;line-height:1}
+.pair{display:flex;gap:10px;margin:12px 0}.pair div{flex:1;background:var(--surf);border-radius:14px;padding:10px;font-size:13px}.pair b{display:block;margin-bottom:4px}
+#match{position:absolute;inset:0;z-index:40;background:rgba(5,3,9,.94);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:30px;text-align:center}
+#match h1{font-size:34px;font-weight:900;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+#match .faces{display:flex}#match .faces img{width:120px;height:120px;border-radius:50%;object-fit:cover;border:4px solid var(--bg)}#match .faces img+img{margin-left:-24px}
+/* chat */
+.chead{display:flex;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid var(--line)}
+.chead .av{width:42px;height:42px}.chead .t{flex:1;min-width:0}.chead .t b{display:block}.chead .t small{color:var(--mut)}
+.ibtn{width:40px;height:40px;border-radius:50%;font-size:20px}
+#msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:6px}
+.m{max-width:78%;padding:9px 13px;border-radius:18px;word-wrap:break-word;white-space:pre-wrap}
+.m.me{align-self:flex-end;background:var(--grad);border-bottom-right-radius:5px}.m.ot{align-self:flex-start;background:var(--surf);border-bottom-left-radius:5px}
+.m small{display:block;font-size:10px;opacity:.65;margin-top:2px;text-align:right}
+.cin{display:flex;gap:8px;padding:10px 12px calc(10px + env(safe-area-inset-bottom));border-top:1px solid var(--line)}
+.cin input{border-radius:22px}.cin button{background:var(--grad);border-radius:50%;width:46px;flex:none;font-size:18px}
+.menu{position:absolute;top:56px;right:10px;z-index:25;background:var(--surf);border:1px solid var(--line);border-radius:14px;overflow:hidden;min-width:190px}
+.menu button{display:block;width:100%;text-align:left;padding:13px 16px}.menu button+button{border-top:1px solid var(--line)}
+#toast{position:absolute;top:calc(12px + env(safe-area-inset-top));left:14px;right:14px;z-index:60;background:var(--surf);border:1px solid var(--pri);border-radius:14px;padding:12px 14px;transform:translateY(-140%);transition:transform .3s;pointer-events:none;box-shadow:0 8px 30px rgba(0,0,0,.5)}
+#toast.show{transform:none}#toast b{display:block}
+.spin{width:30px;height:30px;border:3px solid var(--line);border-top-color:var(--pri);border-radius:50%;animation:sp 1s linear infinite;margin:auto}@keyframes sp{to{transform:rotate(360deg)}}
+</style>
+<link rel="stylesheet" href="experience.css">
+
+<link rel="stylesheet" href="/assets/brand.css?v=20261013">
+<link rel="stylesheet" href="/assets/app-shell.css?v=20261013b">
+<script defer data-spark-rebrand src="/assets/app-shell.js?v=20261013b"></script>
+</head>
+<body data-spark-page="astromatch" data-spark-layout="complex">
+<div id="app">
+
+<!-- ================= AUTENTICAÇÃO ================= -->
+<section id="auth" class="screen">
+  <div class="hero"><div class="logo">✦ AstroMatch</div><p>Encontros guiados pelos astros</p></div>
+
+  <div id="loginBox">
+    <label>E-mail</label><input id="lEmail" type="email" autocomplete="email">
+    <label>Senha</label><input id="lPass" type="password" autocomplete="current-password">
+    <div class="err" id="lErr"></div>
+    <button class="btn" onclick="doLogin()">Entrar</button>
+    <div class="ctr sub" style="margin:12px 0 4px">ou</div>
+    <div id="gBtn" style="display:flex;justify-content:center"></div>
+    <p class="ctr sub" style="margin-top:18px">Ainda não tem conta? <a class="link" onclick="showReg()">Cadastre-se grátis</a></p>
+  </div>
+
+  <div id="regBox" class="hidden">
+    <div class="steps"><i class="on"></i><i></i><i></i><i></i></div>
+    <div id="rs1">
+      <h3>Crie sua conta</h3>
+      <label>Nome</label><input id="rName" maxlength="60" autocomplete="given-name">
+      <label>E-mail</label><input id="rEmail" type="email" autocomplete="email">
+      <label>Senha (mín. 8 caracteres)</label><input id="rPass" type="password" autocomplete="new-password">
+    </div>
+    <div id="rs2" class="hidden">
+      <h3>Seu céu de nascimento</h3><p class="sub">Usamos data, hora e cidade para calcular Sol, Lua e Ascendente.</p>
+      <label>Data de nascimento</label><input id="rDate" type="date">
+      <div class="row"><div><label>Hora (se souber)</label><input id="rTime" type="time" value="12:00"></div>
+      <div><label>Cidade</label><input id="rCity" list="cityList" value="São Paulo" data-cityac></div></div>
+      <datalist id="cityList"></datalist>
+    </div>
+    <div id="rs3" class="hidden">
+      <h3>Sobre você</h3>
+      <div class="row"><div><label>Eu sou</label><select id="rGender"><option>Feminino</option><option>Masculino</option><option>Outro</option></select></div>
+      <div><label>Quero conhecer</label><select id="rInt"><option>Todos</option><option>Feminino</option><option>Masculino</option></select></div></div>
+      <label>Bio</label><textarea id="rBio" maxlength="500" placeholder="Conte um pouco sobre você..."></textarea>
+      <label>Onde você mora? (opcional)</label><input id="rHome" data-cityac placeholder="Digite sua cidade..." autocomplete="off">
+      <div class="chk"><input type="checkbox" id="rTerms"><span>Tenho 18 anos ou mais e aceito os <a class="link" onclick="showTerms()">termos de uso</a>.</span></div>
+    </div>
+    <div id="rs4" class="hidden">
+      <h3>Suas fotos</h3>
+      <p class="sub">Todas as suas fotos ficam visíveis para todos — <b>100% grátis, sem limite</b>. Capriche nas fotos para aparecer no Descobrir.</p>
+      <div class="pgrid" id="regGrid"></div>
+    </div>
+    <div class="err" id="rErr"></div>
+    <div class="row" style="margin-top:12px"><button class="btn ghost" id="rBack" onclick="regStep(-1)">Voltar</button><button class="btn" id="rNext" onclick="regStep(1)">Continuar</button></div>
+    <p class="ctr sub" style="margin-top:16px">Já tem conta? <a class="link" onclick="showLogin()">Entrar</a></p>
+  </div>
+</section>
+
+<!-- ================= APP ================= -->
+<section id="main" class="screen hidden">
+  <div class="top"><div class="logo">✦ AstroMatch</div></div>
+
+  <div id="tDiscover" class="tab">
+    <div id="deck"></div>
+    <div class="actions">
+      <button class="act s" onclick="undo()" title="Voltar">↺</button>
+      <button class="act" onclick="btnSwipe('dislike')" style="color:var(--bad)">✕</button>
+      <button class="act s" onclick="btnSwipe('super')" style="color:var(--sup)">★</button>
+      <button class="act" onclick="btnSwipe('like')" style="color:var(--ok)">♥</button>
+    </div>
+  </div>
+
+  <div id="tMatches" class="tab hidden"><div class="scroll" id="matchList"></div></div>
+
+  <div id="tProfile" class="tab hidden"><div class="scroll" id="profileBox"></div></div>
+
+  <nav>
+    <button id="nDiscover" class="on" onclick="tab('Discover')"><span class="ic">✦</span>Descobrir</button>
+    <button id="nMatches" onclick="tab('Matches')"><span class="ic">💬</span>Matches<span class="badge hidden" id="nbadge">0</span></button>
+    <button id="nProfile" onclick="tab('Profile')"><span class="ic">☺</span>Perfil</button>
+  </nav>
+</section>
+
+<!-- chat -->
+<section id="chat" class="ov hidden">
+  <div class="chead">
+    <button class="ibtn" onclick="closeChat()">‹</button>
+    <img class="av" id="cAv"><div class="t"><b id="cName"></b><small id="cSigns"></small></div>
+    <button class="ibtn" onclick="toggleMenu()">⋮</button>
+  </div>
+  <div id="cMenu" class="menu hidden">
+    <button onclick="menuAct('syn')">✦ Ver compatibilidade</button>
+    <button onclick="menuAct('prof')">☺ Ver perfil e fotos</button>
+    <button onclick="menuAct('unmatch')">Desfazer match</button>
+    <button onclick="menuAct('block')" style="color:#fca5a5">Bloquear</button>
+    <button onclick="menuAct('report')" style="color:#fca5a5">Denunciar</button>
+  </div>
+  <div id="msgs"></div>
+  <div class="cin"><button title="Emojis" onclick="toggleEmo(event)">😊</button><input id="cText" placeholder="Digite uma mensagem..." maxlength="2000" onkeydown="if(event.key==='Enter')sendMsg()"><button onclick="sendMsg()">➤</button></div>
+<div id="emoPanel" style="display:none;position:fixed;left:12px;right:12px;bottom:86px;z-index:70;max-width:460px;margin:0 auto;background:#201836;border:1px solid #2e2450;border-radius:18px;padding:12px;box-shadow:0 14px 40px rgba(0,0,0,.55);max-height:44vh;overflow-y:auto"></div>
+</section>
+
+<!-- perfil de outro usuário (a partir do chat) -->
+<section id="viewProf" class="ov hidden" style="z-index:25">
+  <div class="chead"><button class="ibtn" onclick="$('viewProf').classList.add('hidden')">‹</button><div class="t"><b id="vpName"></b></div></div>
+  <div class="scroll" id="vpBody"></div>
+</section>
+
+<div id="modal" class="modal hidden" onclick="if(event.target===this)closeModal()"><div class="sheet" id="sheet"></div></div>
+<div id="match" class="hidden"></div>
+<div id="toast"></div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const BASE = location.pathname.replace(/[^/]*$/, '');
+const S = { token: localStorage.getItem('am_token'), me: null, cfg: null, feed: [], loading: false, matches: [],
+            myPhotos: [], seen: new Set(), chat: null, ws: null, wsTry: 0, reg: { step: 1, uploaded: 0 } };
+
+/* ---------- utilidades ---------- */
+function h(tag, attrs, ...kids) {
+  const e = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs || {})) {
+    if (k === 'class') e.className = v; else if (k.startsWith('on')) e.addEventListener(k.slice(2), v);
+    else if (v !== false && v != null) e.setAttribute(k, v === true ? '' : v);
+  }
+  for (const c of kids.flat()) if (c != null) e.append(c.nodeType ? c : document.createTextNode(c));
+  return e;
+}
+const brl = c => 'R$ ' + (c / 100).toFixed(2).replace('.', ',');
+const url = p => /^(https?:|data:)/.test(p) ? p : BASE + p;
+const toast = (t, m = '') => { const e = $('toast'); e.innerHTML = ''; e.append(h('b', {}, t), m); e.classList.add('show'); clearTimeout(toast.t); toast.t = setTimeout(() => e.classList.remove('show'), 3800); };
+
+async function api(path, opt = {}) {
+  const headers = { ...(opt.headers || {}) };
+  if (S.token) headers.Authorization = 'Bearer ' + S.token;
+  let body = opt.body;
+  if (body && !(body instanceof FormData)) { headers['Content-Type'] = 'application/json'; body = JSON.stringify(body); }
+  const r = await fetch(url('api' + path), { method: opt.method || 'GET', headers, body });
+  let data = null; try { data = await r.json(); } catch (e) {}
+  if (r.status === 401 && S.token && !path.startsWith('/auth')) { logout(true); throw new Error('Sessão expirada'); }
+  if (!r.ok) throw new Error((data && (data.detail && (data.detail.map ? data.detail.map(d => d.msg).join('; ') : data.detail))) || 'Erro ' + r.status);
+  return data;
+}
+
+/* ---------- sessão ---------- */
+function logout(silent) {
+  S.feed = []; S.seen.clear(); S.matches = []; S.myPhotos = []; S.chat = null; closeModal(); $('match').classList.add('hidden'); $('viewProf').classList.add('hidden');
+  localStorage.removeItem('am_token'); S.token = null; S.me = null; if (S.ws) { S.ws.onclose = null; S.ws.close(); }
+  $('main').classList.add('hidden'); $('chat').classList.add('hidden'); $('auth').classList.remove('hidden'); showLogin();
+  if (silent) toast('Sessão encerrada', 'Entre novamente.');
+}
+async function boot() {
+  try { S.cfg = await api('/config'); } catch (e) { S.cfg = { price_cents: 50, free_photos: 3, max_photos: 12, cities: [] }; }
+  $('cityList').append(...S.cfg.cities.map(c => h('option', { value: c })));
+  document.querySelectorAll('#priceTxt1').forEach(e => e.textContent = brl(S.cfg.price_cents));
+  try { initGoogle(); } catch (e) {}
+  try {
+    const m = (location.hash || '').match(/^#reset=(.+)$/);
+    if (m) { history.replaceState(null, '', location.pathname); setTimeout(() => resetFlow(m[1]), 800); }
+  } catch (e) {}
+  try { await ssoSpark(); } catch (e) {}
+  if (S.token) { try { await enter(); return; } catch (e) { } }
+  $('auth').classList.remove('hidden');
+}
+async function enter() {
+  S.me = await api('/me');
+  $('auth').classList.add('hidden'); $('main').classList.remove('hidden');
+  loadMyPhotos(); connectWS(); loadFeed(); refreshMatches(); renderProfile();
+  if (location.hash === '#matches') tab('Matches');
+  if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
+}
+
+/* ---------- login / cadastro ---------- */
+function showLogin() { $('loginBox').classList.remove('hidden'); $('regBox').classList.add('hidden'); }
+function showReg() { $('loginBox').classList.add('hidden'); $('regBox').classList.remove('hidden'); S.reg.step = 1; renderRegStep(); }
+/* ---------- Google + SSO Spark (100% gratis) ---------- */
+const GOOGLE_CID = '468525623041-knelde8kgjcmhcaa5hqjv0i3pns6ldpl.apps.googleusercontent.com';
+function initGoogle() {
+  try {
+    if (!window.google || !google.accounts || !google.accounts.id) return;
+    google.accounts.id.initialize({ client_id: GOOGLE_CID, callback: onGoogleCred });
+    const b = document.getElementById('gBtn');
+    if (b && !b.dataset.on) { b.dataset.on = '1'; google.accounts.id.renderButton(b, { theme: 'filled_black', size: 'large', shape: 'pill', text: 'continue_with', width: 260 }); }
+  } catch (e) {}
+}
+async function onGoogleCred(resp) {
+  try {
+    const r = await api('/auth/google', { method: 'POST', body: { id_token: resp.credential } });
+    S.token = r.token; localStorage.setItem('am_token', r.token);
+    if (r.novo) setTimeout(() => toast('Conta criada pelo Google', 'Complete seu mapa astral no perfil.'), 600);
+    await enter();
+  } catch (e) { toast('Google recusou', e.message); }
+}
+async function ssoSpark() {
+  try {
+    if (S.token) return false;
+    const st = localStorage.getItem('spark_token');
+    if (!st) return false;
+    const r = await api('/auth/trocar', { method: 'POST', body: { spark_token: st } });
+    S.token = r.token; localStorage.setItem('am_token', r.token);
+    try { localStorage.setItem('am_spark_linked', '1'); } catch (e) {}
+    if (r.novo) setTimeout(() => toast('Conta criada pelo Spark', 'Complete seu mapa astral no perfil.'), 600);
+    return true;
+  } catch (e) { return false; }
+}
+function sparkGPS() {
+  try {
+    if (!S.me || S.me.location) return;
+    if (!navigator.geolocation) return;
+    navigator.geolocation.getCurrentPosition(async pos => {
+      try {
+        if (S.me && !S.me.location) {
+          await api('/me/location', { method: 'PUT', body: { lat: pos.coords.latitude, lon: pos.coords.longitude } });
+          S.me.location = { lat: pos.coords.latitude, lon: pos.coords.longitude };
+        }
+      } catch (e) {}
+    }, () => {}, { timeout: 8000, maximumAge: 3600000 });
+  } catch (e) {}
+}
+async function syncSpark() {
+  try {
+    const st = localStorage.getItem('spark_token');
+    if (!st) { toast('Sem sessão Spark', 'Entre pelo portal sparkbr.online que o vínculo é automático.'); return; }
+    const r = await api('/me/sync-spark', { method: 'POST', body: { spark_token: st } });
+    try { localStorage.setItem('am_spark_linked', '1'); } catch (e) {}
+    const got = ['foto', 'nascimento', 'sexo'].filter(k => r[k]);
+    toast(got.length ? 'Spark sincronizado' : 'Já sincronizado', got.length ? 'Importado: ' + got.join(', ') + '.' : 'Nada novo para importar.');
+    S.me = await api('/me'); await loadMyPhotos(); renderProfile();
+  } catch (e) { toast('Não sincronizou', e.message); }
+}
+function refreshSparkBadge() {
+  try {
+    const el = document.getElementById('sparkLinkStatus');
+    if (!el) return;
+    const linked = localStorage.getItem('am_spark_linked') === '1' || !!localStorage.getItem('spark_token');
+    el.textContent = linked ? 'Conta vinculada ao portal Spark — dados sincronizados.' : 'Entre pelo portal sparkbr.online para vincular automaticamente.';
+  } catch (e) {}
+}
+async function resetFlow(tok) {
+  try {
+    const np = prompt('Nova senha (mín. 8 caracteres):');
+    if (!np) return;
+    await api('/auth/reset', { method: 'POST', body: { token: String(tok).trim(), new_password: np } });
+    toast('Senha trocada!', 'Entre com a nova senha.');
+  } catch (e) { toast('Link inválido ou expirado', e.message); }
+}
+async function doLogin() {
+  $('lErr').textContent = '';
+  try {
+    const r = await api('/auth/login', { method: 'POST', body: { email: $('lEmail').value.trim(), password: $('lPass').value } });
+    S.token = r.token; localStorage.setItem('am_token', r.token); await enter();
+  } catch (e) { $('lErr').textContent = e.message; }
+}
+function renderRegStep() {
+  const s = S.reg.step;
+  for (let i = 1; i <= 4; i++) $('rs' + i).classList.toggle('hidden', i !== s);
+  document.querySelectorAll('.steps i').forEach((e, i) => e.classList.toggle('on', i < s));
+  $('rBack').classList.toggle('hidden', s === 1 || s === 4);
+  $('rNext').textContent = s === 3 ? 'Criar conta' : s === 4 ? 'Concluir' : 'Continuar';
+  $('rErr').textContent = '';
+  if (s === 4) renderRegGrid();
+}
+async function regStep(d) {
+  const s = S.reg.step, err = m => { $('rErr').textContent = m; };
+  if (d < 0) { S.reg.step--; return renderRegStep(); }
+  if (s === 1) {
+    if ($('rName').value.trim().length < 2) return err('Informe seu nome.');
+    if (!/^\S+@\S+\.\S+$/.test($('rEmail').value)) return err('E-mail inválido.');
+    if ($('rPass').value.length < 8) return err('A senha precisa ter ao menos 8 caracteres.');
+  }
+  if (s === 2) {
+    if (!$('rDate').value) return err('Informe sua data de nascimento.');
+    const b = new Date($('rDate').value), t = new Date(); let age = t.getFullYear() - b.getFullYear();
+    if (t < new Date(t.getFullYear(), b.getMonth(), b.getDate())) age--;
+    if (age < 18) return err('O AstroMatch é exclusivo para maiores de 18 anos.');
+  }
+  if (s === 3) {
+    if (!$('rTerms').checked) return err('Confirme que tem 18+ e aceite os termos.');
+    $('rNext').disabled = true;
+    try {
+      const r = await api('/auth/register', { method: 'POST', body: {
+        name: $('rName').value.trim(), email: $('rEmail').value.trim(), password: $('rPass').value,
+        birth_date: $('rDate').value, birth_time: $('rTime').value || '12:00', birth_city: $('rCity').value.trim() || 'São Paulo',
+        gender: $('rGender').value, interested_in: $('rInt').value, bio: $('rBio').value.trim(), current_city: $('rHome').value.trim(), accept_terms: true, admin_registration_code: window.adminInvite || "" } });
+      S.token = r.token; localStorage.setItem('am_token', r.token);
+    } catch (e) { $('rNext').disabled = false; return err(e.message); }
+    $('rNext').disabled = false;
+  }
+  if (s === 4) { if (!S.myPhotos.length) return err('Adicione pelo menos 1 foto para aparecer para outras pessoas.'); await enter(); return; }
+  S.reg.step++; renderRegStep();
+}
+async function renderRegGrid() {
+  const ph = await api('/me/photos'); S.myPhotos = ph;
+  const g = $('regGrid'); g.innerHTML = '';
+  ph.forEach(p => g.append(photoTile(p, renderRegGrid)));
+  if (ph.length < S.cfg.max_photos) g.append(addTile(renderRegGrid));
+}
+function showTerms() {
+  openModal(h('div', {}, h('h2', {}, 'Termos de uso'),
+    h('p', { class: 'sub', style: 'margin:10px 0;line-height:1.6' },
+      'O AstroMatch é para maiores de 18 anos. Seja respeitoso: perfis falsos, assédio, conteúdo ilegal ou que envolva menores resultam em banimento. ',
+      'Todas as suas fotos são visíveis gratuitamente para todos. ',
+      'Você pode excluir seu perfil, fotos e mensagens em Perfil. Dados de cadastro, nascimento, fotos e conversas são armazenados no servidor para operar o serviço; data e hora completas de nascimento não são exibidas a outros perfis. Você pode baixar seus dados em Segurança. Compatibilidade astrológica é entretenimento.'),
+    h('button', { class: 'btn', onclick: closeModal }, 'Entendi')));
+}
+
+/* ---------- abas ---------- */
+function tab(n) {
+  ['Discover', 'Matches', 'Profile'].forEach(t => { $('t' + t).classList.toggle('hidden', t !== n); $('n' + t).classList.toggle('on', t === n); });
+  if (n === 'Matches') refreshMatches(); if (n === 'Profile') { loadMyPhotos().then(renderProfile); }
+}
+
+/* ---------- descoberta ---------- */
+async function loadFeed() {
+  if (S.loading) return; S.loading = true;
+  try { const f = await api('/feed?limit=10'); const have = new Set(S.feed.map(x => x.id)); S.feed.push(...f.filter(x => !have.has(x.id) && !S.seen.has(x.id))); }
+  catch (e) { toast('Ops', e.message); }
+  S.loading = false; renderDeck();
+}
+const LB_BTN = 'position:absolute;top:50%;transform:translateY(-50%);width:46px;height:46px;border-radius:50%;background:rgba(255,255,255,.16);backdrop-filter:blur(8px);font-size:24px;color:#fff;border:none;cursor:pointer;z-index:2;';
+function lbKeys(e) {
+  const ov = document.getElementById('lbox');
+  if (!ov) { document.removeEventListener('keydown', lbKeys); return; }
+  if (e.key === 'Escape') { closeLightbox(); return; }
+  const prev = ov.querySelector('[data-lb="prev"]'), next = ov.querySelector('[data-lb="next"]');
+  if (e.key === 'ArrowLeft' && prev) prev.click();
+  if (e.key === 'ArrowRight' && next) next.click();
+}
+function closeLightbox() {
+  try { document.getElementById('lbox')?.remove(); } catch (e) {}
+  document.removeEventListener('keydown', lbKeys);
+}
+function openLightbox(photos, idx, title) {
+  try {
+    if (!photos || !photos.length) return;
+    closeLightbox();
+    const st = { i: Math.max(0, Math.min(idx || 0, photos.length - 1)) };
+    const img = h('img', { alt: title || 'foto', style: 'max-width:94vw;max-height:76vh;object-fit:contain;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.6);background:#000' });
+    const cap = h('div', { style: 'color:#fff;font-weight:800;margin-top:10px;text-align:center' });
+    const show = () => {
+      const ph = photos[st.i] || {};
+      img.src = url(ph.url || ph);
+      cap.textContent = (title ? title + ' · ' : '') + (st.i + 1) + '/' + photos.length;
+      prev.style.visibility = st.i > 0 ? 'visible' : 'hidden';
+      next.style.visibility = st.i < photos.length - 1 ? 'visible' : 'hidden';
+    };
+    const prev = h('button', { 'data-lb': 'prev', title: 'Anterior', style: LB_BTN + 'left:8px', onclick: e => { e.stopPropagation(); st.i = Math.max(0, st.i - 1); show(); } }, '‹');
+    const next = h('button', { 'data-lb': 'next', title: 'Próxima', style: LB_BTN + 'right:8px', onclick: e => { e.stopPropagation(); st.i = Math.min(photos.length - 1, st.i + 1); show(); } }, '›');
+    const ov = h('div', { id: 'lbox', style: 'position:fixed;inset:0;z-index:200;background:rgba(5,3,9,.94);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px' },
+      h('button', { title: 'Fechar', style: 'position:absolute;top:calc(10px + env(safe-area-inset-top));right:14px;width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.16);font-size:18px;color:#fff;border:none;cursor:pointer', onclick: closeLightbox }, '✕'),
+      img, cap, prev, next);
+    ov.addEventListener('click', e => { if (e.target === ov) closeLightbox(); });
+    document.addEventListener('keydown', lbKeys);
+    document.body.append(ov);
+    show();
+  } catch (e) {}
+}
+function renderDeck() {
+  const d = $('deck'); d.innerHTML = '';
+  if (!S.feed.length) {
+    d.append(h('div', { class: 'empty' }, h('div', { class: 'big' }, '🔭'), h('b', {}, 'Nenhum perfil no momento'),
+      h('span', {}, 'Volte mais tarde ou ajuste sua faixa de idade e interesses no perfil.'),
+      h('button', { class: 'btn sm', onclick: loadFeed }, 'Procurar de novo')));
+    return;
+  }
+  if (S.feed[1]) { const b = buildCard(S.feed[1]); b.classList.add('behind'); d.append(b); }
+  const top = buildCard(S.feed[0], true); d.append(top); setupGestures(top, S.feed[0]);
+
+}
+function buildCard(p, active) {
+  const st = { i: 0 };
+  const img = h('img', { alt: '' }), bars = h('div', { class: 'bars' }), lock = h('div', { class: 'lockov hidden' });
+  const card = h('div', { class: 'card' },
+    h('div', { class: 'ph' }, img, lock),
+    bars, h('div', { class: 'shade' }),
+    h('div', { class: 'score' }, '✦ ' + p.score + '%'),
+    h('button', { title: 'Ampliar fotos', style: 'position:absolute;top:14px;left:12px;z-index:5;width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.16);backdrop-filter:blur(8px);font-size:17px;color:#fff;border:none;cursor:pointer', onpointerdown: e => e.stopPropagation(), onclick: e => { e.stopPropagation(); openLightbox(p.photos, st.i, p.name); } }, '⛶'),
+    active ? [h('div', { class: 'tapl', 'data-tap': 'l' }), h('div', { class: 'tapr', 'data-tap': 'r' })] : null,
+    h('div', { class: 'stamp like' }, 'CURTIR'), h('div', { class: 'stamp nope' }, 'NÃO'), h('div', { class: 'stamp sup' }, 'SUPER'),
+    h('div', { class: 'info' },
+      h('h2', {}, p.name + ' ', h('span', {}, p.age)),
+      h('div', { class: 'chips' }, h('span', { class: 'chip' }, p.sun_symbol + ' Sol ' + p.sun_sign), h('span', { class: 'chip' }, '☽ Lua ' + p.moon_sign), h('span', { class: 'chip' }, '↑ Asc ' + p.rising_sign)),
+      p.bio ? h('div', { class: 'bio' }, p.bio) : null),
+    active ? h('button', { class: 'infobtn', onclick: e => { e.stopPropagation(); openSyn(p.id); }, onpointerdown: e => e.stopPropagation() }, '✦') : null);
+  card._show = () => {
+    const ph = p.photos[st.i]; bars.innerHTML = '';
+    p.photos.forEach((x, i) => bars.append(h('i', { class: i === st.i ? 'on' : (x.locked ? 'lk' : '') })));
+    if (!ph) { img.removeAttribute('src'); return; }
+    img.src = url(ph.url); img.className = ph.locked ? 'blur' : ''; lock.innerHTML = '';
+    lock.classList.toggle('hidden', !ph.locked);
+    if (ph.locked) lock.append(h('div', { class: 'lk' }, '🔒'), h('div', {}, 'Foto exclusiva de ' + p.name),
+      h('button', { class: 'btn', onpointerdown: e => e.stopPropagation(), onclick: e => { e.stopPropagation(); unlockPhoto(p, ph); } }, 'Ver por ' + brl(ph.price_cents)));
+  };
+  card._step = d => { const n = st.i + d; if (n >= 0 && n < p.photos.length) { st.i = n; card._show(); } };
+  card._show(); return card;
+}
+function setupGestures(card, p) {
+  let sx = 0, sy = 0, dx = 0, dy = 0, drag = false, moved = false;
+  const stamps = { like: card.querySelector('.stamp.like'), nope: card.querySelector('.stamp.nope'), sup: card.querySelector('.stamp.sup') };
+  card.addEventListener('pointerdown', e => { if (e.target.closest('button')) return; drag = true; moved = false; dx = 0; dy = 0; sx = e.clientX; sy = e.clientY; card.setPointerCapture(e.pointerId); card.style.transition = 'none'; });
+  card.addEventListener('pointermove', e => {
+    if (!drag) return; dx = e.clientX - sx; dy = e.clientY - sy; if (Math.abs(dx) + Math.abs(dy) > 8) moved = true;
+    card.style.transform = `translate(${dx}px,${dy}px) rotate(${dx / 18}deg)`;
+    stamps.like.style.opacity = Math.max(0, Math.min(1, dx / 90)); stamps.nope.style.opacity = Math.max(0, Math.min(1, -dx / 90));
+    stamps.sup.style.opacity = dy < -40 && Math.abs(dx) < 60 ? Math.min(1, -dy / 100) : 0;
+  });
+  const end = e => {
+    if (!drag) return; drag = false; card.style.transition = 'transform .25s';
+    if (!moved) { const r = card.getBoundingClientRect(), x = e.clientX - r.left;
+      if (e.target.closest('.tapl') || x < r.width * .35) card._step(-1); else if (e.target.closest('.tapr') || x > r.width * .65) card._step(1);
+      card.style.transform = ''; return; }
+    if (dx > 110) doSwipe('like'); else if (dx < -110) doSwipe('dislike'); else if (dy < -120 && Math.abs(dx) < 90) doSwipe('super');
+    else { card.style.transform = ''; Object.values(stamps).forEach(s => s.style.opacity = 0); }
+  };
+  card.addEventListener('pointerup', end); card.addEventListener('pointercancel', () => { drag = false; card.style.transform = ''; Object.values(stamps).forEach(s => s.style.opacity = 0); });
+}
+function btnSwipe(a) { if (S.feed.length) doSwipe(a); }
+async function doSwipe(action) {
+  const p = S.feed[0]; if (!p || S.swiping) return; S.swiping = true;
+  const card = $('deck').lastElementChild; card.style.transition = 'transform .3s,opacity .3s';
+  const x = action === 'like' ? 700 : action === 'dislike' ? -700 : 0, y = action === 'super' ? -900 : 80;
+  card.style.transform = `translate(${x}px,${y}px) rotate(${x / 20}deg)`; card.style.opacity = 0;
+  S.feed.shift(); S.seen.add(p.id); setTimeout(renderDeck, 260);
+  try {
+    const r = await api('/swipes', { method: 'POST', body: { target_id: p.id, action } });
+    if (r.is_match) { showMatch(r.match_user, r.match_id); refreshMatches(); }
+  } catch (e) { S.feed.unshift(p); S.seen.delete(p.id); renderDeck(); toast('Curtida não salva', e.message); }
+  finally { S.swiping = false; if (!S.feed.length) loadFeed(); }
+}
+async function undo() {
+  try { const r = await api('/swipes/last', { method: 'DELETE' }); const u = await api('/users/' + r.target_id); S.seen.delete(r.target_id); S.feed.unshift(u); renderDeck(); }
+  catch (e) { toast('Não foi possível voltar', e.message); }
+}
+function showMatch(u, mid) {
+  const m = $('match'), mine = S.myPhotos[0], theirs = u.photos[0];
+  m.innerHTML = ''; m.append(h('h1', {}, 'É um match! ✦'), h('p', { class: 'sub' }, 'Você e ' + u.name + ' têm ' + u.score + '% de compatibilidade astral'),
+    h('div', { class: 'faces' }, mine ? h('img', { src: url(mine.url) }) : null, theirs ? h('img', { src: url(theirs.url) }) : null),
+    h('button', { class: 'btn', onclick: () => { m.classList.add('hidden'); openChat(mid, u); } }, 'Enviar mensagem'),
+    h('button', { class: 'btn ghost', onclick: () => m.classList.add('hidden') }, 'Continuar descobrindo'));
+  m.classList.remove('hidden');
+}
+
+/* ---------- compatibilidade ---------- */
+async function openSyn(uid) {
+  openModal(h('div', { class: 'ctr' }, h('div', { class: 'spin' })));
+  try {
+    const s = await api('/synastry/' + uid);
+    openModal(h('div', {}, h('div', { class: 'ctr' }, h('div', { class: 'bigscore' }, s.score + '%'), h('p', { class: 'sub', style: 'margin-top:6px' }, s.summary)),
+      h('div', { class: 'pair' }, h('div', {}, h('b', {}, 'Você'), '☉ ' + s.me.sun, h('br'), '☽ ' + s.me.moon, h('br'), '↑ ' + s.me.rising),
+        h('div', {}, h('b', {}, s.them.name), '☉ ' + s.them.sun, h('br'), '☽ ' + s.them.moon, h('br'), '↑ ' + s.them.rising)),
+      s.aspects.map(a => h('div', { class: 'asp ' + a.tone }, h('b', {}, a.label + ' · ' + a.aspect), a.text)),
+      h('button', { class: 'btn ghost', style: 'margin-top:16px', onclick: closeModal }, 'Fechar')));
+  } catch (e) { closeModal(); toast('Ops', e.message); }
+}
+
+/* ---------- desbloqueio PIX ---------- */
+let payTimer = null;
+async function unlockPhoto(p, ph) {
+  openModal(h('div', { class: 'ctr' }, h('div', { class: 'spin' })));
+  try {
+    const r = await api('/photos/' + ph.id + '/unlock', { method: 'POST' });
+    if (r.already_unlocked) { closeModal(); return refreshUser(p.id); }
+    const qr = h('div', { class: 'qr' }, r.qr_base64 ? h('img', { src: 'data:image/png;base64,' + r.qr_base64 }) : 'QR Code indisponível. Use o código abaixo.');
+    const status = h('p', { class: 'sub' }, '⏳ Aguardando pagamento...');
+    openModal(h('div', { class: 'ctr' }, h('h2', {}, 'Desbloquear foto de ' + p.name), h('div', { class: 'price' }, brl(r.amount_cents)),
+      h('p', { class: 'sub' }, r.manual ? 'PIX com conferência manual. A foto será liberada após o administrador confirmar o recebimento no banco. Confira o destinatário antes de pagar.' : 'Pague via PIX. A foto será liberada após a confirmação do pagamento.'), qr,
+      h('div', { class: 'code' }, r.qr_code || ''),
+      h('div', { class: 'row' }, h('button', { class: 'btn ghost', onclick: () => { navigator.clipboard.writeText(r.qr_code || '').then(() => toast('Copiado!', 'Cole no app do seu banco.')).catch(() => toast('Não foi possível copiar', 'Selecione o código na tela.')); } }, 'Copiar código'),
+        h('button', { class: 'btn ghost', onclick: closeModal }, 'Cancelar')),
+      r.manual ? h('button', { class: 'btn', style: 'margin-top:10px', onclick: async e => { e.currentTarget.disabled = true; try { await api('/payments/' + r.payment_id + '/notify-paid', { method: 'POST' }); status.textContent = 'Recebimento em conferência. Você pode fechar esta janela e consultar a foto depois.'; } catch (error) { e.currentTarget.disabled = false; toast('Não foi possível avisar', error.message); } } }, 'Já paguei · avisar para conferência') : null,
+      r.manual ? h('p', { class: 'form-help' }, 'Referência: ' + r.reference) : null,
+      r.mock ? h('button', { class: 'btn', style: 'margin-top:10px', onclick: async () => { await api('/payments/' + r.payment_id + '/mock-approve', { method: 'POST' }); } }, '🧪 Simular pagamento (modo teste)') : null,
+      h('div', { style: 'margin-top:12px' }, status)));
+    clearInterval(payTimer);
+    payTimer = setInterval(async () => {
+      try {
+        const s = await api('/payments/' + r.payment_id);
+        if (s.status === 'APPROVED') { clearInterval(payTimer); closeModal(); toast('Foto desbloqueada! ✦', 'Aproveite.'); refreshUser(p.id); }
+        else if (s.status === 'REVIEW') { status.textContent = 'Recebimento em conferência pelo administrador. A foto ainda não foi liberada.'; }
+        else if (s.status === 'CANCELLED') { clearInterval(payTimer); status.textContent = 'Pagamento cancelado ou expirado.'; }
+      } catch (e) { }
+    }, 3000);
+  } catch (e) { closeModal(); toast('Não foi possível gerar o PIX', e.message); }
+}
+async function refreshUser(id) {
+  try {
+    const u = await api('/users/' + id); const i = S.feed.findIndex(x => x.id === id);
+    if (i >= 0) { const keep = S.feed[i]; Object.assign(keep, u); if (i === 0) renderDeck(); }
+    if (S.chat && S.chat.user.id === id) S.chat.user = u;
+    if (!$('viewProf').classList.contains('hidden')) renderUserProfile(u);
+  } catch (e) { }
+}
+
+/* ---------- matches ---------- */
+async function refreshMatches() {
+  try { S.matches = await api('/matches'); } catch (e) { return; }
+  const n = S.matches.reduce((a, m) => a + m.unread, 0);
+  $('nbadge').textContent = n; $('nbadge').classList.toggle('hidden', !n);
+  const box = $('matchList'); box.innerHTML = '';
+  if (!S.matches.length) { box.append(h('div', { class: 'empty', style: 'position:static;padding:70px 20px' }, h('div', { class: 'big' }, '💫'), h('b', {}, 'Nenhum match ainda'), 'Curta perfis na aba Descobrir. Quando for recíproco, aparece aqui.')); return; }
+  S.matches.forEach(m => {
+    const ph = m.user.photos[0];
+    box.append(h('div', { class: 'li', onclick: () => openChat(m.match_id, m.user) },
+      h('img', { class: 'av', src: ph ? url(ph.url) : '' }),
+      h('div', { class: 't' }, h('b', {}, m.user.name + ', ' + m.user.age + '  ' + m.user.sun_symbol), h('small', {}, m.last_text || 'Deu match! Diga oi 👋')),
+      m.unread ? h('span', { class: 'un' }, m.unread) : null));
+  });
+}
+async function openChat(mid, user) {
+  S.chat = { id: mid, user }; $('cName').textContent = user.name; $('cSigns').textContent = `${user.sun_symbol} ${user.sun_sign} · ☽ ${user.moon_sign} · ↑ ${user.rising_sign}`;
+  const ph = user.photos[0]; $('cAv').src = ph ? url(ph.url) : ''; $('cMenu').classList.add('hidden');
+  $('msgs').innerHTML = ''; $('chat').classList.remove('hidden');
+  try { (await api('/matches/' + mid + '/messages')).forEach(addMsg); } catch (e) { toast('Ops', e.message); }
+  refreshMatches(); $('cText').focus();
+}
+function closeChat() { S.chat = null; $('chat').classList.add('hidden'); refreshMatches(); }
+function addMsg(m) {
+  if (document.querySelector('[data-message-id="' + m.id + '"]')) return;
+  const t = new Date(m.created_at), own = m.sender_id === S.me.id;
+  const el = h('div', { 'data-message-id': m.id, class: 'm ' + (own ? 'me' : 'ot') }, m.text,
+    h('small', {}, t.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })),
+    own ? h('button', { title: 'Apagar', style: 'margin-left:6px;background:rgba(255,255,255,.14);border:none;border-radius:50%;width:20px;height:20px;font-size:11px;color:inherit;cursor:pointer;flex:none', onclick: async e => { e.stopPropagation(); if (!confirm('Apagar esta mensagem?')) return; try { await api('/matches/' + S.chat.id + '/messages/' + m.id, { method: 'DELETE' }); el.remove(); } catch (er) { toast('Não apagou', er.message); } } }, '✕') : null);
+  const box = $('msgs'); box.append(el); box.scrollTop = box.scrollHeight;
+}
+let cityACT = null;
+async function cityACType(inp) {
+  clearTimeout(cityACT);
+  const q = inp.value.trim();
+  const old = document.getElementById('cityACPanel');
+  if (q.length < 2) { if (old) old.remove(); return; }
+  cityACT = setTimeout(async () => {
+    try {
+      const rs = await api('/cidades?q=' + encodeURIComponent(q));
+      let p = document.getElementById('cityACPanel');
+      const r = inp.getBoundingClientRect();
+      if (!p) {
+        p = h('div', { id: 'cityACPanel', style: 'position:fixed;z-index:9999;background:#201836;border:1px solid #2e2450;border-radius:12px;max-height:220px;overflow-y:auto;box-shadow:0 14px 40px rgba(0,0,0,.55);min-width:200px' });
+        document.body.append(p);
+      }
+      p.style.left = Math.max(8, r.left) + 'px';
+      p.style.top = (r.bottom + 4) + 'px';
+      p.style.width = Math.max(200, r.width) + 'px';
+      p.replaceChildren();
+      if (!rs.length) p.append(h('div', { style: 'padding:10px;font-size:13px' }, 'Nenhuma cidade.'));
+      rs.slice(0, 12).forEach(c => p.append(h('div', { style: 'padding:10px 12px;font-size:14px;cursor:pointer;border-bottom:1px solid #2e2450', onclick: () => { inp.value = c.cidade + '/' + c.uf; p.remove(); inp.dispatchEvent(new Event('change', { bubbles: true })); } }, h('b', {}, c.cidade), h('span', { style: 'color:#9a90b8' }, ' · ' + c.uf))));
+    } catch (e) {}
+  }, 220);
+}
+document.addEventListener('input', e => {
+  try {
+    const inp = e.target.closest && e.target.closest('input[data-cityac]');
+    if (inp) cityACType(inp);
+  } catch (err) {}
+});
+document.addEventListener('focusin', e => {
+  try {
+    const inp = e.target.closest && e.target.closest('input[data-cityac]');
+    if (inp && inp.value.trim().length >= 2) cityACType(inp);
+  } catch (err) {}
+});
+document.addEventListener('click', e => {
+  try {
+    const p = document.getElementById('cityACPanel');
+    if (p && !p.contains(e.target) && !(e.target.closest && e.target.closest('input[data-cityac]'))) p.remove();
+  } catch (err) {}
+});
+const EMOJI = {'Amor':['❤️','🧡','💛','💚','💙','💜','🖤','🤍','🤎','💘','💝','💖','💗','💓','💞','💟','❣️','💋','🌹','💍'],'Rostos':['😀','😁','😄','😊','🙂','😉','😍','🥰','😘','😗','😙','😚','😜','🤪','😎','🥳','🤗','🤔','😐','🙄','😴','🤯','🥺','😏'],'Gestos':['👋','🤚','🖐️','✋','👌','✌️','🤞','🤟','🤙','👍','👎','🙏','👏','💪','☝️','👀'],'Astros':['✨','⭐','🌟','💫','🌙','🌛','🌜','♈','♉','♊','♋','♌','♍','♎','♏','♐','♑','♒','♓','⛎'],'Diversão':['🎉','🎊','🎈','🎁','🍷','☕','🍫','🍓','🎬','🎵','✈️','🌃'],'Bichos':['🐶','🐱','🦊','🐼','🐨','🦁','🐸','🐰']};
+function toggleEmo(ev) {
+  try { if (ev) ev.stopPropagation(); } catch (e) {}
+  const p = document.getElementById('emoPanel');
+  if (!p.dataset.on) {
+    p.innerHTML = '';
+    for (const cat of Object.keys(EMOJI)) {
+      p.append(h('div', { style: 'font-size:11px;font-weight:800;color:#9a90b8;margin:8px 2px 4px;letter-spacing:.5px' }, cat.toUpperCase()));
+      const row = h('div', { style: 'display:grid;grid-template-columns:repeat(8,1fr);gap:2px' });
+      EMOJI[cat].forEach(e => row.append(h('button', { style: 'background:none;border:none;font-size:24px;padding:4px;cursor:pointer;border-radius:10px', onclick: () => insertEmo(e) }, e)));
+      p.append(row);
+    }
+    p.dataset.on = '1';
+  }
+  p.style.display = p.style.display === 'none' ? 'block' : 'none';
+}
+function insertEmo(e) {
+  const i = document.getElementById('cText');
+  try {
+    const s = i.selectionStart || i.value.length, t = i.value;
+    i.value = t.slice(0, s) + e + t.slice(i.selectionEnd || s);
+    i.focus();
+  } catch (err) { i.value += e; }
+  document.getElementById('emoPanel').style.display = 'none';
+}
+document.addEventListener('click', e => {
+  try {
+    const p = document.getElementById('emoPanel');
+    if (p && p.style.display === 'block' && !p.contains(e.target) && !(e.target.closest && e.target.closest('.cin'))) p.style.display = 'none';
+  } catch (err) {}
+});
+async function sendMsg() {
+  const i = $('cText'), text = i.value.trim(); if (!text || !S.chat || S.sending) return;
+  S.sending = true; const mid = S.chat.id;
+  try { const m = await api('/matches/' + mid + '/messages', { method: 'POST', body: { text } });
+    if (S.chat && S.chat.id === mid) { addMsg(m); if (i.value.trim() === text) i.value = ''; }
+  } catch (e) { toast('Não enviado', e.message); } finally { S.sending = false; }
+}
+function connectWS() {
+  if (!S.token) return;
+  const proto = location.protocol === 'https:' ? 'wss:' : 'ws:';
+  const ws = S.ws = new WebSocket(proto + '//' + location.host + BASE + 'ws?token=' + encodeURIComponent(S.token));
+  ws.onopen = () => S.wsTry = 0;
+  ws.onmessage = ev => {
+    const d = JSON.parse(ev.data);
+    if (d.type === 'message') {
+      if (S.chat && S.chat.id === d.match_id) { addMsg(d); if (d.sender_id !== S.me.id) api('/matches/' + d.match_id + '/messages').catch(() => {}); }
+      else if (d.sender_id !== S.me.id) { const m = S.matches.find(x => x.match_id === d.match_id); toast(m ? m.user.name : 'Nova mensagem', d.text.slice(0, 80)); }
+      refreshMatches();
+    } else if (d.type === 'message_deleted') { document.querySelector('[data-message-id="' + d.id + '"]')?.remove();
+    } else if (d.type === 'voice_deleted') { document.querySelector('[data-voice-id="' + d.id + '"]')?.remove();
+    } else if (d.type === 'call') { try { if (typeof onCallRing === 'function') onCallRing(d); } catch (e) {} } else if (d.type === 'error') toast('Ops', d.detail);
+  };
+  ws.onclose = () => { if (S.token) setTimeout(connectWS, Math.min(15000, 1000 * (++S.wsTry))); };
+}
+function toggleMenu() { $('cMenu').classList.toggle('hidden'); }
+async function menuAct(a) {
+  $('cMenu').classList.add('hidden'); const c = S.chat; if (!c) return;
+  if (a === 'syn') return openSyn(c.user.id);
+  if (a === 'prof') { renderUserProfile(c.user); $('viewProf').classList.remove('hidden'); return; }
+  try {
+    if (a === 'unmatch' && confirm('Desfazer o match com ' + c.user.name + '?')) { await api('/matches/' + c.id, { method: 'DELETE' }); closeChat(); }
+    if (a === 'block' && confirm('Bloquear ' + c.user.name + '? Vocês não se verão mais.')) { await api('/users/' + c.user.id + '/block', { method: 'POST' }); closeChat(); toast('Usuário bloqueado'); }
+    if (a === 'report') { const r = prompt('Conte o motivo da denúncia:'); if (r !== null) { await api('/users/' + c.user.id + '/report', { method: 'POST', body: { reason: r } }); toast('Denúncia enviada', 'Obrigado por ajudar a manter a comunidade segura.'); } }
+  } catch (e) { toast('Ops', e.message); }
+}
+async function loadMural(uid, own) {
+  const box = document.getElementById('muralBox');
+  if (!box) return;
+  box.innerHTML = '';
+  box.append(h('h3', { style: 'margin-top:14px' }, 'Mural'));
+  if (own) {
+    box.append(h('div', { class: 'utility-card' },
+      h('textarea', { id: 'muralText', maxlength: 2000, placeholder: 'Compartilhe algo...', style: 'width:100%;min-height:64px' }),
+      h('input', { id: 'muralYt', placeholder: 'Link do YouTube (opcional)', style: 'width:100%;margin-top:6px' }),
+      h('button', { class: 'btn', style: 'margin-top:8px', onclick: postMural }, 'Publicar no mural')));
+  }
+  try {
+    const ps = await api('/users/' + uid + '/mural');
+    if (!ps.length) box.append(h('p', { class: 'sub' }, own ? 'Seu mural está vazio. Publique acima.' : 'Nenhum post ainda.'));
+    for (const p of ps) box.append(muralPost(p, own));
+  } catch (e) { box.append(h('p', { class: 'sub' }, 'Mural indisponível.')); }
+}
+function ytEmbed(id) {
+  const w = h('div', { style: 'position:relative;padding-top:56.25%;border-radius:12px;overflow:hidden;margin-top:8px;background:#000' });
+  w.append(h('iframe', { src: 'https://www.youtube-nocookie.com/embed/' + id, style: 'position:absolute;inset:0;width:100%;height:100%;border:0', allow: 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture', allowfullscreen: true }));
+  return w;
+}
+function muralPost(p, own) {
+  const d = new Date(p.created_at);
+  return h('div', { class: 'utility-card' },
+    h('div', { style: 'display:flex;justify-content:space-between;align-items:center' },
+      h('b', {}, p.author_name),
+      h('small', { class: 'sub' }, d.toLocaleDateString('pt-BR') + (p.updated_at ? ' · editado' : ''))),
+    p.text ? h('p', { style: 'margin:8px 0;white-space:pre-line' }, p.text) : null,
+    p.kind === 'youtube' && p.yt ? ytEmbed(p.yt) : null,
+    own ? h('div', { class: 'row', style: 'margin-top:8px' },
+      h('button', { class: 'btn ghost sm', onclick: () => editMural(p) }, 'Editar'),
+      h('button', { class: 'btn ghost sm', onclick: async () => { if (!confirm('Excluir este post?')) return; try { await api('/mural/' + p.id, { method: 'DELETE' }); loadMural(S.viewUid, true); } catch (e) { toast('Não excluiu', e.message); } } }, 'Excluir')) : null);
+}
+async function postMural() {
+  const t = ((document.getElementById('muralText') || {}).value || '');
+  const y = (((document.getElementById('muralYt') || {}).value) || '').trim();
+  try {
+    await api('/me/mural', { method: 'POST', body: { kind: y ? 'youtube' : 'texto', text: t, url: y } });
+    loadMural(S.viewUid, true); toast('Publicado');
+  } catch (e) { toast('Não publicou', e.message); }
+}
+async function editMural(p) {
+  const t = prompt('Editar post:', p.text || '');
+  if (t === null) return;
+  let u2 = '';
+  if (p.kind === 'youtube') { u2 = prompt('Link do YouTube:', 'https://youtu.be/' + p.yt); if (u2 === null) return; }
+  try { await api('/mural/' + p.id, { method: 'PUT', body: { kind: p.kind, text: t, url: u2 } }); loadMural(S.viewUid, true); } catch (e) { toast('Não salvou', e.message); }
+}
+async function loadDepos(uid, own) {
+  const box = document.getElementById('depoBox');
+  if (!box) return;
+  box.innerHTML = '';
+  box.append(h('h3', { style: 'margin-top:14px' }, 'Recados astrais'));
+  if (!own) box.append(h('button', { class: 'btn ghost', style: 'margin-bottom:8px', onclick: async () => {
+    const t = prompt('Deixe um recado (aparece após aprovação):');
+    if (!t) return;
+    try { await api('/users/' + uid + '/depoimento', { method: 'POST', body: { text: t } }); toast('Recado enviado', 'Aparece após aprovação.'); } catch (e) { toast('Não enviou', e.message); }
+  } }, 'Deixar recado'));
+  try {
+    const ps = await api('/users/' + uid + '/depoimentos');
+    if (!ps.length) box.append(h('p', { class: 'sub' }, 'Nenhum recado ainda.'));
+    for (const p of ps) box.append(depoCard(p, own, uid));
+  } catch (e) {}
+  if (own) {
+    try {
+      const pend = await api('/me/depoimentos/pendentes');
+      if (pend.length) {
+        box.append(h('h3', { style: 'margin-top:10px' }, 'Aprovar recados (' + pend.length + ')'));
+        for (const p of pend) box.append(h('div', { class: 'utility-card' },
+          h('b', {}, p.author_name), h('p', { style: 'margin:6px 0' }, p.text),
+          h('div', { class: 'row' },
+            h('button', { class: 'btn sm', onclick: async () => { try { await api('/depoimentos/' + p.id + '/aprovar', { method: 'POST' }); loadDepos(uid, true); } catch (e) { toast('Ops', e.message); } } }, 'Aprovar'),
+            h('button', { class: 'btn ghost sm', onclick: async () => { try { await api('/depoimentos/' + p.id + '/recusar', { method: 'POST' }); loadDepos(uid, true); } catch (e) { toast('Ops', e.message); } } }, 'Recusar'))));
+      }
+    } catch (e) {}
+  }
+}
+function depoCard(p, own, uid) {
+  return h('div', { class: 'utility-card' },
+    h('div', { style: 'display:flex;justify-content:space-between;align-items:center' },
+      h('b', {}, '✦ ' + p.author_name),
+      h('small', { class: 'sub' }, new Date(p.created_at).toLocaleDateString('pt-BR'))),
+    h('p', { style: 'margin:6px 0;font-style:italic' }, '"' + p.text + '"'),
+    own ? h('button', { class: 'btn ghost sm', onclick: async () => { if (!confirm('Excluir este recado?')) return; try { await api('/depoimentos/' + p.id, { method: 'DELETE' }); loadDepos(uid, true); } catch (e) { toast('Ops', e.message); } } }, 'Excluir') : null);
+}
+function renderUserProfile(u) {
+  $('vpName').textContent = u.name + ', ' + u.age;
+  const g = h('div', { class: 'pgrid' });
+  u.photos.forEach((ph, ix) => g.append(h('div', { class: 'pt', onclick: e => { if (e.target.closest('button')) return; openLightbox(u.photos, ix, u.name); } }, h('img', { src: url(ph.url), style: ph.locked ? 'transform:scale(1.15)' : '' }),
+    ph.locked ? h('button', { class: 'tg', onclick: () => unlockPhoto(u, ph) }) : null,
+    ph.locked ? h('span', { class: 'tag paid' }, '🔒 ' + brl(ph.price_cents)) : null)));
+  $('vpBody').innerHTML = ''; $('vpBody').append(h('p', { style: 'margin:8px 0' }, u.bio || ''), h('p', { class: 'sub' }, '⌖ Mora em ' + ((u.preferences && u.preferences.current_city) || '—') + ' · Nasceu em ' + (u.birth_city || '—')), g,
+    h('p', { class: 'sub', style: 'margin-top:10px' }, 'Todas as fotos visíveis — 100% grátis.'),
+    h('div', { id: 'muralBox' }));
+  S.viewUid = u.id;
+  loadMural(u.id, u.id === S.me.id);
+  loadDepos(u.id, u.id === S.me.id);
+}
+
+/* ---------- meu perfil e fotos ---------- */
+async function loadMyPhotos() { try { S.myPhotos = await api('/me/photos'); } catch (e) { toast('Não carregou suas fotos', e.message); } }
+function photoTile(p, refresh) {
+  return h('div', { class: 'pt', onclick: e => { if (e.target.closest('button,input,label')) return; const ix = S.myPhotos.indexOf(p); openLightbox(S.myPhotos, ix < 0 ? 0 : ix, 'Você'); } }, h('img', { src: url(p.url) }),
+    h('button', { class: 'tg', title: 'Alternar grátis/paga', onclick: async () => {
+      try { await api('/me/photos/' + p.id + '/public', { method: 'PUT', body: { is_public: !p.is_public } }); await refresh(); } catch (e) { toast('Ops', e.message); } } }),
+    h('span', { class: 'tag ' + (p.is_public ? 'free' : 'paid') }, p.is_public ? '★ GRÁTIS' : '🔒 ' + brl(S.cfg.price_cents)),
+    h('button', { class: 'x', onclick: async e => { e.stopPropagation(); if (!confirm('Excluir esta foto?')) return; try { await api('/me/photos/' + p.id, { method: 'DELETE' }); await refresh(); } catch (er) { toast('Ops', er.message); } } }, '✕'));
+}
+function addTile(refresh) {
+  const inp = h('input', { type: 'file', accept: 'image/*', multiple: true, class: 'hidden' });
+  inp.addEventListener('change', async () => {
+    for (const f of inp.files) {
+      const fd = new FormData(); fd.append('file', f);
+      try { await api('/me/photos', { method: 'POST', body: fd }); } catch (e) { toast('Foto não enviada', e.message); }
+    }
+    await refresh();
+  });
+  return h('label', { class: 'pt add' }, '+', inp);
+}
+async function renderProfile() {
+  const m = S.me, box = $('profileBox'); box.innerHTML = '';
+  const free = S.myPhotos.filter(p => p.is_public).length;
+  const refresh = async () => { await loadMyPhotos(); renderProfile(); };
+  const grid = h('div', { class: 'pgrid' }); S.myPhotos.forEach(p => grid.append(photoTile(p, refresh)));
+  if (S.myPhotos.length < S.cfg.max_photos) grid.append(addTile(refresh));
+  const f = {};
+  const field = (k, lab, el) => { f[k] = el; return h('div', {}, h('label', {}, lab), el); };
+  const opt = (arr, v) => arr.map(x => h('option', { value: x, selected: x === v }, x));
+  box.append(
+    h('h3', { style: 'margin-top:8px' }, m.name + ', ' + m.age),
+    h('p', { class: 'sub' }, '⌖ Mora em ' + ((S.prefs && S.prefs.current_city) || '—') + ' · Nasceu em ' + (m.birth_city || '—')),
+    h('button', { class: 'btn ghost sm', style: 'margin-top:6px', onclick: () => { try { editPreferences(); } catch (e) { toast('Ops', e.message); } } }, '✏️ Mudar cidade e gostos'),
+    h('div', { class: 'mychart' }, h('div', {}, h('small', {}, 'Sol'), h('b', {}, m.sun_sign)), h('div', {}, h('small', {}, 'Lua'), h('b', {}, m.moon_sign)), h('div', {}, h('small', {}, 'Ascendente'), h('b', {}, m.rising_sign))),
+    h('h3', {}, 'Minhas fotos'),
+    h('p', { class: 'sub' }, 'Todas as suas fotos ficam visíveis para todos — 100% grátis.'),
+    grid,
+    h('h3', {}, 'Dados do perfil'),
+    field('name', 'Nome', h('input', { value: m.name, maxlength: 60 })),
+    field('bio', 'Bio', h('textarea', { maxlength: 500 }, m.bio)),
+    h('div', { class: 'row' }, h('div', {}, field('gender', 'Eu sou', h('select', {}, opt(['Feminino', 'Masculino', 'Outro'], m.gender)))), h('div', {}, field('int', 'Quero conhecer', h('select', {}, opt(['Todos', 'Feminino', 'Masculino'], m.interested_in))))),
+    h('div', { class: 'row' }, h('div', {}, field('min', 'Idade mín.', h('input', { type: 'number', min: 18, max: 99, value: m.min_age }))), h('div', {}, field('max', 'Idade máx.', h('input', { type: 'number', min: 18, max: 99, value: m.max_age })))),
+    h('h3', {}, 'Nascimento'), h('p', { class: 'sub' }, 'Alterar recalcula seu mapa astral.'),
+    h('div', { class: 'row' }, h('div', {}, field('bd', 'Data', h('input', { type: 'date', value: m.birth_date }))), h('div', {}, field('bt', 'Hora', h('input', { type: 'time', value: m.birth_time })))),
+    field('bc', 'Cidade', h('input', { list: 'cityList', value: m.birth_city, 'data-cityac': true })),
+    h('button', { class: 'btn', style: 'margin-top:16px', onclick: async () => {
+      try {
+        S.me = await api('/me', { method: 'PUT', body: { name: f.name.value, bio: f.bio.value, gender: f.gender.value, interested_in: f.int.value,
+          min_age: +f.min.value, max_age: +f.max.value, birth_date: f.bd.value, birth_time: f.bt.value, birth_city: f.bc.value } });
+        toast('Perfil salvo ✦'); S.feed = []; S.seen.clear(); loadFeed(); renderProfile();
+      } catch (e) { toast('Não salvou', e.message); } } }, 'Salvar alterações'),
+    h('div', { class: 'utility-card' }, h('h3', {}, 'Conta Spark'), h('p', { id: 'sparkLinkStatus', class: 'sub' }, 'Verificando vínculo…'),
+      h('button', { class: 'btn ghost', style: 'margin-top:8px', onclick: syncSpark }, 'Sincronizar com Spark')),
+    h('h3', {}, 'Configurações'),
+    h('div', { class: 'sw' }, h('div', {}, h('b', {}, 'Notificações push'), h('div', { class: 'sub' }, 'Matches, mensagens e fotos desbloqueadas. No iPhone, instale o app na tela inicial.')),
+      h('button', { class: 'btn sm', id: 'pushBtn', onclick: togglePush }, '...')),
+    m.is_admin ? h('button', { class: 'btn ghost', style: 'margin-top:10px', onclick: showStats }, '📊 Painel do administrador') : '',
+    h('button', { class: 'btn ghost', style: 'margin-top:10px', onclick: () => logout(false) }, 'Sair'),
+    h('button', { class: 'btn danger', style: 'margin-top:10px', onclick: async () => {
+      if (!confirm('Excluir sua conta e todos os seus dados? Isso não pode ser desfeito.')) return;
+      try { await api('/me', { method: 'DELETE' }); logout(false); toast('Conta excluída'); } catch (e) { toast('Ops', e.message); } } }, 'Excluir minha conta'));
+  updatePushBtn();
+  try { refreshSparkBadge(); } catch (e) {}
+  try { const mb = document.createElement('div'); mb.id = 'muralBox'; box.append(mb); loadMural(m.id, true); } catch (e) {}
+  try { const db = document.createElement('div'); db.id = 'depoBox'; box.append(db); loadDepos(m.id, true); } catch (e) {}
+}
+async function showStats() {
+  try { const s = await api('/admin/stats');
+    openModal(h('div', {}, h('h2', {}, 'Painel'), h('div', { class: 'asp good' }, h('b', {}, 'Receita (PIX)'), 'R$ ' + s.revenue_brl.toFixed(2).replace('.', ',') + ' em ' + s.payments_approved + ' fotos desbloqueadas'),
+      h('div', { class: 'asp' }, h('b', {}, 'Usuários'), s.users + ' cadastrados · ' + s.photos + ' fotos'), h('div', { class: 'asp' }, h('b', {}, 'Engajamento'), s.matches + ' matches · ' + s.messages + ' mensagens'),
+      h('div', { class: 'asp hard' }, h('b', {}, 'Denúncias'), s.reports), h('button', { class: 'btn ghost', style: 'margin-top:14px', onclick: closeModal }, 'Fechar')));
+  } catch (e) { toast('Ops', e.message); }
+}
+
+/* ---------- push ---------- */
+const b64u = s => { const p = '='.repeat((4 - s.length % 4) % 4), r = atob((s + p).replace(/-/g, '+').replace(/_/g, '/')); return Uint8Array.from([...r].map(c => c.charCodeAt(0))); };
+async function getSub() { if (!('serviceWorker' in navigator) || !('PushManager' in window)) return null; const reg = await navigator.serviceWorker.ready; return reg.pushManager.getSubscription(); }
+async function updatePushBtn() {
+  const b = $('pushBtn'); if (!b) return;
+  if (!('serviceWorker' in navigator) || !('PushManager' in window)) { b.textContent = 'Indisponível'; b.disabled = true; return; }
+  b.textContent = (await getSub()) ? 'Desativar' : 'Ativar';
+}
+async function togglePush() {
+  try {
+    const cur = await getSub();
+    if (cur) { const j = cur.toJSON(); await api('/push/unsubscribe', { method: 'POST', body: { endpoint: j.endpoint, p256dh: j.keys.p256dh, auth: j.keys.auth } }); await cur.unsubscribe(); toast('Notificações desativadas'); }
+    else {
+      if (await Notification.requestPermission() !== 'granted') return toast('Permissão negada', 'Libere as notificações nas configurações do navegador.');
+      const reg = await navigator.serviceWorker.ready, k = (await api('/push/key')).key;
+      const sub = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: b64u(k) }), j = sub.toJSON();
+      await api('/push/subscribe', { method: 'POST', body: { endpoint: j.endpoint, p256dh: j.keys.p256dh, auth: j.keys.auth } });
+      toast('Notificações ativadas ✦', 'Você será avisado de matches e mensagens.');
+    }
+  } catch (e) { toast('Ops', e.message); }
+  updatePushBtn();
+}
+
+/* ---------- modal ---------- */
+function openModal(content) { const s = $('sheet'); s.innerHTML = ''; s.append(content); $('modal').classList.remove('hidden'); }
+function closeModal() { clearInterval(payTimer); $('modal').classList.add('hidden'); }
+
+</script>
+<script src="experience.js?v=5"></script>
+<button onclick="location.href='https://sparkbr.online/'" title="Voltar p/ Spark" style="position:fixed;bottom:142px;right:10px;z-index:9000;background:#f59e0b;color:#fff;border:none;border-radius:50%;width:44px;height:44px;font-size:20px;font-weight:800;box-shadow:0 2px 8px rgba(0,0,0,.25)">&#9889;</button>
+<script>boot();</script>
+
+<script src="/navegador/bridge/spark-family.js?v=2.1.0"></script>
+</body>
+</html>

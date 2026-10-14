@@ -1,0 +1,30 @@
+SPARKBR — PACOTE DO SITE E DOS APPS
+Atualizado em 12/10/2026
+
+CONTEÚDO
+- index.html: página inicial do ecossistema
+- whindersson/index.html: apresentação VIP independente
+- pastas dos apps, páginas, assets, CSS, scripts, manifestos e service workers
+
+PUBLICAÇÃO
+1. Extraia o conteúdo deste ZIP diretamente para a raiz do site (webroot).
+2. Preserve os nomes das pastas e sirva index.html para as rotas / e /whindersson/.
+3. Use HTTPS para instalação PWA, notificações e recursos do navegador que exigem contexto seguro.
+4. Faça uma cópia de segurança do site atual antes de substituir arquivos no seu provedor.
+
+SERVIÇOS
+Este pacote contém o front-end web. Algumas ferramentas também consultam APIs do SparkBR
+(por exemplo, /spark-api, /saude-api, /auth e /agua-push). Os serviços de backend,
+banco de dados, credenciais, DNS e configuração do servidor não estão neste ZIP; mantenha
+os serviços existentes conectados e configure os mesmos caminhos no provedor de hospedagem.
+
+PROPOSTA VIP
+A página /whindersson/ inclui um destaque para Elisaldo Carlini (CEBRID/UNIFESP) e o
+artigo de Cunha, Carlini e colaboradores, publicado em Pharmacology em 1980. A referência
+original, os limites históricos e as fontes institucionais podem ser consultados na página.
+A agenda de colaboração com USP e outras universidades é uma proposta a formalizar.
+
+A página /whindersson/ é uma proposta independente e não afirma parceria, patrocínio ou
+endosso de Whindersson Nunes, DIA UM ou WhinCBD. A visão de 1.000+ servidores está
+identificada como objetivo futuro sujeito a estudo, investimento e validação. A foto do
+hero é carregada do site DIA UM; obtenha autorização de uso antes de uma publicação pública.

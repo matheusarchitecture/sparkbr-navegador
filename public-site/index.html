@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head>
+  <script defer src="/navegador/bridge/spark-bridge.js?v=2.1.0"></script><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#173f35"><meta name="description" content="SparkBR: inteligência brasileira para a vida real. Seu navegador da família com IA integrada e 23 aplicativos 100% gratuitos para casa, compras, saúde e dinheiro."><title>SparkBR — Inteligência brasileira. Mais vida no seu dia.</title><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="manifest" href="/manifest.webmanifest"><link rel="apple-touch-icon" href="/assets/icon-192.png"><link rel="preload" as="font" type="font/woff2" href="/assets/manrope.woff2" crossorigin><style>
+#hub-account{display:flex;align-items:center;gap:8px}
+#hub-account .ha-dot{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#14c99a,#08785f);color:#fff;display:grid;place-items:center;font-size:12px;font-weight:800;overflow:hidden}
+#hub-account .ha-dot img{width:100%;height:100%;object-fit:cover}
+#hub-account .ha-name{font-size:12px;font-weight:700;color:var(--ink)}
+#hub-account .ha-btn{padding:9px 14px;border-radius:999px;border:1px solid var(--line);background:#fff;font-weight:800;font-size:12px;cursor:pointer}
+#hub-modal{display:none;position:fixed;inset:0;z-index:9999;background:rgba(10,20,30,.55);align-items:center;justify-content:center;padding:16px}
+#hub-modal.open{display:flex}
+#hub-card{background:#fff;border-radius:22px;max-width:400px;width:100%;padding:26px;position:relative;box-shadow:0 24px 60px rgba(0,0,0,.3)}
+#hub-card h3{margin:0 0 4px;font-size:20px}
+#hub-card .sub{font-size:12px;color:var(--muted);margin-bottom:14px}
+#hub-tabs{display:flex;gap:6px;margin-bottom:14px}
+#hub-tabs button{flex:1;padding:10px;border-radius:10px;border:1px solid var(--line);background:#f5f7f6;font-weight:800;font-size:12px;cursor:pointer}
+#hub-tabs button.on{background:#0d1728;color:#fff}
+#hub-card input,#hub-card select{width:100%;padding:11px;border:1px solid var(--line);border-radius:10px;margin-bottom:8px;font-size:13px;font-family:inherit}
+#hub-card .go{width:100%;padding:12px;border:none;border-radius:12px;background:linear-gradient(135deg,#51dfb1,#13bc8c);font-weight:800;font-size:13px;cursor:pointer;color:#08291f}
+#hub-card .gbtn{width:100%;padding:11px;border:1px solid var(--line);border-radius:12px;background:#fff;font-weight:800;font-size:13px;cursor:pointer;margin-bottom:8px}
+#hub-msg{font-size:12px;min-height:18px;margin-top:8px;color:#b91c1c}
+#hub-x{position:absolute;top:10px;right:14px;border:none;background:none;font-size:18px;cursor:pointer;color:var(--muted)}
+#hub-req{font-size:11px;color:var(--muted);background:#f5f7f6;border-radius:10px;padding:8px 10px;margin-bottom:10px}
+#hub-account{position:relative;cursor:pointer}
+#hub-menu{display:none;position:absolute;top:34px;right:0;background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:0 18px 40px rgba(0,0,0,.18);min-width:220px;z-index:9999;overflow:hidden;text-align:left}
+#hub-menu.open{display:block}
+#hub-menu .hm-head{padding:12px 14px;border-bottom:1px solid var(--line);font-size:12px}
+#hub-menu .hm-head b{display:block;font-size:13px}
+#hub-menu button{display:block;width:100%;text-align:left;padding:11px 14px;border:none;background:#fff;font-size:12px;font-weight:700;cursor:pointer}
+#hub-menu button:hover{background:#f5f7f6}
+</style><link rel="stylesheet" href="/assets/home.css?v=20261013"><script src="/assets/home.js?v=20261013" defer></script></head>
+<body><a href="#apps" class="skip-link">Ir aos aplicativos</a><svg xmlns="http://www.w3.org/2000/svg" style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true"><symbol id="i-spark" viewBox="0 0 24 24"><path d="m3 3 2 2 2 11h12l2-9H6M9 20h.01M18 20h.01"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></symbol><symbol id="i-sparkmat" viewBox="0 0 24 24"><path d="m3 11 9-8 9 8M5 9v12h14V9M9 21v-7h6v7M12 3v5"/></symbol><symbol id="i-sparkpet" viewBox="0 0 24 24"><path d="M7 15c-3 4-1 7 2 6 2-1 4-1 6 0 3 1 5-2 2-6-3-4-7-4-10 0Z"/><ellipse cx="5" cy="10" rx="2" ry="3"/><ellipse cx="10" cy="6" rx="2" ry="3"/><ellipse cx="15" cy="6" rx="2" ry="3"/><ellipse cx="20" cy="10" rx="2" ry="3"/></symbol><symbol id="i-saude" viewBox="0 0 24 24"><path d="M20 5a5 5 0 0 0-8 1 5 5 0 0 0-8-1c-5 5 3 11 8 16 5-5 13-11 8-16Z"/><path d="M4 12h5l2-4 3 8 2-4h4"/></symbol><symbol id="i-agua" viewBox="0 0 24 24"><path d="M12 3c-2 4-7 9-7 13a7 7 0 0 0 14 0c0-4-5-9-7-13Z"/><path d="M8 16a4 4 0 0 0 4 4"/></symbol><symbol id="i-posto" viewBox="0 0 24 24"><path d="M3 21h12M5 21V5h9v16M5 11h9M15 5l4 4v9a2 2 0 0 0 4 0v-5l-4-4M19 6l3 3"/></symbol><symbol id="i-familia" viewBox="0 0 24 24"><circle cx="9" cy="7" r="3"/><circle cx="18" cy="9" r="2"/><path d="M3 21v-3a6 6 0 0 1 12 0v3M16 14a5 5 0 0 1 6 5v2M9 15v6"/></symbol><symbol id="i-financeiro" viewBox="0 0 24 24"><path d="M3 6h17v15H3V6ZM3 6V3h14M16 11h5v5h-5a2.5 2.5 0 0 1 0-5Z"/><path d="M17 13.5h.01"/></symbol><symbol id="i-farmacia" viewBox="0 0 24 24"><path d="M4 7h16v14H4ZM2 7l3-4h14l3 4M10 11h4M12 9v6M8 21v-4h8v4"/></symbol><symbol id="i-dose" viewBox="0 0 24 24"><path d="m8 4-4 4a6 6 0 0 0 8 8l4-4a6 6 0 0 0-8-8ZM6 6l8 8M17 17h4M19 15v4"/></symbol><symbol id="i-astromatch" viewBox="0 0 24 24"><path d="M20 5a5 5 0 0 0-8 1 5 5 0 0 0-8-1c-5 5 3 11 8 16 5-5 13-11 8-16ZM12 7v4M10 9h4"/></symbol><symbol id="i-contas" viewBox="0 0 24 24"><path d="M6 3h12v19l-3-2-3 2-3-2-3 2V3ZM9 7h6M9 11h6M9 15h3"/></symbol><symbol id="i-cardapio" viewBox="0 0 24 24"><circle cx="13" cy="12" r="7"/><circle cx="13" cy="12" r="4"/><path d="M2 3v5c0 2 3 2 3 0V3M3.5 3v18M22 3v18M22 3c-4 3-4 9 0 9"/></symbol><symbol id="i-agenda" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4M17 3v4M3 10h18M7 14h2M13 14h2M7 18h2"/></symbol><symbol id="i-cofrinho" viewBox="0 0 24 24"><path d="M6 9a7 7 0 0 1 12 0l3 2v6h-3l-1 4h-3l-1-3h-3l-1 3H6l-1-5c-4-1-4-5-1-5M8 8 7 4l4 3M11 9h3"/><circle cx="17" cy="12" r=".5"/></symbol><symbol id="i-faxina" viewBox="0 0 24 24"><path d="m14 3-4 10M7 12l8 3-3 7H3l4-10ZM6 17v5M9 17l-1 5M18 3v4M16 5h4M20 11v4M18 13h4"/></symbol><symbol id="i-escola" viewBox="0 0 24 24"><path d="m2 8 10-5 10 5-10 5L2 8ZM6 10v7c4 3 8 3 12 0v-7M22 8v10"/></symbol><symbol id="i-carteirinha" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M6 8h5M8.5 5.5v5M6 15h5M6 17h8M15 8h3M15 11h3M15 14h3"/></symbol><symbol id="i-energia" viewBox="0 0 24 24"><path d="m14 2-9 12h6l-1 8 9-12h-6l1-8Z"/></symbol><symbol id="i-bico" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="14" rx="2"/><path d="M8 7V3h8v4M3 12c5 4 13 4 18 0M12 11v5"/></symbol><symbol id="i-sono" viewBox="0 0 24 24"><path d="M21 13A9 9 0 0 1 11 3a9 9 0 1 0 10 10ZM17 3v4M15 5h4"/></symbol><symbol id="i-mural" viewBox="0 0 24 24"><path d="M7 3h10v7a5 5 0 0 1-10 0V3ZM7 6H3v2a4 4 0 0 0 4 4M17 6h4v2a4 4 0 0 1-4 4M12 15v5M8 21h8"/></symbol><symbol id="i-ideias" viewBox="0 0 24 24"><path d="M8 15a7 7 0 1 1 8 0v3H8v-3ZM9 21h6M10 18v-6M14 18v-6M9 11l3 2 3-2"/></symbol><symbol id="i-search" viewBox="0 0 24 24"><circle cx="10" cy="10" r="6"/><path d="m15 15 6 6"/></symbol><symbol id="i-star" viewBox="0 0 24 24"><path d="m12 3 2.8 5.8 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.7l6.2-.9L12 3Z"/></symbol><symbol id="i-sparkle" viewBox="0 0 24 24"><path d="M12 2c2 6 4 8 10 10-6 2-8 4-10 10-2-6-4-8-10-10 6-2 8-4 10-10Z"/></symbol><symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 3 6v5c0 5 4 8 9 11 5-3 9-6 9-11V6l-9-3Z"/><path d="m8 12 3 3 5-6"/></symbol><symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 5 5L20 7"/></symbol><symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18"/></symbol><symbol id="i-phone" viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="2"/><path d="M10 18h4"/></symbol></svg>
+<header class="site-header shell"><a class="brand" href="/" aria-label="SparkBR, início"><img src="/assets/spark-mark.svg" alt="" width="40" height="40"><span class="wordmark">spark<span>BR</span></span></a><nav class="main-nav" aria-label="Navegação principal"><a href="#apps">Aplicativos</a><a href="#nosso-jeito">Nosso jeito</a><a href="#brasileiro">IA brasileira</a></nav><div class="header-meta"><span class="free-note">100% gratuito</span><span id="hub-account"><button class="ha-btn" id="hub-login-top">Entrar / Cadastrar</button></span><div id="hub-menu"></div></div></header>
+<main class="shell"><section class="hero" aria-labelledby="hero-title"><div class="hero-copy"><div class="eyebrow"><span class="brazil-dot" aria-hidden="true"></span>Inteligência brasileira. Vida real.</div><h1 id="hero-title">Seu dia tem<br>um novo <em>brilho.</em></h1><p class="hero-lead">Um navegador pensado para a <strong>família brasileira.</strong> IA integrada e 23 aplicativos para cuidar da casa, do bolso e de quem você ama. Tudo gratuito.</p><div class="hero-actions"><a class="button button-primary" href="#apps">Encontre seu primeiro app <span aria-hidden="true">↗</span></a><a class="button button-link" href="/baixar/">Levar o Spark comigo <span aria-hidden="true">↗</span></a></div><div class="hero-proof"><span><strong>23 aplicativos</strong>E novas ideias chegando</span><span><strong>100% gratuito</strong>Para a sua família</span><span><strong>Feito no Brasil</strong>Com o nosso jeito</span></div></div>
+<div class="product-stage"><div class="stage-orbit"></div><svg class="glyph stage-spark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-sparkle"/></svg><div class="browser-demo" aria-label="Exemplo da experiência SparkBR"><div class="browser-chrome" aria-hidden="true"><i></i><i></i><i></i><span class="demo-url">sparkbr.online · seu ponto de partida</span><span style="font-size:13px;color:#9db69d">✦</span></div><div class="demo-body"><div class="demo-meta"><span>SPARKBR · SUA VIDA, CONECTADA</span><span class="label">EXEMPLO DE USO</span></div><h2 class="demo-title">Menos correria.<br><em>Mais tempo junto.</em></h2><p class="demo-caption">O que vamos simplificar hoje?</p><form class="demo-search" id="demo-search"><svg class="glyph " viewBox="0 0 24 24" aria-hidden="true"><use href="#i-search"/></svg><input aria-label="O que você quer organizar?" id="demo-query" placeholder="Quero organizar minha semana…"><button aria-label="Encontrar ferramentas" type="submit">↗</button></form><div class="demo-quick"><a class="demo-app" href="/spark/"><svg class="glyph " viewBox="0 0 24 24" aria-hidden="true"><use href="#i-spark"/></svg><span>Mercado</span></a><a class="demo-app" href="/familia/"><svg class="glyph " viewBox="0 0 24 24" aria-hidden="true"><use href="#i-familia"/></svg><span>Família</span></a><a class="demo-app" href="/financeiro/"><svg class="glyph " viewBox="0 0 24 24" aria-hidden="true"><use href="#i-financeiro"/></svg><span>Meu bolso</span></a><a class="demo-app" href="/saude/"><svg class="glyph " viewBox="0 0 24 24" aria-hidden="true"><use href="#i-saude"/></svg><span>Meu cuidado</span></a></div><div class="demo-assist"><svg class="glyph " viewBox="0 0 24 24" aria-hidden="true"><use href="#i-sparkle"/></svg><div><b>Uma boa ideia para começar</b><p>Planeje as refeições da semana e leve os ingredientes para sua lista do mercado.</p><a href="/cardapio/">Abrir Cardápio da Semana <span aria-hidden="true">↗</span></a></div></div></div></div><div class="floating-note"><svg class="glyph " viewBox="0 0 24 24" aria-hidden="true"><use href="#i-saude"/></svg><div><strong>Feito pra vida de verdade.</strong><span>Do Brasil. Para a sua família.</span></div></div></div></section>
+<div class="trust-strip" aria-label="O jeito SparkBR"><span class="trust-item"><svg class="glyph " viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check"/></svg><span><strong>Grátis</strong> para usar todos os dias</span></span><span class="trust-item"><svg class="glyph " viewBox="0 0 24 24" aria-hidden="true"><use href="#i-sparkle"/></svg><span><strong>IA</strong> dentro das ferramentas</span></span><span class="trust-item"><svg class="glyph " viewBox="0 0 24 24" aria-hidden="true"><use href="#i-phone"/></svg><span>No <strong>celular e computador</strong></span></span><span class="trust-item"><svg class="glyph " viewBox="0 0 24 24" aria-hidden="true"><use href="#i-globe"/></svg><span>Uma marca com <strong>alma brasileira</strong></span></span></div>
+<section class="discovery" id="apps" aria-labelledby="apps-title"><div class="section-head"><div><span class="kicker">UM MUNDO DE POSSIBILIDADES</span><h2 id="apps-title">Tem um Spark para<br><em>cada parte da sua vida.</em></h2></div><p>Escolha o que faz sentido hoje.<br>O resto pode esperar.</p></div><div class="toolbar"><div class="filters" role="group" aria-label="Filtrar aplicativos"><button class="filter" data-filter="all" aria-pressed="true">Todos os apps</button><button class="filter" data-filter="casa" aria-pressed="false">Casa & família</button><button class="filter" data-filter="compras" aria-pressed="false">Compras & dinheiro</button><button class="filter" data-filter="cuidado" aria-pressed="false">Saúde & cuidado</button><button class="filter" data-filter="conexoes" aria-pressed="false">Conexões</button></div><div class="search-tools"><label class="search"><svg class="glyph " viewBox="0 0 24 24" aria-hidden="true"><use href="#i-search"/></svg><input id="app-search" type="search" placeholder="O que você precisa?" aria-label="Buscar um aplicativo" autocomplete="off"></label><button class="capture-btn" id="hub-foto" aria-label="Buscar com uma foto" title="Foto: capturar e enviar ao app">📷</button><button class="capture-btn" id="hub-mic" aria-label="Buscar por voz, segure para falar" title="Segure e fale">🎤</button><button id="hub-install" class="capture-btn" title="Instalar SparkBR" aria-label="Instalar SparkBR" style="display:none">↧</button></div></div><div class="result-line"><span id="result-count" role="status" aria-live="polite">23 aplicativos gratuitos</span><button class="view-favorites" id="favorites-only" aria-pressed="false"><svg class="glyph " viewBox="0 0 24 24" aria-hidden="true"><use href="#i-star"/></svg> Meus favoritos</button></div><div id="apps-grid" class="apps-grid"><div class="card-wrap" data-group="compras" data-app="spark"><a class="app-card" href="/spark/" data-search="mercado compras lista supermercado despensa ia" style="--tile:#f7e7d7;--tone:#9b704a"><div class="card-top"><span class="app-icon"><svg class="glyph " viewBox="0 0 24 24" aria-hidden="true"><use href="#i-spark"/></svg></span><span class="app-category">Compras inteligentes</span></div><h3>Spark Mercado</h3><p>Organize a lista de compras, compare mercados e cuide da despensa com apoio da IA.</p><div class="card-link"><span>Abrir aplicativo</span><span aria-hidden="true">↗</span></div></a><button class="favorite" data-favorite="spark" aria-label="Favoritar Spark Mercado" aria-pressed="false"><svg class="glyph " viewBox="0 0 24 24" aria-hidden="true"><use href="#i-star"/></svg></button></div><div class="card-wrap" data-group="casa" data-app="sparkmat"><a class="app-card" href="/sparkmat/" data-search="obra construção materiais orçamento ia" style="--tile:#edf0df;--tone:#637b40"><div class="card-top"><span class="app-icon"><svg class="glyph " viewBox="0 0 24 24" aria-hidden="true"><use href="#i-sparkmat"/></svg></span><span class="app-category">Casa e obra</span></div><h3>SparkMat Obra</h3><p>Planeje materiais, etapas da obra e custos de compra.</p><div class="card-link"><span>Abrir aplicativo</span><span aria-hidden="true">↗</span></div></a><button class="favorite" data-favorite="sparkmat" aria-label="Favoritar SparkMat Obra" aria-pressed="false"><svg class="glyph " viewBox="0 0 24 24" aria-hidden="true"><use href="#i-star"/></svg></button></div><div class="card-wrap" data-group="cuidado" data-app="sparkpet"><a class="app-card" href="/sparkpet/" data-search="pets animais ração banho tosa veterinário" style="--tile:#e1ebed;--tone:#608893"><div class="card-top"><span class="app-icon"><svg class="glyph " viewBox="0 0 24 24" aria-hidden="true"><use href="#i-sparkpet"/></svg></span><span class="app-category">Cuidado animal</span></div><h3>SparkPet</h3><p>Organize a rotina, as compras e os serviços para seus pets.</p><div class="card-link"><span>Abrir aplicativo</span><span aria-hidden="true">↗</span></div></a><button class="favorite" data-favorite="sparkpet" aria-label="Favoritar SparkPet" aria-pressed="false"><svg class="glyph " viewBox="0 0 24 24" aria-hidden="true"><use href="#i-star"/></svg></button></div><div class="card-wrap" data-group="cuidado" data-app="saude"><a class="app-card" href="/saude/" data-search="saúde treino dieta exercício academia evolução ia coach" style="--tile:#e1ebed;--tone:#608893"><div class="card-top"><span class="app-icon"><svg class="glyph " viewBox="0 0 24 24" aria-hidden="true"><use href="#i-saude"/></svg></span><span class="app-category">Saúde e bem-estar</span></div><h3>Spark Saúde</h3><p>Registre treinos, alimentação e evolução pessoal com apoio de ferramentas inteligentes.</p><div class="card-link"><span>Abrir aplicativo</span><span aria-hidden="true">↗</span></div></a><button class="favorite" data-favorite="saude" aria-label="Favoritar Spark Saúde" aria-pressed="false"><svg class="glyph " viewBox="0 0 24 24" aria-hidden="true"><use href="#i-star"/></svg></button></div><div class="card-wrap" data-group="cuidado" data-app="agua"><a class="app-card" href="/agua/" data-search="água hidratação beber lembrete rotina" style="--tile:#e1ebed;--tone:#608893"><div class="card-top"><span class="app-icon"><svg class="glyph " viewBox="0 0 24 24" aria-hidden="true"><use href="#i-agua"/></svg></span><span class="app-category">Hábitos diários</span></div><h3>Spark Água</h3><p>Acompanhe sua meta de hidratação e os copos de água ao longo do dia.</p><div class="card-link"><span>Abrir aplicativo</span><span aria-hidden="true">↗</span></div></a><button class="favorite" data-favorite="agua" aria-label="Favoritar Spark Água" aria-pressed="false"><svg class="glyph " viewBox="0 0 24 24" aria-hidden="true"><use href="#i-star"/></svg></button></div><div class="card-wrap" data-group="compras" data-app="posto"><a class="app-card" href="/posto/" data-search="posto combustível gasolina etanol preço carro" style="--tile:#f7e7d7;--tone:#9b704a"><div class="card-top"><span class="app-icon"><svg class="glyph " viewBox="0 0 24 24" aria-hidden="true"><use href="#i-posto"/></svg></span><span class="app-category">Mobilidade</span></div><h3>Spark Posto</h3><p>Compare preços de combustível e acompanhe seus gastos com o carro.</p><div class="card-link"><span>Abrir aplicativo</span><span aria-hidden="true">↗</span></div></a><button class="favorite" data-favorite="posto" aria-label="Favoritar Spark Posto" aria-pressed="false"><svg class="glyph " viewBox="0 0 24 24" aria-hidden="true"><use href="#i-star"/></svg></button></div><div class="card-wrap" data-group="casa" data-app="familia"><a class="app-card" href="/familia/" data-search="família pessoas saúde metas prêmios" style="--tile:#edf0df;--tone:#637b40"><div class="card-top"><span class="app-icon"><svg class="glyph " viewBox="0 0 24 24" aria-hidden="true"><use href="#i-familia"/></svg></span><span class="app-category">Rotina em família</span></div><h3>Família Spark</h3><p>Reúna pessoas, pets, metas, hábitos e atalhos para os apps da família.</p><div class="card-link"><span>Abrir aplicativo</span><span aria-hidden="true">↗</span></div></a><button class="favorite" data-favorite="familia" aria-label="Favoritar Família Spark" aria-pressed="false"><svg class="glyph " viewBox="0 0 24 24" aria-hidden="true"><use href="#i-star"/></svg></button></div><div class="card-wrap" data-group="compras" data-app="financeiro"><a class="app-card" href="/financeiro/" data-search="dinheiro finanças orçamento economia investimento" style="--tile:#f7e7d7;--tone:#9b704a"><div class="card-top"><span class="app-icon"><svg class="glyph " viewBox="0 0 24 24" aria-hidden="true"><use href="#i-financeiro"/></svg></span><span class="app-category">Planejamento</span></div><h3>Spark Financeiro</h3><p>Organize gastos e acompanhe planos de economia para seus objetivos.</p><div class="card-link"><span>Abrir aplicativo</span><span aria-hidden="true">↗</span></div></a><button class="favorite" data-favorite="financeiro" aria-label="Favoritar Spark Financeiro" aria-pressed="false"><svg class="glyph " viewBox="0 0 24 24" aria-hidden="true"><use href="#i-star"/></svg></button></div><div class="card-wrap" data-group="cuidado" data-app="farmacia"><a class="app-card" href="/farmacia/" data-search="farmácia remédio medicamento receita saúde" style="--tile:#e1ebed;--tone:#608893"><div class="card-top"><span class="app-icon"><svg class="glyph " viewBox="0 0 24 24" aria-hidden="true"><use href="#i-farmacia"/></svg></span><span class="app-category">Saúde e cuidado</span></div><h3>Spark Farmácia</h3><p>Consulte informações sobre medicamentos e farmácias da região.</p><div class="card-link"><span>Abrir aplicativo</span><span aria-hidden="true">↗</span></div></a><button class="favorite" data-favorite="farmacia" aria-label="Favoritar Spark Farmácia" aria-pressed="false"><svg class="glyph " viewBox="0 0 24 24" aria-hidden="true"><use href="#i-star"/></svg></button></div><div class="card-wrap" data-group="cuidado" data-app="dose"><a class="app-card" href="/dose/" data-search="dose remédio medicamento horário lembrete tratamento" style="--tile:#e1ebed;--tone:#608893"><div class="card-top"><span class="app-icon"><svg class="glyph " viewBox="0 0 24 24" aria-hidden="true"><use href="#i-dose"/></svg></span><span class="app-category">Cuidado contínuo</span></div><h3>Spark Dose</h3><p>Organize horários, estoque e lembretes de medicação.</p><div class="card-link"><span>Abrir aplicativo</span><span aria-hidden="true">↗</span></div></a><button class="favorite" data-favorite="dose" aria-label="Favoritar Spark Dose" aria-pressed="false"><svg class="glyph " viewBox="0 0 24 24" aria-hidden="true"><use href="#i-star"/></svg></button></div><div class="card-wrap" data-group="conexoes" data-app="astromatch"><a class="app-card" href="/astromatch/" data-search="encontro amor relacionamento paquera crush date romance signos mapa astral afinidade" style="--tile:#eee6f0;--tone:#927a9d"><div class="card-top"><span class="app-icon"><svg class="glyph " viewBox="0 0 24 24" aria-hidden="true"><use href="#i-astromatch"/></svg></span><span class="app-category">Encontros</span></div><h3>AstroMatch</h3><p>Descubra afinidades astrológicas e converse com novas pessoas em um app de encontros para maiores de 18 anos.</p><div class="card-link"><span>Abrir aplicativo</span><span aria-hidden="true">↗</span></div><span class="adult-pill">18+</span></a><button class="favorite" data-favorite="astromatch" aria-label="Favoritar AstroMatch" aria-pressed="false"><svg class="glyph " viewBox="0 0 24 24" aria-hidden="true"><use href="#i-star"/></svg></button></div><div class="card-wrap" data-group="casa" data-app="contas"><a class="app-card" href="/contas/" data-search="contas boleto vencimento luz agua escola aluguel multa pagar fatura" style="--tile:#edf0df;--tone:#637b40"><div class="card-top"><span class="app-icon"><svg class="glyph " viewBox="0 0 24 24" aria-hidden="true"><use href="#i-contas"/></svg></span><span class="app-category">Casa em dia</span></div><h3>Contas da Casa</h3><p>Organize boletos, vencimentos e registros de contas pagas.</p><div class="card-link"><span>Abrir aplicativo</span><span aria-hidden="true">↗</span></div></a><button class="favorite" data-favorite="contas" aria-label="Favoritar Contas da Casa" aria-pressed="false"><svg class="glyph " viewBox="0 0 24 24" aria-hidden="true"><use href="#i-star"/></svg></button></div><div class="card-wrap" data-group="compras" data-app="cardapio"><a class="app-card" href="/cardapio/" data-search="cardapio janta jantar semana receita cozinha o que comer gelslow" style="--tile:#f7e7d7;--tone:#9b704a"><div class="card-top"><span class="app-icon"><svg class="glyph " viewBox="0 0 24 24" aria-hidden="true"><use href="#i-cardapio"/></svg></span><span class="app-category">Mesa posta</span></div><h3>Cardápio da Semana</h3><p>Planeje as refeições da semana e envie os itens para a lista do Mercado.</p><div class="card-link"><span>Abrir aplicativo</span><span aria-hidden="true">↗</span></div></a><button class="favorite" data-favorite="cardapio" aria-label="Favoritar Cardápio da Semana" aria-pressed="false"><svg class="glyph " viewBox="0 0 24 24" aria-hidden="true"><use href="#i-star"/></svg></button></div><div class="card-wrap" data-group="casa" data-app="agenda"><a class="app-card" href="/agenda/" data-search="agenda calendario compromisso medico escola reuniao horario quem leva" style="--tile:#edf0df;--tone:#637b40"><div class="card-top"><span class="app-icon"><svg class="glyph " viewBox="0 0 24 24" aria-hidden="true"><use href="#i-agenda"/></svg></span><span class="app-category">Tempo junto</span></div><h3>Agenda da Família</h3><p>Reúna compromissos da escola, consultas, obra e responsabilidades em um calendário.</p><div class="card-link"><span>Abrir aplicativo</span><span aria-hidden="true">↗</span></div></a><button class="favorite" data-favorite="agenda" aria-label="Favoritar Agenda da Família" aria-pressed="false"><svg class="glyph " viewBox="0 0 24 24" aria-hidden="true"><use href="#i-star"/></svg></button></div><div class="card-wrap" data-group="compras" data-app="cofrinho"><a class="app-card" href="/cofrinho/" data-search="cofrinho economia guardar poupar meta divida cartao desafio aposte" style="--tile:#f7e7d7;--tone:#9b704a"><div class="card-top"><span class="app-icon"><svg class="glyph " viewBox="0 0 24 24" aria-hidden="true"><use href="#i-cofrinho"/></svg></span><span class="app-category">Guardar junto</span></div><h3>Cofrinho &amp; Dívidas</h3><p>Acompanhe metas de economia, aportes e a organização das dívidas.</p><div class="card-link"><span>Abrir aplicativo</span><span aria-hidden="true">↗</span></div></a><button class="favorite" data-favorite="cofrinho" aria-label="Favoritar Cofrinho &amp; Dívidas" aria-pressed="false"><svg class="glyph " viewBox="0 0 24 24" aria-hidden="true"><use href="#i-star"/></svg></button></div><div class="card-wrap" data-group="casa" data-app="faxina"><a class="app-card" href="/faxina/" data-search="faxina limpeza casa comodo cozinha banheiro diarista organizar" style="--tile:#edf0df;--tone:#637b40"><div class="card-top"><span class="app-icon"><svg class="glyph " viewBox="0 0 24 24" aria-hidden="true"><use href="#i-faxina"/></svg></span><span class="app-category">Casa brilhando</span></div><h3>Faxina da Casa</h3><p>Divida a limpeza por cômodo, dia e responsável.</p><div class="card-link"><span>Abrir aplicativo</span><span aria-hidden="true">↗</span></div></a><button class="favorite" data-favorite="faxina" aria-label="Favoritar Faxina da Casa" aria-pressed="false"><svg class="glyph " viewBox="0 0 24 24" aria-hidden="true"><use href="#i-star"/></svg></button></div><div class="card-wrap" data-group="casa" data-app="escola"><a class="app-card" href="/escola/" data-search="escola crianca filho licao mochila material reuniao vacina serie" style="--tile:#edf0df;--tone:#637b40"><div class="card-top"><span class="app-icon"><svg class="glyph " viewBox="0 0 24 24" aria-hidden="true"><use href="#i-escola"/></svg></span><span class="app-category">Filhos</span></div><h3>Escola &amp; Crianças</h3><p>Organize lições, materiais, mochila e compromissos dos filhos.</p><div class="card-link"><span>Abrir aplicativo</span><span aria-hidden="true">↗</span></div></a><button class="favorite" data-favorite="escola" aria-label="Favoritar Escola &amp; Crianças" aria-pressed="false"><svg class="glyph " viewBox="0 0 24 24" aria-hidden="true"><use href="#i-star"/></svg></button></div><div class="card-wrap" data-group="cuidado" data-app="carteirinha"><a class="app-card" href="/carteirinha/" data-search="carteirinha exame receita vacina medico prontuario saude renovar" style="--tile:#e1ebed;--tone:#608893"><div class="card-top"><span class="app-icon"><svg class="glyph " viewBox="0 0 24 24" aria-hidden="true"><use href="#i-carteirinha"/></svg></span><span class="app-category">Prevenção</span></div><h3>Carteirinha &amp; Exames</h3><p>Reúna receitas, exames e vacinas por pessoa, com alertas de renovação.</p><div class="card-link"><span>Abrir aplicativo</span><span aria-hidden="true">↗</span></div></a><button class="favorite" data-favorite="carteirinha" aria-label="Favoritar Carteirinha &amp; Exames" aria-pressed="false"><svg class="glyph " viewBox="0 0 24 24" aria-hidden="true"><use href="#i-star"/></svg></button></div><div class="card-wrap" data-group="casa" data-app="energia"><a class="app-card" href="/energia/" data-search="energia luz conta botijao gas leitura relogio economia kwh" style="--tile:#edf0df;--tone:#637b40"><div class="card-top"><span class="app-icon"><svg class="glyph " viewBox="0 0 24 24" aria-hidden="true"><use href="#i-energia"/></svg></span><span class="app-category">Conta leve</span></div><h3>Luz, Água &amp; Gás</h3><p>Registre leituras, acompanhe metas de consumo e organize o controle do botijão.</p><div class="card-link"><span>Abrir aplicativo</span><span aria-hidden="true">↗</span></div></a><button class="favorite" data-favorite="energia" aria-label="Favoritar Luz, Água &amp; Gás" aria-pressed="false"><svg class="glyph " viewBox="0 0 24 24" aria-hidden="true"><use href="#i-star"/></svg></button></div><div class="card-wrap" data-group="compras" data-app="bico"><a class="app-card" href="/bico/" data-search="bico renda extra freela ganho trabalho vender turno salario" style="--tile:#f7e7d7;--tone:#9b704a"><div class="card-top"><span class="app-icon"><svg class="glyph " viewBox="0 0 24 24" aria-hidden="true"><use href="#i-bico"/></svg></span><span class="app-category">Ganhar mais</span></div><h3>Bico &amp; Renda Extra</h3><p>Registre ganhos de freelas, turnos e vendas e acompanhe a meta do mês.</p><div class="card-link"><span>Abrir aplicativo</span><span aria-hidden="true">↗</span></div></a><button class="favorite" data-favorite="bico" aria-label="Favoritar Bico &amp; Renda Extra" aria-pressed="false"><svg class="glyph " viewBox="0 0 24 24" aria-hidden="true"><use href="#i-star"/></svg></button></div><div class="card-wrap" data-group="cuidado" data-app="sono"><a class="app-card" href="/sono/" data-search="sono dormir noite descanso cama insonia acordar coruja" style="--tile:#e1ebed;--tone:#608893"><div class="card-top"><span class="app-icon"><svg class="glyph " viewBox="0 0 24 24" aria-hidden="true"><use href="#i-sono"/></svg></span><span class="app-category">Descanso</span></div><h3>Cantinho do Sono</h3><p>Registre noites de sono e acompanhe a rotina de descanso da família.</p><div class="card-link"><span>Abrir aplicativo</span><span aria-hidden="true">↗</span></div></a><button class="favorite" data-favorite="sono" aria-label="Favoritar Cantinho do Sono" aria-pressed="false"><svg class="glyph " viewBox="0 0 24 24" aria-hidden="true"><use href="#i-star"/></svg></button></div><div class="card-wrap" data-group="conexoes" data-app="mural"><a class="app-card" href="/mural/" data-search="mural elogio aplauso vitoria conquista parabens destaque historia" style="--tile:#eee6f0;--tone:#927a9d"><div class="card-top"><span class="app-icon"><svg class="glyph " viewBox="0 0 24 24" aria-hidden="true"><use href="#i-mural"/></svg></span><span class="app-category">Comunidade</span></div><h3>Mural de Elogios</h3><p>Celebre e compartilhe as conquistas da família.</p><div class="card-link"><span>Abrir aplicativo</span><span aria-hidden="true">↗</span></div></a><button class="favorite" data-favorite="mural" aria-label="Favoritar Mural de Elogios" aria-pressed="false"><svg class="glyph " viewBox="0 0 24 24" aria-hidden="true"><use href="#i-star"/></svg></button></div><div class="card-wrap" data-group="conexoes" data-app="ideias"><a class="app-card" href="/ideias/" data-search="ideia sugestao voto votacao melhoria pedido novidade voce pediu" style="--tile:#eee6f0;--tone:#927a9d"><div class="card-top"><span class="app-icon"><svg class="glyph " viewBox="0 0 24 24" aria-hidden="true"><use href="#i-ideias"/></svg></span><span class="app-category">Voz da família</span></div><h3>Canal de Ideias</h3><p>Envie sugestões, vote e acompanhe o andamento de novas ideias para os apps.</p><div class="card-link"><span>Abrir aplicativo</span><span aria-hidden="true">↗</span></div></a><button class="favorite" data-favorite="ideias" aria-label="Favoritar Canal de Ideias" aria-pressed="false"><svg class="glyph " viewBox="0 0 24 24" aria-hidden="true"><use href="#i-star"/></svg></button></div><div id="no-results" class="empty" hidden><span id="empty-message">Não encontramos esse app. Tente “compras”, “água” ou “agenda”.</span><br><button class="button button-primary" id="clear-search">Ver todos os aplicativos</button></div></div><p class="more-note"><svg class="glyph " viewBox="0 0 24 24" aria-hidden="true"><use href="#i-sparkle"/></svg> 23 ideias úteis. E esse é só o começo. <a href="/ideias/">Dê a sua sugestão ↗</a></p></section>
+<section class="story" id="nosso-jeito" aria-labelledby="story-title"><div class="story-art" aria-hidden="true"><svg class="glyph story-sun" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-sparkle"/></svg><div class="life-cards"><div class="life-tile"><svg class="glyph " viewBox="0 0 24 24" aria-hidden="true"><use href="#i-sparkmat"/></svg><strong>Uma casa.<br>Muitos<br>planos.</strong></div><div class="life-tile"><svg class="glyph " viewBox="0 0 24 24" aria-hidden="true"><use href="#i-saude"/></svg><strong>Quem<br>importa,<br>por perto.</strong></div><div class="life-tile"><svg class="glyph " viewBox="0 0 24 24" aria-hidden="true"><use href="#i-sparkle"/></svg><strong>A vida<br>com mais<br>leveza.</strong></div></div></div><div class="story-text"><span class="kicker">TECNOLOGIA COM O NOSSO JEITO</span><h2>A vida é cheia.<br>O Spark deixa <em>espaço.</em></h2><p>Tem a conta que vence, a lista que ficou em casa e o compromisso da escola. Tem também os sonhos, os encontros e o tempo que a gente quer de volta.</p><p>O SparkBR nasce para ajudar com tudo isso. Ferramentas que cabem na rotina de famílias de todos os jeitos. Em português. Com cuidado. Sem cobrar para fazer parte.</p><ol class="story-steps"><li><span>1</span>Encontre uma ferramenta que resolva seu dia.</li><li><span>2</span>Organize no seu ritmo, do seu jeito.</li><li><span>3</span>Favorite o que você quer ter sempre por perto.</li></ol></div></section>
+<section class="native-section" id="brasileiro" aria-labelledby="native-title"><div><span class="kicker">FEITO NO BRASIL, PENSADO EM VOCÊ</span><h2 id="native-title">Inteligência brasileira.<br>Uma ajuda <em>bem nossa.</em></h2><p>A IA faz parte da experiência SparkBR: está nas ferramentas para ajudar com listas, planejamento e tarefas reais. A tecnologia tem mais valor quando entende o que faz parte da nossa vida.</p><p>Da feira ao fim do mês. Da rotina de casa aos planos da família. É para isso que a gente constrói.</p><a class="button" href="/manual/">Conhecer as ferramentas com IA <span aria-hidden="true">↗</span></a></div><div class="native-details"><div class="native-detail"><svg class="glyph " viewBox="0 0 24 24" aria-hidden="true"><use href="#i-globe"/></svg><div><b>Uma marca brasileira, desde o começo</b><span>Português, reais e o dia a dia das nossas famílias.</span></div></div><div class="native-detail"><svg class="glyph " viewBox="0 0 24 24" aria-hidden="true"><use href="#i-sparkle"/></svg><div><b>IA integrada, com um propósito</b><span>Ajuda dentro dos aplicativos, ligada ao que você quer resolver.</span></div></div><div class="native-detail"><svg class="glyph " viewBox="0 0 24 24" aria-hidden="true"><use href="#i-phone"/></svg><div><b>Seu Spark vai com você</b><span>Abra no navegador ou instale a experiência no celular e no computador.</span></div></div></div></section>
+<section class="questions" aria-labelledby="questions-title"><div><span class="kicker">SEM COMPLICAÇÃO</span><h2 id="questions-title">Pode chegar.<br>A casa é sua.</h2><p>Mais clareza para começar com confiança.</p><a class="button-link" href="/manual/">Abrir o manual do SparkBR ↗</a></div><div><details><summary>É gratuito mesmo?</summary><p>Sim. Os 23 aplicativos são gratuitos para a sua família, conforme a oferta do SparkBR. O acesso às ferramentas usa uma conta compartilhada. Conheça o modelo em <a href="/zero-ads/">Gratuidade & Zero Ads</a>.</p></details><details><summary>Preciso baixar um navegador novo?</summary><p>Você pode abrir o SparkBR pelo navegador que já usa. A experiência também pode ser instalada como aplicativo web. No Windows, usa Edge ou Chrome; no Android, Chrome; e no iPhone, Safari. Veja <a href="/baixar/">como levar o SparkBR com você</a>.</p></details><details><summary>Todos os aplicativos usam IA?</summary><p>O ecossistema tem IA integrada em ferramentas específicas. Cada aplicativo explica seus recursos; alguns organizam registros e lembretes sem precisar de IA. Voz, fotos e respostas inteligentes podem depender de internet e dos serviços do SparkBR.</p></details><details><summary>Como guardo meus apps preferidos?</summary><p>Toque na estrela de um aplicativo e depois em “Meus favoritos”. Esses atalhos ficam guardados neste navegador. É você quem escolhe o que quer ter por perto.</p></details></div></section></main>
+<div id="hub-modal" role="dialog" aria-modal="true" aria-labelledby="hub-title" tabindex="-1"><div id="hub-card">
+<button id="hub-x" aria-label="Fechar">X</button>
+<h3 id="hub-title">Entrar no SparkBR</h3>
+<div class="sub">Uma conta vale em todos os apps. Grátis e ilimitado.</div>
+<div id="hub-tabs"><button id="ht-in" class="on">Entrar</button><button id="ht-up">Cadastrar</button></div>
+<div id="hub-req">Para usar as ferramentas é preciso cadastrar: e-mail ou Google + nome, celular, senha, idade e sexo.</div>
+<button class="gbtn" id="hub-g" type="button">Continuar com o Google</button>
+<div id="hub-f-in">
+<input id="hi-email" aria-label="E-mail" type="email" placeholder="E-mail" autocomplete="email">
+<input id="hi-senha" aria-label="Senha" type="password" placeholder="Senha" autocomplete="current-password">
+<button class="go" id="hi-go">Entrar</button>
+<div style="text-align:center;margin-top:6px;"><a href="javascript:void(0)" id="hi-rec" style="font-size:12px;">Esqueci a senha</a></div>
+</div>
+<div id="hub-f-up" style="display:none">
+<input id="hu-nome" aria-label="Nome completo" placeholder="Nome completo">
+<input id="hu-email" aria-label="E-mail" type="email" placeholder="E-mail">
+<input id="hu-fone" aria-label="Celular" type="tel" inputmode="tel" placeholder="Celular / WhatsApp (só números)">
+<input id="hu-senha" aria-label="Senha" type="password" placeholder="Senha (6+ letras)">
+<div style="display:flex;gap:8px"><input id="hu-idade" aria-label="Idade" type="number" min="1" max="120" placeholder="Idade" style="flex:1"><select id="hu-sexo" aria-label="Sexo" style="flex:1"><option value="">Sexo...</option><option value="masculino">Masculino</option><option value="feminino">Feminino</option><option value="outro">Outro</option></select></div>
+<button class="go" id="hu-go">Cadastrar grátis</button>
+</div>
+<div id="hub-f-rec" style="display:none">
+<input id="hr-email" aria-label="E-mail da conta" type="email" placeholder="E-mail da conta">
+<button class="go" id="hr-go">Enviar código</button>
+<input id="hr-cod" aria-label="Código de recuperação" inputmode="numeric" placeholder="Código de 6 dígitos" style="display:none">
+<input id="hr-nova" aria-label="Nova senha" type="password" placeholder="Nova senha" style="display:none">
+<button class="go" id="hr-ok" style="display:none">Trocar senha</button>
+<button class="gbtn" id="hub-g2" type="button">Ou entrar com o Google</button>
+<div style="text-align:center;margin-top:6px;"><a href="javascript:void(0)" id="hr-back" style="font-size:12px;">Voltar</a></div>
+</div>
+<div id="hub-f-done" style="display:none"><input id="hd-fone" aria-label="Celular" type="tel" inputmode="tel" placeholder="Celular / WhatsApp (só números)"><div style="display:flex;gap:8px"><input id="hd-idade" aria-label="Idade" type="number" min="1" max="120" placeholder="Idade" style="flex:1"><select id="hd-sexo" aria-label="Sexo" style="flex:1"><option value="">Sexo...</option><option value="masculino">Masculino</option><option value="feminino">Feminino</option><option value="outro">Outro</option></select></div><button class="go" id="hd-go">Salvar e liberar</button></div><div id="hub-msg"></div>
+</div></div>
+<footer class="footer shell"><a class="brand" href="/" aria-label="SparkBR, início"><img src="/assets/spark-mark.svg" alt="" width="30" height="30"><span class="wordmark">spark<span>BR</span></span></a><p>Mais vida no seu dia. Feito no Brasil.</p><div class="footer-links"><a href="/baixar/">Instalar</a><a href="/zero-ads/">Gratuidade</a><a href="/parcerias/">Parcerias</a><a href="/manual/">Ajuda</a></div></footer><div class="footer-bottom">SparkBR · Inteligência brasileira para a vida real · 23 aplicativos. E crescendo.</div><script src="https://accounts.google.com/gsi/client" async defer></script>
+<script>
+(function(){
+"use strict";
+var API="/spark-api", GID="468525623041-knelde8kgjcmhcaa5hqjv0i3pns6ldpl.apps.googleusercontent.com";
+var tk=null, ME=null;
+function ls(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v);}catch(e){return null;}}
+function msg(t,ok){var m=document.getElementById("hub-msg");if(m){m.textContent=t||"";m.style.color=ok?"#08785f":"#b91c1c";}}
+function openM(tab){var m=document.getElementById("hub-modal");if(m)m.classList.add("open");if(tab)showTab(tab);}
+function closeM(){var m=document.getElementById("hub-modal");if(m)m.classList.remove("open");}
+function showTab(t){
+  ["in","up"].forEach(function(x){var b=document.getElementById("ht-"+x);if(b)b.classList.toggle("on",x===t);});
+  document.getElementById("hub-f-in").style.display=t==="in"?"":"none";
+  document.getElementById("hub-f-up").style.display=t==="up"?"":"none";
+  document.getElementById("hub-f-rec").style.display="none";
+  document.getElementById("hub-f-done").style.display="none";
+  document.getElementById("hub-title").textContent=t==="up"?"Criar conta grátis":"Entrar no Spark";
+  msg("");
+}
+function esc(s){try{return String(s==null?"":s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}catch(e){return"";}}
+function renderAcc(){
+  var box=document.getElementById("hub-account");if(!box)return;
+  if(ME){
+    var ini=esc((ME.nome||"U").trim().charAt(0).toUpperCase());
+    var dot=ME.foto?'<span class="ha-dot"><img src="'+esc(ME.foto)+'" alt=""></span>':'<span class="ha-dot">'+ini+'</span>';
+    box.innerHTML=dot+'<span class="ha-name">Logado: '+esc(ME.nome||"")+'</span>';
+    box.onclick=function(ev){toggleMenu(ev);};
+  }else{
+    box.innerHTML='<button class="ha-btn" id="hub-login-top">Entrar / Cadastrar</button>';
+    box.onclick=null;
+    var b=document.getElementById("hub-login-top");if(b)b.onclick=function(ev){if(ev)ev.stopPropagation();openM("in");};
+  }
+  var cv=document.getElementById("hub-menu");if(cv){cv.classList.remove("open");try{delete cv.dataset.built;}catch(e){}}
+}
+async function check(){
+  tk=ls("spark_token");ME=null;
+  if(tk){
+    try{
+      var r=await fetch(API+"/perfil",{headers:{"Authorization":"Bearer "+tk},cache:"no-store"});
+      var j=await r.json();
+      if(j&&j.ok&&j.perfil){ME=j.perfil;renderAcc();try{ssoAll();}catch(e){}if(!isComplete()){openM();showDone();}return true;}
+    }catch(e){}
+    tk=null;try{localStorage.removeItem("spark_token");}catch(e){}
+  }
+  renderAcc();return false;
+}
+function isComplete(){
+  if(!ME)return false;
+  var f=String(ME.fone||"").replace(/\D/g,"");
+  var i=parseInt(ME.idade||"0",10);
+  var s=String(ME.sexo||"").toLowerCase();
+  return f.length>=8&&(i>=1&&i<=120)&&(s==="masculino"||s==="feminino"||s==="outro");
+}
+function showDone(){
+  ["hub-f-in","hub-f-up","hub-f-rec"].forEach(function(id){document.getElementById(id).style.display="none";});
+  document.getElementById("hub-f-done").style.display="";
+  document.getElementById("hub-title").textContent="Complete seu cadastro";
+  try{
+    if(ME.fone)document.getElementById("hd-fone").value=ME.fone;
+    if(ME.idade)document.getElementById("hd-idade").value=ME.idade;
+    if(ME.sexo)document.getElementById("hd-sexo").value=ME.sexo;
+  }catch(e){}
+  msg("Faltam dados obrigatórios para liberar as ferramentas.");
+}
+async function doDone(){
+  var o={fone:document.getElementById("hd-fone").value.replace(/\D/g,""),
+    idade:parseInt(document.getElementById("hd-idade").value||"0",10),
+    sexo:document.getElementById("hd-sexo").value};
+  if(o.fone.length<8){msg("Celular/WhatsApp obrigatório.");return;}
+  if(!(o.idade>=1&&o.idade<=120)){msg("Idade obrigatória.");return;}
+  if(["masculino","feminino","outro"].indexOf(o.sexo)<0){msg("Sexo obrigatório.");return;}
+  try{
+    var r=await fetch(API+"/perfil",{method:"POST",headers:{"Content-Type":"application/json","Authorization":"Bearer "+tk},body:JSON.stringify(o)});
+    var j=await r.json();
+    if(j&&j.ok){closeM();await check();}
+    else msg((j&&j.error)||"Falhou.");
+  }catch(e){msg("Sem conexão.");}
+}
+function toggleMenu(ev){
+  if(ev){try{ev.stopPropagation();}catch(e){}}
+  if(!ME)return;
+  var box=document.getElementById("hub-account");
+  var m=document.getElementById("hub-menu");
+  if(!box||!m)return;
+  if(!m.dataset.built){
+    m.innerHTML='<div class="hm-head"><b>'+esc(ME.nome||"")+'</b>'+esc(ME.email||"")+'</div>'
+      +'<button id="hm-sw">Trocar de conta</button><button id="hm-out">Sair</button>';
+    m.dataset.built="1";
+    document.getElementById("hm-sw").onclick=function(){doOut();};
+    document.getElementById("hm-out").onclick=function(){doOut();};
+    document.addEventListener("click",function(){var mm=document.getElementById("hub-menu");if(mm)mm.classList.remove("open");});
+  }
+  m.classList.toggle("open");
+}
+async function doOut(){
+  try{if(tk){await fetch(API+"/auth/sair",{method:"POST",headers:{"Authorization":"Bearer "+tk}});}}catch(e){}
+  tk=null;ME=null;
+  try{localStorage.removeItem("spark_token");}catch(e){}
+  renderAcc();closeM();openM("in");
+}
+async function ssoAll(){
+  var t=null;try{t=localStorage.getItem("spark_token")||"";}catch(e){}
+  if(!t)return;
+  try{
+    var r=await fetch("/setupv2-api/trocar",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({spark_token:t})});
+    var j=await r.json();
+    if(j&&j.token){try{localStorage.setItem("setuppro-token",j.token);}catch(e){}}
+  }catch(e){}
+  try{
+    var r2=await fetch("/dosefiel-api/auth/trocar",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({spark_token:t})});
+    var j2=await r2.json();
+    if(j2&&j2.token){try{localStorage.setItem("dosefiel_token",j2.token);}catch(e){}}
+  }catch(e){}
+  try{
+    var r3=await fetch("/auth/trocar",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({spark_token:t})});
+    var j3=await r3.json();
+    if(j3&&j3.ok&&j3.token){try{localStorage.setItem("acadsaude-session",JSON.stringify({token:j3.token}));}catch(e){}}
+  }catch(e){}
+}
+function gate(){
+  document.querySelectorAll(".app-card").forEach(function(a){
+    var h=a.getAttribute("href")||"";
+    if(!/^\/(spark|sparkmat|sparkpet|saude|agua|posto|familia|financeiro|farmacia|dose|astromatch|contas|cardapio|agenda|cofrinho|faxina|escola|carteirinha|energia|bico|sono|mural|ideias)\//.test(h))return;
+    a.addEventListener("click",function(ev){
+      if(!ME){ev.preventDefault();openM("up");msg("Cadastre-se grátis para usar as ferramentas.");}
+    });
+  });
+}
+async function doLogin(){
+  var e=document.getElementById("hi-email").value.trim().toLowerCase(),s=document.getElementById("hi-senha").value;
+  if(!e||!s){msg("Preencha e-mail e senha.");return;}
+  msg("Entrando...");
+  try{
+    var r=await fetch(API+"/auth/login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email:e,senha:s})});
+    var j=await r.json();
+    if(j&&j.ok&&j.token){ls("spark_token",j.token);ME=(j.user||j.perfil||null);closeM();await check();}
+    else msg((j&&j.error)||"Falhou. Confira e tente de novo.");
+  }catch(e){msg("Sem conexão. Tente de novo.");}
+}
+async function doReg(){
+  var o={nome:document.getElementById("hu-nome").value.trim(),
+    email:document.getElementById("hu-email").value.trim().toLowerCase(),
+    fone:document.getElementById("hu-fone").value.replace(/\D/g,""),
+    senha:document.getElementById("hu-senha").value,
+    idade:parseInt(document.getElementById("hu-idade").value||"0",10),
+    sexo:document.getElementById("hu-sexo").value};
+  if(o.nome.length<2){msg("Nome obrigatório.");return;}
+  if(!o.email||o.email.indexOf("@")<0){msg("E-mail obrigatório.");return;}
+  if(o.fone.length<8){msg("Celular/WhatsApp obrigatório.");return;}
+  if(o.senha.length<6){msg("Senha de 6+ letras.");return;}
+  if(!(o.idade>=1&&o.idade<=120)){msg("Idade obrigatória.");return;}
+  if(["masculino","feminino","outro"].indexOf(o.sexo)<0){msg("Sexo obrigatório.");return;}
+  msg("Cadastrando...");
+  try{
+    var r=await fetch(API+"/auth/register",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(o)});
+    var j=await r.json();
+    if(j&&j.ok&&j.token){ls("spark_token",j.token);closeM();await check();}
+    else msg((j&&j.error)||"Falhou. Tente de novo.");
+  }catch(e){msg("Sem conexão. Tente de novo.");}
+}
+function doG(){
+  try{
+    google.accounts.id.initialize({client_id:GID,callback:async function(resp){
+      msg("Entrando com Google...");
+      try{
+        var r=await fetch(API+"/auth/google",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({id_token:resp.credential})});
+        var j=await r.json();
+        if(j&&j.ok&&j.token){ls("spark_token",j.token);closeM();await check();}
+        else msg((j&&j.error)||"Google recusado.");
+      }catch(e){msg("Sem conexão.");}
+    }});
+    google.accounts.id.prompt();
+  }catch(e){msg("Google indisponível agora.");}
+}
+function showRec(){"in up rec".split(" ").forEach(function(x){});
+  document.getElementById("hub-f-in").style.display="none";
+  document.getElementById("hub-f-up").style.display="none";
+  document.getElementById("hub-f-rec").style.display="";
+  document.getElementById("hub-title").textContent="Recuperar senha";msg("");
+}
+async function doRec(){
+  var e=document.getElementById("hr-email").value.trim().toLowerCase();
+  if(!e){msg("Digite o e-mail.");return;}
+  try{
+    var r=await fetch(API+"/auth/recuperar",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email:e})});
+    var j=await r.json();
+    if(j&&j.ok){msg(j.enviado?"Código enviado no e-mail.":"Se existe conta, o código foi enviado.",true);
+      document.getElementById("hr-cod").style.display="";document.getElementById("hr-nova").style.display="";document.getElementById("hr-ok").style.display="";}
+    else msg((j&&j.error)||"Falhou.");
+  }catch(e){msg("Sem conexão.");}
+}
+async function doRecOk(){
+  var o={email:document.getElementById("hr-email").value.trim().toLowerCase(),
+    codigo:document.getElementById("hr-cod").value.trim(),
+    senha:document.getElementById("hr-nova").value};
+  if(!o.codigo||!o.nova){msg("Código e nova senha.");return;}
+  try{
+    var r=await fetch(API+"/auth/nova-senha",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(o)});
+    var j=await r.json();
+    if(j&&j.ok){msg("Senha trocada! Entre agora.",true);showTab("in");}
+    else msg((j&&j.error)||"Código inválido.");
+  }catch(e){msg("Sem conexão.");}
+}
+document.getElementById("hub-x").onclick=closeM;
+document.getElementById("hub-modal").addEventListener("click",function(e){if(e.target.id==="hub-modal")closeM();});
+document.getElementById("ht-in").onclick=function(){showTab("in");};
+document.getElementById("ht-up").onclick=function(){showTab("up");};
+document.getElementById("hi-go").onclick=doLogin;
+document.getElementById("hu-go").onclick=doReg;
+document.getElementById("hub-g").onclick=doG;
+document.getElementById("hub-g2").onclick=doG;
+document.getElementById("hd-go").onclick=doDone;
+document.getElementById("hi-rec").onclick=showRec;
+document.getElementById("hr-go").onclick=doRec;
+document.getElementById("hr-ok").onclick=doRecOk;
+document.getElementById("hr-back").onclick=function(){showTab("in");};
+gate();
+check();
+})();
+</script>
+<script>
+/* SPARK-BROWSER 20261013: SW + install + offline */
+(function(){
+  try{
+    if("serviceWorker" in navigator){ navigator.serviceWorker.register("/sw.js").catch(function(){}); }
+  }catch(e){}
+  var defp=null;
+  window.addEventListener("beforeinstallprompt",function(e){
+    try{e.preventDefault();}catch(_){}
+    defp=e;
+    try{var b=document.getElementById("hub-install");if(b)b.style.display="";}catch(_){}
+  });
+  try{
+    var ib=document.getElementById("hub-install");
+    if(ib)ib.onclick=function(){
+      if(defp){try{defp.prompt();defp.userChoice.then(function(){defp=null;});}catch(_){}}
+      else{location.href="/instalar/";}
+    };
+  }catch(e){}
+  function net(){
+    try{
+      var on=navigator.onLine!==false;
+      var d=document.querySelector(".status-dot");
+      if(d){d.style.background=on?"var(--green)":"#f59e0b";d.title=on?"Sistema online":"Você está offline — apps com dados locais continuam.";}
+    }catch(e){}
+  }
+  try{window.addEventListener("online",net);window.addEventListener("offline",net);net();}catch(e){}
+  /* FOTO GLOBAL 20261013: captura -> IndexedDB -> contas/energia/escola */
+  try{
+    var fb=document.getElementById("hub-foto");
+    if(fb&&!fb._on){
+      fb._on=true;
+      var say=function(m){ try{
+        var S0=window.SparkCasa;
+        if(S0&&S0.toast){S0.toast(m);return;}
+        var d=document.getElementById("hub-toast");
+        if(!d){d=document.createElement("div");d.id="hub-toast";d.style.cssText="position:fixed;left:50%;bottom:120px;transform:translateX(-50%);background:#0f172a;color:#fff;font-size:13px;font-weight:700;padding:10px 16px;border-radius:12px;z-index:99999;";document.body.appendChild(d);}
+        d.textContent=m;d.style.display="block";
+      }catch(e){} };
+      fb.onclick=function(){
+        try{
+          var S=window.SparkCasa;
+          if(!S||!S.fotoTirar){ say("Atualize a página (Ctrl+F5)."); return; }
+          say("Capturando...");
+          S.fotoTirar(function(id){
+            if(!id){ return; }
+            var dest=prompt("Enviar foto para: 1-Contas 2-Energia 3-Escola","1");
+            var map={"1":"contas","2":"energia","3":"escola"};
+            var d=map[String(dest||"1").trim()]||"contas";
+            try{S.set("foto-pendente",{id:id,destino:d});}catch(_){}
+            location.href="/"+d+"/";
+          });
+        }catch(e){ say("Falha na camera."); }
+      };
+    }
+  }catch(e){}
+  /* SELO OFFLINE 20261013b: via atributo+CSS (sem spans, sem duplicar) */
+  try{
+    var OFF=["/contas/","/cardapio/","/agenda/","/cofrinho/","/faxina/","/escola/","/carteirinha/","/energia/","/bico/","/sono/","/agua/"];
+    var st=document.getElementById("selo-off-css");
+    if(!st){st=document.createElement("style");st.id="selo-off-css";
+      st.textContent='.app-card[data-off="1"] .app-category::after{content:" ● offline";font-size:10px;font-weight:800;color:#16a34a;} .app-card[data-off="0"] .app-category::after{content:" ● online";font-size:10px;font-weight:800;color:#94a3b8;}';
+      document.head.appendChild(st);}
+    document.querySelectorAll(".app-card").forEach(function(a){
+      try{
+        var h=a.getAttribute("href")||"";
+        a.querySelectorAll(".selo-off").forEach(function(x){x.remove();});
+        a.dataset.off=(OFF.indexOf(h)>=0)?"1":"0";
+      }catch(_){}
+    });
+  }catch(e){}
+})();
+</script>
+<script src="/spark-casa.js?v=5"></script>
+<script>
+/* HUB-VOZ 20261012: voz+texto buscam apps e conteudo */
+(function () {
+  if (window._hubVoz) return; window._hubVoz = true;
+  function norm(s) {
+    try {
+      s = String(s || '').toLowerCase();
+      s = s.normalize ? s.normalize('NFD').replace(/[\u0300-\u036f]/g, '') : s;
+      return s.replace(/[^a-z0-9 ]/g, ' ').replace(/\s+/g, ' ').trim();
+    } catch (_) { return String(s || '').toLowerCase(); }
+  }
+  function toast(t) {
+    try {
+      var d = document.getElementById('hub-toast');
+      if (!d) { d = document.createElement('div'); d.id = 'hub-toast'; d.style.cssText = 'position:fixed;left:50%;bottom:120px;transform:translateX(-50%);background:#0f172a;color:#fff;font-size:13px;font-weight:700;padding:10px 16px;border-radius:12px;z-index:99999;max-width:88vw;text-align:center;'; document.body.appendChild(d); }
+      d.textContent = String(t == null ? '' : t); d.style.display = 'block';
+      try { if (d._t) clearTimeout(d._t); } catch (_) {}
+      d._t = setTimeout(function () { try { d.style.display = 'none'; } catch (_) {} }, 3200);
+    } catch (_) {}
+  }
+  function apps() {
+    var out = [];
+    try {
+      document.querySelectorAll('.app-card').forEach(function (c) {
+        var t = '', d = '', h = '';
+        try { t = c.querySelector('h3').textContent || ''; } catch (_) {}
+        try { d = c.getAttribute('data-search') || ''; } catch (_) {}
+        try { h = c.getAttribute('href') || ''; } catch (_) {}
+        out.push({ t: t, d: d, h: h });
+      });
+    } catch (_) {}
+    return out;
+  }
+  function matchApp(nq) {
+    var best = null, bestScore = 0;
+    try {
+      var toks = nq.split(' ').filter(function (w) { return w.length > 2; });
+      apps().forEach(function (a) {
+        var hay = norm(a.t + ' ' + a.d);
+        var sc = 0;
+        toks.forEach(function (w) { if (hay.indexOf(w) >= 0) sc++; });
+        if (sc > bestScore) { bestScore = sc; best = a; }
+      });
+    } catch (_) {}
+    return bestScore > 0 ? best : null;
+  }
+  function rotaLink(x) {
+    try {
+      if (x.lat && x.lng) return 'https://www.google.com/maps/dir/?api=1&destination=' + x.lat + ',' + x.lng;
+      return 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent((x.nome || '') + ' ' + (x.cidade || ''));
+    } catch (_) { return 'https://www.google.com/maps'; }
+  }
+  function extraiLocal(q) {
+    try {
+      var t = String(q || '');
+      var m = t.split(/\s+em\s+|\s+no\s+|\s+na\s+|\s+do\s+|\s+da\s+/i);
+      if (m.length >= 2) {
+        var item = m.slice(0, -1).join(' ').replace(/quero comprar|onde comprar|onde tem|onde fica|comprar|quero|rota|endereco|telefone|whatsapp/gi, ' ').replace(/\s+/g, ' ').trim();
+        var place = m[m.length - 1].replace(/\?/g, '').trim();
+        if (item && place) return { item: item, place: place };
+      }
+      var limpo = t.replace(/quero comprar|onde comprar|onde tem|onde fica|comprar|quero|rota|endereco|endereco|telefone|whatsapp|como chego|como chegar|em que lugar|qual lugar|\?/gi, ' ').replace(/\s+/g, ' ').trim();
+      if (limpo) return { item: '', place: limpo };
+    } catch (_) {}
+    return null;
+  }
+  async function mostraLocais(box, q, nq) {
+    try {
+      var sec = document.getElementById('hub-locais');
+      if (!sec) {
+        sec = document.createElement('div');
+        sec.id = 'hub-locais';
+        var fb = document.getElementById('hub-food');
+        if (fb && fb.parentNode) fb.parentNode.insertBefore(sec, fb);
+        else box.insertBefore(sec, box.firstChild);
+      }
+      sec.innerHTML = '';
+      var pl = extraiLocal(q);
+      var pq = pl ? pl.place : q;
+      if (!pq || pq.length < 2) return;
+      var r = await fetch('/spark-api/locais/busca?q=' + encodeURIComponent(pq));
+      var j = await r.json();
+      var arr = (j && j.itens) || [];
+      var html = '';
+      if (pl && pl.item) {
+        try {
+          var ri = await fetch('/spark-api/alimentos/busca?q=' + encodeURIComponent(pl.item));
+          var ji = await ri.json();
+          var iti = ((ji && ji.itens) || [])[0];
+          if (iti) html += '<div style="font-size:12px;font-weight:800;color:#065f46">🛒 ' + esc(iti.nome) + ' · ' + Number(iti.kcal || 0) + ' kcal · R$ ' + (iti.preco_medio != null ? Number(iti.preco_medio).toFixed(2).replace('.', ',') : '?') + '</div>';
+        } catch (_) {}
+      }
+      if (!arr.length) {
+        if (/(onde|endereco|loja|mercado|farmacia|posto|comprar em|comprar no|comprar na)/.test(nq)) sec.innerHTML = html + '<div style="font-size:12px;color:#64748b">Nenhum local para "' + esc(pq) + '". Tente bairro ou mercado.</div>';
+        else sec.innerHTML = html;
+        return;
+      }
+      sec.innerHTML = html + '<div style="font-size:12px;font-weight:800;color:#065f46;margin-top:4px">📍 Onde comprar — toque p/ rota:</div>' + arr.slice(0, 5).map(function (x, ix) {
+        var tel = x.telefone ? '<div style="color:#64748b;font-size:11px">📞 ' + esc(x.telefone) + '</div>' : '<div style="color:#9ca3af;font-size:11px">sem telefone cadastrado</div>';
+        return '<a data-ix="' + ix + '" class="hubl" href="' + rotaLink(x) + '" target="_blank" rel="noopener" style="display:flex;gap:8px;align-items:center;background:#ecfdf5;border:1px solid #a7f3d0;border-radius:10px;padding:9px;font-size:13px;margin-top:6px;text-decoration:none;color:inherit"><div style="flex:1;min-width:0"><b>' + esc(x.nome) + '</b><div style="color:#64748b;font-size:11px">' + esc(x.tipo || '') + ' · ' + esc(x.bairro || '') + ' · ' + esc(x.cidade || '') + (x.verificado ? ' ✓' : '') + '</div>' + tel + '</div><div style="color:#16a34a;font-weight:800">🗺 rota</div></a>';
+      }).join('');
+    } catch (_) {}
+  }
+  async function hubAdd(x) {
+    try {
+      var tk = ''; try { tk = localStorage.getItem('spark_token') || ''; } catch (_) {}
+      if (!tk) { try { localStorage.setItem('saude-cmd-q', x.nome); } catch (_) {} location.href = '/saude/'; return; }
+      var g = await fetch('/spark-api/minha-lista?app=spark', { headers: { 'Authorization': 'Bearer ' + tk }, cache: 'no-store' });
+      var gj = await g.json();
+      var itens = (gj && gj.itens) || [];
+      itens.push({ nome: x.nome, qtd: 1, unit: 'un', basePrice: (x.preco_medio != null ? x.preco_medio : 0), checked: false, ean: '', precoReal: (x.preco_medio != null ? x.preco_medio : null) });
+      if (itens.length > 500) itens = itens.slice(0, 500);
+      var s = await fetch('/spark-api/minha-lista?app=spark', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tk }, body: JSON.stringify({ itens: itens, app: 'spark', ts: 0 }) });
+      var sj = await s.json();
+      if (sj && sj.ok) toast('"' + x.nome + '" na lista do mercado!');
+      else { try { localStorage.setItem('saude-cmd-q', x.nome); } catch (_) {} location.href = '/saude/'; }
+    } catch (_) { try { localStorage.setItem('saude-cmd-q', x.nome); } catch (_) {} location.href = '/saude/'; }
+  }
+  function sugBox() {
+    var b = document.getElementById('hub-sug');
+    if (!b) {
+      var inp = document.getElementById('app-search');
+      if (!inp || !inp.parentNode) return null;
+      b = document.createElement('div');
+      b.id = 'hub-sug';
+      b.style.cssText = 'display:none;flex-direction:column;gap:6px;margin-top:6px;';
+      inp.parentNode.parentNode.insertBefore(b, inp.parentNode.nextSibling);
+    }
+    return b;
+  }
+  function esc(s) { try { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); } catch (_) { return ''; } }
+  var sugT = null;
+  function appIntent(nq) {
+    try {
+      if (/(remedio|farmacia|medicamento|dipirona|paracetamol|losartana|antibiotico|tomei|tomo|dor|febre|pressao|diabetes|gripe|tosse|alergia)/.test(nq)) return 'farma';
+      if (/(racao|pet|cachorro|gato|cao|banho|tosa|veterinario|vacina|petisco|coleira|brinquedo|gato|passaro)/.test(nq)) return 'pet';
+    if (/(cbd|canabidiol|cannabidiol|cannabis|canabica|thc|cbda|cbn|cbg|canabinoide|whincbd|oleo de cannabis|fitocanabinoide)/.test(nq)) return 'canna';
+      if (/(cimento|tijolo|brita|ferro|tinta|obra|construcao|reforma|pedreiro|telha|madeira|piso|azulejo|torneira|calar|areia grossa|pedra|porta|janela|louca|chuveiro)/.test(nq)) return 'obra';
+      if (/(gastei|paguei|custou|comprei por|valor|r\$|reais|despesa)/.test(nq)) return 'fin';
+    if (/(onde comprar|onde tem|onde fica|quero comprar|endereco|telefone|whatsapp|rota|como chego|como chegar|em que lugar|qual lugar)/.test(nq)) return 'local';
+      if (/(boleto|conta de luz|conta de agua|vence|vencimento|fatura|pagar conta|multa|juros)/.test(nq)) return '/contas/';
+      if (/(cardapio|janta|jantar|o que comer|receita da semana|semana)/.test(nq)) return '/cardapio/';
+      if (/(compromisso|reuniao|calendario|dentista|consulta|horario|quem leva)/.test(nq)) return '/agenda/';
+      if (/(cofrinho|guardar|poupar|economizar|meta|desafio|dividas?|cartao)/.test(nq)) return '/cofrinho/';
+      if (/(faxina|limpeza|limpar|comodo|cozinha|banheiro|diarista)/.test(nq)) return '/faxina/';
+      if (/(escola|licao|mochila|material escolar|filho|filha|crianca|serie|prova)/.test(nq)) return '/escola/';
+      if (/(exame|receita medica|vacina|carteirinha|renovar receita|prontuario)/.test(nq)) return '/carteirinha/';
+      if (/(conta de luz|luz|botijao|gas|leitura|relogio|kwh|economizar energia)/.test(nq)) return '/energia/';
+      if (/(bico|renda extra|freela|freelance|ganho|vender|turno|fazer dinheiro)/.test(nq)) return '/bico/';
+      if (/(sono|dormir|noite|descanso|insonia|acordar|desligar)/.test(nq)) return '/sono/';
+      if (/(mural|elogio|aplauso|vitoria|conquista|parabens|destaque)/.test(nq)) return '/mural/';
+      if (/(ideia|sugestao|melhoria|novidade|voce pediu|votar|pedido)/.test(nq)) return '/ideias/';
+      if (/(dieta|treino|emagrecer|perder peso|academia|exercicio|massa muscular|definir)/.test(nq)) return '/saude/';
+      if (/(beber agua|tomei agua|hidratacao|hidratar|copo d.?agua|quantos ml)/.test(nq)) return '/agua/';
+      if (/(tomei remedio|tomar remedio|horario do remedio|lembrete remedio|estoque remedio|tratamento)/.test(nq)) return '/dose/';
+      if (/(abastecer|etanol ou gasolina|compensa.*(etanol|gasolina)|prova.*(proveta|combustivel)|posto barato|preco.*(gasolina|etanol|diesel))/.test(nq)) return '/posto/';
+      if (/(meta da familia|premio|treinos de hoje|perfil familiar)/.test(nq)) return '/familia/';
+      if (/(lista de compras|comparar mercado| Despensa|despensa|validades|nota fiscal|cupom|nfc)/.test(nq)) return '/spark/';
+      if (/(bula|tarja|receita medica|farmacia perto|generico)/.test(nq)) return '/farmacia/';
+      if (/(signo|mapa astral|ascendente|combinacao|match amoroso)/.test(nq)) return '/astromatch/';
+      if (/(adicionar|incluir|cadastrar)/.test(nq)) return 'fam';
+    } catch (_) {}
+    return null;
+  }
+  function multiSec() {
+    var s = document.getElementById('hub-multi');
+    if (!s) {
+      var box = document.getElementById('hub-sug');
+      if (!box) return null;
+      s = document.createElement('div');
+      s.id = 'hub-multi';
+      box.insertBefore(s, box.firstChild);
+    }
+    return s;
+  }
+  async function mostraMulti(box, q, nq) {
+    try {
+      var intent = appIntent(nq);
+      var sec = multiSec();
+      if (!sec) return false;
+      sec.innerHTML = '';
+      if (!intent) return false;
+      if (intent.charAt(0) === '/') {
+        var nm = '';
+        try {
+          var cards = document.querySelectorAll('.app-card');
+          for (var ci = 0; ci < cards.length; ci++) {
+            if (cards[ci].getAttribute('href') === intent) { nm = cards[ci].querySelector('h3').textContent; break; }
+          }
+        } catch (_) {}
+        sec.innerHTML = '<div class="hubnav" style="display:flex;gap:8px;align-items:center;background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:9px;font-size:13px;cursor:pointer" data-h="' + intent + '"><div style="flex:1"><b>→ Abrir ' + esc(nm || intent) + '</b></div><div style="color:#0284c7;font-weight:800">abrir</div></div>';
+        var nv = sec.querySelector('.hubnav');
+        if (nv) nv.onmousedown = function () { try { location.href = nv.getAttribute('data-h'); } catch (_) {} };
+        return true;
+      }
+      if (intent === 'farma') {
+        var r = await fetch('/dosefiel-api/catalogo/publico?q=' + encodeURIComponent(q));
+        var j = await r.json();
+        var arr = (j && (j.results || j.itens)) || [];
+        if (!arr.length) { sec.innerHTML = '<div style="font-size:12px;color:#64748b">Nada na farmácia para "' + esc(q) + '".</div>'; return true; }
+        sec.innerHTML = '<div style="font-size:12px;font-weight:800;color:#7c3aed">💊 Farmácia — toque p/ ver:</div>' + arr.slice(0, 5).map(function (x, ix) {
+          return '<div data-ix="' + ix + '" class="hubm" style="display:flex;gap:8px;align-items:center;background:#f5f3ff;border:1px solid #ddd6fe;border-radius:10px;padding:9px;font-size:13px;cursor:pointer;margin-top:6px"><div style="flex:1;min-width:0"><b>' + esc(x.nome) + '</b><div style="color:#64748b;font-size:11px">' + esc(x.principio || '') + '</div></div><div style="color:#7c3aed;font-weight:800">ver</div></div>';
+        }).join('');
+        sec._arr = arr;
+        var rows = sec.querySelectorAll('.hubm');
+        for (var i = 0; i < rows.length; i++) {
+          (function (el) {
+            el.onmousedown = function () {
+              try {
+                var x = sec._arr[parseInt(el.getAttribute('data-ix'), 10)];
+                if (!x) return;
+                try { localStorage.setItem('farm-cmd-q', x.nome); } catch (_) {}
+                location.href = '/farmacia/';
+              } catch (_) {}
+            };
+          })(rows[i]);
+        }
+        return true;
+      }
+      if (intent === 'pet') {
+        var ep = '/spark-api/ia/entender-pet';
+        var r2 = await fetch(ep, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ texto: q }) });
+        var j2 = await r2.json();
+        var arr2 = (j2 && j2.itens) || [];
+        if (!arr2.length) { sec.innerHTML = '<div style="font-size:12px;color:#64748b">Nada entendido. Tente de outro jeito.</div>'; return true; }
+        sec.innerHTML = '<div style="font-size:12px;font-weight:800;color:#0369a1">🐾 Pet — toque p/ por na lista:</div>' + arr2.slice(0, 6).map(function (x, ix) {
+          return '<div data-ix="' + ix + '" class="hubm" style="display:flex;gap:8px;align-items:center;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:9px;font-size:13px;cursor:pointer;margin-top:6px"><div style="flex:1"><b>' + esc(x.nome) + '</b><div style="color:#64748b;font-size:11px">qtd ' + esc(x.qtd || 1) + '</div></div><div style="color:#16a34a;font-weight:800">+ lista</div></div>';
+        }).join('');
+        sec._arr = arr2;
+        var rows2 = sec.querySelectorAll('.hubm');
+        for (var k = 0; k < rows2.length; k++) {
+          (function (el) {
+            el.onmousedown = function () {
+              try {
+                var x = sec._arr[parseInt(el.getAttribute('data-ix'), 10)];
+                if (x) hubAdd({ nome: x.nome, preco_medio: null });
+              } catch (_) {}
+            };
+          })(rows2[k]);
+        }
+        return true;
+      }
+      if (intent === 'obra') {
+        var ep = '/spark-api/ia/entender';
+        var r2 = await fetch(ep, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ texto: q }) });
+        var j2 = await r2.json();
+        var arr2 = (j2 && j2.itens) || [];
+        var html2 = '';
+        try {
+          var ro = await fetch('/spark-api/obra/busca?q=' + encodeURIComponent(q));
+          var jo = await ro.json();
+          var ao = (jo && jo.itens) || [];
+          if (ao.length) {
+            html2 = '<div style="font-size:12px;font-weight:800;color:#b45309">🏗️ SINAPI 08/2026 SP — toque p/ ficha:</div>' + ao.slice(0, 5).map(function (x, ix) {
+              var pr = (x.tipo === 'insumo' ? x.preco_sp : x.custo_sp);
+              return '<div data-t="s" data-ix="' + ix + '" class="hubo" style="display:flex;gap:8px;align-items:center;background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:9px;font-size:13px;cursor:pointer;margin-top:6px"><div style="flex:1;min-width:0"><b>' + esc(x.nome) + '</b><div style="color:#64748b;font-size:11px">' + esc(x.tipo) + ' ' + esc(x.cod || '') + ' · R$ ' + (pr != null ? Number(pr).toFixed(2).replace('.', ',') : '?') + '/' + esc(x.un || '') + '</div></div><div style="color:#b45309;font-weight:800">ficha</div>' + (x.guia ? '<details style="margin-top:4px;font-size:11px;color:#475569"><summary style="cursor:pointer;color:#b45309;font-weight:700">metodo + dicas</summary><div style="margin-top:4px"><b>Como executar:</b><ol style="margin:4px 0 4px 18px">' + x.guia.metodo.map(function(s){return '<li>' + s + '</li>';}).join('') + '</ol><b>Dicas de quem faz:</b><ul style="margin:4px 0 4px 18px">' + x.guia.dicas.map(function(s){return '<li>' + s + '</li>';}).join('') + '</ul><div style="background:#fffbeb;border:1px dashed #fcd34d;border-radius:8px;padding:6px;margin-top:4px">' + (x.memorial || '') + '</div><div style="margin-top:4px"><a href="' + x.link + '" target="_blank" rel="noopener">ficha oficial</a> · <a href="' + x.videos + '" target="_blank" rel="noopener">videos faca-voce-mesmo</a></div></div></details>' : '') + '</div>';
+            }).join('');
+            sec._sarr = ao;
+          }
+        } catch (_) {}
+        if (arr2.length) {
+          html2 += '<div style="font-size:12px;font-weight:800;color:#0369a1;margin-top:4px">🧱 Obra — toque p/ por na lista:</div>' + arr2.slice(0, 6).map(function (x, ix) {
+            return '<div data-t="l" data-ix="' + ix + '" class="hubo" style="display:flex;gap:8px;align-items:center;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:9px;font-size:13px;cursor:pointer;margin-top:6px"><div style="flex:1"><b>' + esc(x.nome) + '</b><div style="color:#64748b;font-size:11px">qtd ' + esc(x.qtd || 1) + '</div></div><div style="color:#16a34a;font-weight:800">+ lista</div></div>';
+          }).join('');
+          sec._larr = arr2;
+        }
+        if (!html2) { sec.innerHTML = '<div style="font-size:12px;color:#64748b">Nada entendido. Tente de outro jeito.</div>'; return true; }
+        sec.innerHTML = html2;
+        var rows2 = sec.querySelectorAll('.hubo');
+        for (var k = 0; k < rows2.length; k++) {
+          (function (el) {
+            el.onmousedown = function () {
+              try {
+                if (el.getAttribute('data-t') === 's') {
+                  var x = sec._sarr[parseInt(el.getAttribute('data-ix'), 10)];
+                  if (x) { try { localStorage.setItem('obra-cmd-ficha', JSON.stringify(x)); } catch (_) {} location.href = '/sparkmat/'; }
+                } else {
+                  var y = sec._larr[parseInt(el.getAttribute('data-ix'), 10)];
+                  if (y) hubAdd({ nome: y.nome, preco_medio: null });
+                }
+              } catch (_) {}
+            };
+          })(rows2[k]);
+        }
+        return true;
+      }
+      if (false) {
+        var ep = intent === 'pet' ? '/spark-api/ia/entender-pet' : '/spark-api/ia/entender';
+        var r2 = await fetch(ep, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ texto: q }) });
+        var j2 = await r2.json();
+        var arr2 = (j2 && j2.itens) || [];
+        if (!arr2.length) { sec.innerHTML = '<div style="font-size:12px;color:#64748b">Nada entendido. Tente de outro jeito.</div>'; return true; }
+        sec.innerHTML = '<div style="font-size:12px;font-weight:800;color:#0369a1">' + (intent === 'pet' ? '🐾 Pet' : '🧱 Obra') + ' — toque p/ por na lista:</div>' + arr2.slice(0, 6).map(function (x, ix) {
+          return '<div data-ix="' + ix + '" class="hubm" style="display:flex;gap:8px;align-items:center;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:9px;font-size:13px;cursor:pointer;margin-top:6px"><div style="flex:1"><b>' + esc(x.nome) + '</b><div style="color:#64748b;font-size:11px">qtd ' + esc(x.qtd || 1) + '</div></div><div style="color:#16a34a;font-weight:800">+ lista</div></div>';
+        }).join('');
+        sec._arr = arr2;
+        var rows2 = sec.querySelectorAll('.hubm');
+        for (var k = 0; k < rows2.length; k++) {
+          (function (el) {
+            el.onmousedown = function () {
+              try {
+                var x = sec._arr[parseInt(el.getAttribute('data-ix'), 10)];
+                if (x) hubAdd({ nome: x.nome, preco_medio: null });
+              } catch (_) {}
+            };
+          })(rows2[k]);
+        }
+        return true;
+      }
+      if (intent === 'fin') {
+        var pv = parseValor(q);
+        if (!pv) { sec.innerHTML = '<div style="font-size:12px;color:#64748b">Diga o valor. Ex: gastei 50 com mercado.</div>'; return true; }
+        sec.innerHTML = '<div style="font-size:12px;font-weight:800;color:#065f46">💰 Confirmar gasto:</div><div id="hubfin" style="display:flex;gap:8px;align-items:center;background:#ecfdf5;border:1px solid #a7f3d0;border-radius:10px;padding:9px;font-size:13px;cursor:pointer;margin-top:6px"><div style="flex:1"><b>R$ ' + pv.valor.toFixed(2).replace('.', ',') + '</b><div style="color:#64748b;font-size:11px">' + esc(pv.desc) + ' · ' + esc(pv.cat) + '</div></div><div style="color:#16a34a;font-weight:800">confirmar</div></div>';
+        sec._pv = pv;
+        document.getElementById('hubfin').onmousedown = function () {
+          try {
+            var tk = '';
+            try { tk = localStorage.getItem('spark_token') || ''; } catch (_) {}
+            if (!tk) { toast('Entre na conta para registrar gasto.'); return; }
+            fetch('/spark-api/despesas', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tk }, body: JSON.stringify({ categoria: sec._pv.cat, descricao: sec._pv.desc, valor: sec._pv.valor }) }).then(function (r) { return r.json(); }).then(function (j) {
+              if (j && j.ok) toast('Gasto registrado! ✅');
+              else toast('Falhou. Tente de novo.');
+            }).catch(function () { toast('Falha de rede.'); });
+          } catch (_) {}
+        };
+        return true;
+      }
+      if (intent === 'canna') {
+        var rc = await fetch('/dosefiel-api/cannabis/catalogo?q=' + encodeURIComponent(q));
+        var jc = await rc.json();
+        var arrc = (jc && jc.results) || [];
+        if (!arrc.length) { sec.innerHTML = '<div style="font-size:12px;color:#64748b">Nada em cannabis para "' + esc(q) + '".</div>'; return true; }
+        sec.innerHTML = '<div style="font-size:12px;font-weight:800;color:#166534">🌿 Cannabis medicinal — toque p/ abrir no Dose:</div>' + arrc.slice(0, 5).map(function (x, ix) {
+          return '<div data-ix="' + ix + '" class="hubm" style="display:flex;gap:8px;align-items:center;background:#f0fdf4;border:1px solid #86efac;border-radius:10px;padding:9px;font-size:13px;cursor:pointer;margin-top:6px"><div style="flex:1;min-width:0"><b>' + esc(x.nome) + '</b><div style="color:#64748b;font-size:11px">' + esc(x.perfil || '') + '</div></div><div style="color:#16a34a;font-weight:800">abrir</div></div>';
+        }).join('');
+        var rowsc = sec.querySelectorAll('.hubm');
+        for (var kc = 0; kc < rowsc.length; kc++) {
+          (function (el) {
+            el.onmousedown = function () { try { location.href = '/dose/#screen-cannabis'; } catch (_) {} };
+          })(rowsc[kc]);
+        }
+        return true;
+      }
+      if (intent === 'fam') {
+        var pm = parseMembro(q);
+        if (!pm) { sec.innerHTML = '<div style="font-size:12px;color:#64748b">Diga o nome. Ex: adicionar Ana na família.</div>'; return true; }
+        sec.innerHTML = '<div style="font-size:12px;font-weight:800;color:#1e40af">👪 Confirmar membro:</div><div id="hubfam" style="display:flex;gap:8px;align-items:center;background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:9px;font-size:13px;cursor:pointer;margin-top:6px"><div style="flex:1"><b>' + esc(pm.nome) + '</b><div style="color:#64748b;font-size:11px">' + esc(pm.tipo) + '</div></div><div style="color:#16a34a;font-weight:800">confirmar</div></div>';
+        sec._pm = pm;
+        document.getElementById('hubfam').onmousedown = function () {
+          try {
+            var tk = '';
+            try { tk = localStorage.getItem('spark_token') || ''; } catch (_) {}
+            if (!tk) { toast('Entre na conta para adicionar.'); return; }
+            fetch('/spark-api/familia/membro', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tk }, body: JSON.stringify({ nome: sec._pm.nome, tipo: sec._pm.tipo }) }).then(function (r) { return r.json(); }).then(function (j) {
+              if (j && j.ok) toast(sec._pm.nome + ' na família! ✅');
+              else toast('Falhou. Tente de novo.');
+            }).catch(function () { toast('Falha de rede.'); });
+          } catch (_) {}
+        };
+        return true;
+      }
+    } catch (_) {}
+    return false;
+  }
+  function parseValor(tx) {
+    try {
+      var t = String(tx || '');
+      var m = t.match(/R\$?\s*(\d[\d.,]*)/i) || t.match(/(\d[\d.,]*)\s*(reais|real|r\$)/i);
+      if (!m) m = t.match(/(\d[\d.,]*)/);
+      if (!m) return null;
+      var v = parseFloat(m[1].replace(/\./g, '').replace(',', '.'));
+      if (!(v > 0) || v > 1000000) return null;
+      var tl = t.toLowerCase();
+      var cat = 'outros';
+      if (/(mercado|compras|comida|feira)/.test(tl)) cat = 'mercado';
+      else if (/(posto|gasolina|etanol|combustivel|carro)/.test(tl)) cat = 'combustivel';
+      else if (/(farmacia|remedio|medico)/.test(tl)) cat = 'farmacia';
+      else if (/(obra|material|construcao)/.test(tl)) cat = 'obra';
+      else if (/(pet|veterinario|racao)/.test(tl)) cat = 'pet';
+      var desc = t.replace(/gastei|paguei|custou|comprei por|valor|r\$|reais|real/gi, ' ').replace(/\d[\d.,]*/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 80) || 'gasto';
+      return { valor: Math.round(v * 100) / 100, desc: desc, cat: cat };
+    } catch (_) { return null; }
+  }
+  function parseMembro(tx) {
+    try {
+      var t = String(tx || '').toLowerCase();
+      var m = t.match(/(?:adicionar|incluir|cadastrar)\s+([a-zà-ú ]{2,40}?)(?:\s+(na familia|como membro|como filho|como filha|na casa|\s*$)|$)/);
+      if (!m) return null;
+      var nome = m[1].replace(/(na familia|como membro|da familia|de estimacao)/g, '').trim();
+      nome = nome.replace(/^(meu|minha|o|a|um|uma)\s+/, '').trim();
+      if (nome.length < 2) return null;
+      nome = nome.charAt(0).toUpperCase() + nome.slice(1);
+      var tipo = /(pet|cachorro|gato|cao|passaro|peixe)/.test(t) ? 'pet' : 'pessoa';
+      return { nome: nome.slice(0, 40), tipo: tipo };
+    } catch (_) { return null; }
+  }
+  function mostraSug(q) {
+    try {
+      var box = sugBox(); if (!box) return;
+      var nq = norm(q);
+      if (nq.length < 2) { box.style.display = 'none'; box.innerHTML = ''; return; }
+      var a = matchApp(nq);
+      var html = '';
+      if (a) html += '<div class="hubnav" style="display:flex;gap:8px;align-items:center;background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:9px;font-size:13px;cursor:pointer" data-h="' + esc(a.h) + '"><div style="flex:1"><b>→ Abrir ' + esc(a.t) + '</b></div><div style="color:#0284c7;font-weight:800">abrir</div></div>';
+      box.innerHTML = html + '<div id="hub-food"></div>';
+      try { var _nq2 = norm(q); mostraMulti(box, q, _nq2); } catch (_) {}
+      box.style.display = 'flex';
+      try { mostraLocais(box, q, nq); } catch (_) {}
+      var nav = box.querySelector('.hubnav');
+      if (nav) nav.onmousedown = function () { try { location.href = nav.getAttribute('data-h'); } catch (_) {} };
+      if (sugT) clearTimeout(sugT);
+      sugT = setTimeout(function () {
+        fetch('/spark-api/alimentos/busca?q=' + encodeURIComponent(q)).then(function (r) { return r.json(); }).then(function (j) {
+          try {
+            var arr = (j && j.itens) || [];
+            var fb = document.getElementById('hub-food');
+            if (!fb) return;
+            fb.innerHTML = arr.slice(0, 5).map(function (x, ix) {
+              return '<div data-ix="' + ix + '" class="hubf" style="display:flex;gap:8px;align-items:center;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:9px;font-size:13px;cursor:pointer;margin-top:6px"><div style="flex:1;min-width:0"><b>' + esc(x.nome) + '</b><div style="color:#64748b;font-size:11px">' + Number(x.kcal || 0) + ' kcal · R$ ' + (x.preco_medio != null ? Number(x.preco_medio).toFixed(2).replace('.', ',') : '?') + '</div></div><div style="color:#16a34a;font-weight:800">ver</div></div>';
+            }).join('');
+            fb._arr = arr;
+            var rows = fb.querySelectorAll('.hubf');
+            for (var i = 0; i < rows.length; i++) {
+              (function (el) {
+                el.onmousedown = function () {
+                  try {
+                    var x = fb._arr[parseInt(el.getAttribute('data-ix'), 10)];
+                    if (!x) return;
+                    hubAdd(x);
+                  } catch (_) {}
+                };
+              })(rows[i]);
+            }
+          } catch (_) {}
+        });
+        }, 300);
+    } catch (_) {}
+  }
+  function rotear(q) {
+    var nq = norm(q);
+    if (!nq) return false;
+    var nav = /(abrir|abra|ir para|va para|mostrar|mostre|quero|area)/.test(nq);
+    var a = matchApp(nq);
+    var _in = appIntent(nq);
+    if (_in) { try { var _inp = document.getElementById('app-search'); if (_inp) { _inp.value = q; _inp.dispatchEvent(new Event('input', { bubbles: true })); } } catch (_) {} return true; }
+    if (a && (nav || nq.split(' ').length <= 2)) { location.href = a.h; return true; }
+    return false;
+  }
+  var rec = null, chunks = [], holding = false;
+  function pickMime() {
+    try {
+      var c = ['audio/webm;codecs=opus', 'audio/webm', 'audio/mp4', 'audio/ogg;codecs=opus'];
+      for (var i = 0; i < c.length; i++) { try { if (window.MediaRecorder && MediaRecorder.isTypeSupported(c[i])) return c[i]; } catch (_) {} }
+    } catch (_) {}
+    return '';
+  }
+  async function vozIni(ev) {
+    try { if (ev) ev.preventDefault(); } catch (_) {}
+    holding = true; chunks = [];
+    toast('Ouvindo... solte para enviar.');
+    try {
+      var stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      var mime = pickMime();
+      rec = mime ? new MediaRecorder(stream, { mimeType: mime }) : new MediaRecorder(stream);
+      rec.ondataavailable = function (e) { try { if (e.data && e.data.size) chunks.push(e.data); } catch (_) {} };
+      rec.onstop = vozEnvia;
+      rec.start();
+      setMic(true);
+    } catch (_) { holding = false; setMic(false); toast('Microfone bloqueado. Libere no cadeado.'); }
+  }
+  async function vozFim() {
+    if (!holding) return; holding = false; setMic(false);
+    try { if (rec && rec.state !== 'inactive') rec.stop(); } catch (_) {}
+  }
+  function setMic(r) { try { var b = document.getElementById('hub-mic'); if (b) b.textContent = r ? '🔴' : '🎤'; } catch (_) {} }
+  async function vozEnvia() {
+    try {
+      if (!chunks.length) { toast('Nada gravado. Segure e fale.'); return; }
+      var blob = new Blob(chunks, { type: (rec.mimeType || 'audio/webm') });
+      if (blob.size < 8000) { toast('Áudio curto: segure e fale por 2 segundos.'); return; }
+      var ext = 'webm';
+      try { if ((rec.mimeType || '').indexOf('mp4') >= 0) ext = 'm4a'; else if ((rec.mimeType || '').indexOf('ogg') >= 0) ext = 'ogg'; } catch (_) {}
+      toast('Transcrevendo...');
+      var tr = await fetch('/spark-api/ia/transcrever?ext=' + ext, { method: 'POST', headers: { 'Content-Type': blob.type || 'audio/webm' }, body: blob });
+      var tj = await tr.json();
+      if (!tj || !tj.ok) { toast('Não entendi o áudio. Fale de novo.'); return; }
+      var inp = document.getElementById('app-search');
+      if (inp) { inp.value = tj.texto || ''; try { inp.dispatchEvent(new Event('input', { bubbles: true })); } catch (_) {} }
+      if (!rotear(tj.texto || '')) mostraSug(tj.texto || '');
+      else toast('Abrindo...');
+    } catch (_) { toast('Falha de rede no áudio.'); }
+  }
+  function boot() {
+    try {
+      var m = document.getElementById('hub-mic');
+      if (m && !m._on) {
+        m._on = true;
+        m.addEventListener('pointerdown', vozIni);
+        m.addEventListener('pointerup', vozFim);
+        m.addEventListener('pointerleave', function () { try { vozFim(); } catch (_) {} });
+      }
+      var inp = document.getElementById('app-search');
+      if (inp && !inp._hubon) {
+        inp._hubon = true;
+        inp.addEventListener('input', function (e) { try { mostraSug(e.target.value); } catch (_) {} });
+      }
+    } catch (_) {}
+  }
+  try { boot(); } catch (_) {}
+  try { document.addEventListener('DOMContentLoaded', boot); } catch (_) {}
+  try { setTimeout(boot, 1500); } catch (_) {}
+  try { setTimeout(boot, 4000); } catch (_) {}
+})();
+</script><script src="/navegador/bridge/spark-family.js?v=2.1.0"></script>
+</body></html>

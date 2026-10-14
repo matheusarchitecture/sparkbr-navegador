@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <script defer src="/navegador/bridge/spark-bridge.js?v=2.1.0"></script>
+<meta charset="utf-8">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0f172a">
+<link rel="manifest" href="/sparkpet/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/saude/icon-192.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/sparkpet/sw.js").catch(function(){});});}</script>
+<title>SparkPet — Ração, Banho e Pet Shops | Spark Apps</title>
+<script>window.SPARK_APP = 'pet';</script>
+<script>
+window.SPARK_EXEMPLO = [
+  { name: 'Ração Cão Adulto 15kg', qty: 1, unit: 'saco', basePrice: 129.90, checked: false, ean: '' },
+  { name: 'Sachê Gato Frango 85g', qty: 12, unit: 'un', basePrice: 3.20, checked: false, ean: '' },
+  { name: 'Areia Gato 4kg', qty: 2, unit: 'saco', basePrice: 22.90, checked: false, ean: '' },
+  { name: 'Banho cão porte médio', qty: 1, unit: 'un', basePrice: 60.00, checked: false, ean: '' },
+  { name: 'Alpiste 1kg', qty: 1, unit: 'saco', basePrice: 14.90, checked: false, ean: '' },
+  { name: 'Brinquedo mordedor', qty: 2, unit: 'un', basePrice: 19.90, checked: false, ean: '' }
+];
+</script>
+<script>
+window.SPARK_PETSHOPS = [
+  { nome: 'Cobasi', cidade: 'Ribeirão Preto', mult: 1.00, maps: 'https://www.google.com/maps/search/?api=1&query=Cobasi+Ribeir%C3%A3o+Preto' },
+  { nome: 'Petz', cidade: 'Ribeirão Preto', mult: 1.04, maps: 'https://www.google.com/maps/search/?api=1&query=Petz+Ribeir%C3%A3o+Preto' },
+  { nome: 'Casa da Ração', cidade: 'Ribeirão Preto', mult: 0.93, maps: 'https://www.google.com/maps/search/?api=1&query=Casa+da+Ra%C3%A7%C3%A3o+Ribeir%C3%A3o+Preto' },
+  { nome: 'Chimbica', cidade: 'Ribeirão Preto', mult: 0.90, maps: 'https://www.google.com/maps/search/?api=1&query=Chimbica+pet+Ribeir%C3%A3o+Preto' },
+  { nome: 'Ponto das Rações', cidade: 'Ribeirão Preto', mult: 0.94, maps: 'https://www.google.com/maps/search/?api=1&query=Ponto+das+Ra%C3%A7%C3%B5es+Ribeir%C3%A3o+Preto' },
+  { nome: 'Late Mia & Cia', cidade: 'Ribeirão Preto', mult: 0.96, maps: 'https://www.google.com/maps/search/?api=1&query=Late+Mia+Cia+pet+Ribeir%C3%A3o+Preto' },
+  { nome: 'Agropecuária Boa Sorte', cidade: 'Ribeirão Preto', mult: 0.92, maps: 'https://www.google.com/maps/search/?api=1&query=Agropecuaria+Boa+Sorte+Ribeir%C3%A3o+Preto' }
+];
+window.SPARK_TOUR = [
+  { t: 'Passo 1 de 4 — Fale ou digite', d: 'Segure o microfone e fale ("2kg de ração e 1 banho") ou digite. A IA entende e separa por categoria.' },
+  { t: 'Passo 2 de 4 — Agente pet', d: 'O agente cruza sua lista com preços e mostra o pet shop mais barato perto de você.' },
+  { t: 'Passo 3 de 4 — Onde comprar', d: 'Cobasi, Petz, casas de ração e agropecuárias com distância e preço. Toque em preço médio pra conferir.' },
+  { t: 'Passo 4 de 4 — Leve e compartilhe', d: 'PDF, WhatsApp ou QR. Sua lista fica salva na sua conta (a mesma do mercado e da obra).' }
+];
+</script>
+<style>
+body{font-family:system-ui;margin:0;background:#fff7ed;color:#431407}
+.top{background:#0f172a;color:#fff;padding:12px 16px}
+.top b{font-size:16px}
+.top span{font-size:11px;color:#fdba74;display:block}
+.chips{display:flex;gap:6px;overflow:auto;padding:10px 12px}
+.market-chip{border:1px solid #fed7aa;background:#fff;border-radius:20px;padding:6px 12px;font-size:12px;white-space:nowrap;cursor:pointer}
+.market-chip.active{background:#ea580c;color:#fff;border-color:#ea580c}
+.kpis{display:flex;gap:8px;padding:0 12px}
+.kpi{flex:1;background:#fff;border:1px solid #fed7aa;border-radius:12px;padding:8px;text-align:center}
+.kpi b{font-size:15px;display:block}
+.kpi span{font-size:10px;color:#9a3412}
+.addrow{display:flex;gap:6px;padding:10px 12px}
+.addrow input{flex:1;border:1px solid #fed7aa;border-radius:10px;padding:10px;font-size:13px}
+.addrow button{background:#ea580c;color:#fff;border:none;border-radius:10px;padding:0 16px;font-weight:800}
+.list-item{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #ffedd5;padding:8px 12px}
+.item-left{display:flex;gap:8px;align-items:center}
+.item-checkbox{width:22px;height:22px;border:2px solid #fdba74;border-radius:6px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.item-checkbox.checked{background:#ea580c;color:#fff}
+.item-name{font-size:13px;font-weight:600;display:block}
+.item-name.checked{text-decoration:line-through;color:#a8a29e}
+.item-meta{font-size:11px;color:#9a3412}
+.item-price{font-weight:800;font-size:13px}
+.pill{border-radius:10px;padding:1px 6px}
+.pill-blue{background:#ffedd5;color:#9a3412}
+.nav{position:fixed;bottom:0;left:0;right:0;background:#0f172a;display:flex;padding:8px}
+.nav button{flex:1;background:none;border:none;color:#fdba74;font-size:11px;cursor:pointer}
+.nav button.active{color:#fff}
+.tab-content{display:none;padding-bottom:70px}
+.tab-content.active{display:block}
+.btn{display:block;width:calc(100% - 24px);margin:8px 12px;border:none;border-radius:10px;padding:12px;font-weight:800;cursor:pointer}
+</style>
+
+
+<link rel="stylesheet" href="/assets/brand.css?v=20261013">
+<link rel="stylesheet" href="/assets/app-shell.css?v=20261013b">
+<script defer data-spark-rebrand src="/assets/app-shell.js?v=20261013b"></script>
+</head>
+<body data-spark-page="sparkpet" data-spark-layout="complex">
+<div class="top"><b>🐾 SparkPet</b><span>Ração, banho e pet shops — Ribeirão Preto e região</span></div>
+<div class="chips" id="pet-chips"></div>
+<div id="tab-lista" class="tab-content active">
+  <div class="kpis">
+    <div class="kpi"><b id="kpi-count">0 itens</b><span>Itens na Lista</span></div>
+    <div class="kpi"><b id="kpi-total">R$ 0,00</b><span>Total na <span id="kpi-market-name">Cobasi</span></span></div>
+  </div>
+  <div class="addrow">
+    <input id="quick-input" placeholder="Adicionar (ex: 2kg ração, 1 banho)...">
+    <button onclick="petAdd()">+ Add</button>
+  </div>
+  <div style="font-size:11px;color:#15803d;padding:0 12px" id="savings-tip"></div>
+  <div style="font-size:13px;font-weight:800;padding:8px 12px 0">Produtos Selecionados</div>
+  <div id="shopping-list-items"></div>
+  <button class="btn" style="background:#ea580c;color:#fff" onclick="alert('Use o agente abaixo para otimizar 🐾')">🚀 Finalizar: <span id="btn-total-preview">R$ 0,00</span></button>
+  <div class="interaction-box"></div>
+</div>
+<div id="tab-parc" class="tab-content">
+  <div style="padding:16px;font-size:13px">Em breve: banho, tosa e veterinários parceiros com agendamento. 🐾</div>
+</div>
+<nav class="nav">
+  <button class="nav-item active" onclick="switchPetTab('lista',this)">🐾 Lista</button>
+  <button class="nav-item" onclick="switchPetTab('parc',this)">🤝 Parcerias</button>
+</nav>
+<script src="/spark/spark_real.js?v=20261011g"></script>
+<script>window.SPARK_GOOGLE_ID='468525623041-knelde8kgjcmhcaa5hqjv0i3pns6ldpl.apps.googleusercontent.com';</script><script src="/spark/spark_conta.js?v=13"></script>
+<script src="/spark/spark_cards.js?v=3"></script>
+<script>
+const petState = {
+  activeMarket: 'cobasi',
+  markets: {
+    cobasi: { name: 'Cobasi', color: '#EA580C', rate: '0%', multiplier: 1.0 },
+    petz: { name: 'Petz', color: '#2563EB', rate: '0%', multiplier: 1.04 },
+    casaracao: { name: 'Casa da Ração', color: '#16A34A', rate: '0%', multiplier: 0.93 },
+    chimbica: { name: 'Chimbica', color: '#D97706', rate: '0%', multiplier: 0.90 },
+    ponto: { name: 'Ponto das Rações', color: '#7C3AED', rate: '0%', multiplier: 0.94 },
+    latemia: { name: 'Late Mia & Cia', color: '#DB2777', rate: '0%', multiplier: 0.96 }
+  },
+  items: [],
+  isRecording: false
+};
+var state = petState;
+function switchPetTab(id, el) {
+  document.querySelectorAll('.tab-content').forEach(function (t) { t.classList.remove('active'); });
+  document.querySelectorAll('.nav-item').forEach(function (b) { b.classList.remove('active'); });
+  var t = document.getElementById('tab-' + id); if (t) t.classList.add('active');
+  if (el) el.classList.add('active');
+}
+function renderChips() {
+  document.getElementById('pet-chips').innerHTML = Object.keys(state.markets).map(function (k) {
+    return '<button class="market-chip' + (k === state.activeMarket ? ' active' : '') + '" onclick="selectPetMarket(\'' + k + '\')">' + state.markets[k].name + '</button>';
+  }).join('');
+}
+function selectPetMarket(k) {
+  state.activeMarket = k; renderChips();
+  if (window.renderShoppingList) window.renderShoppingList();
+  if (window.updateKPIs) window.updateKPIs();
+}
+function toggleCheck(id) {
+  var it = state.items.find(function (i) { return i.id === id; });
+  if (it) { it.checked = !it.checked; if (window.renderShoppingList) window.renderShoppingList(); updateKPIs(); try{window.sparkSync&&window.sparkSync()}catch(_){} }
+}
+function updateKPIs() {
+  var mult = state.markets[state.activeMarket].multiplier, total = 0;
+  state.items.forEach(function (i) { if (!i.checked) total += (i.basePrice * mult * i.qty); });
+  document.getElementById('kpi-total').textContent = 'R$ ' + total.toFixed(2).replace('.', ',');
+  document.getElementById('btn-total-preview').textContent = 'R$ ' + total.toFixed(2).replace('.', ',');
+  document.getElementById('kpi-count').textContent = state.items.length + ' itens';
+  document.getElementById('kpi-market-name').textContent = state.markets[state.activeMarket].name;
+  var best = Math.min.apply(null, Object.keys(state.markets).map(function (k) { return state.markets[k].multiplier; }));
+  var diff = total - total / mult * best;
+  var tip = document.getElementById('savings-tip');
+  if (diff > 0.05) tip.innerHTML = '💡 Nesta lista dá <b>R$ ' + diff.toFixed(2).replace('.', ',') + ' de economia</b> no mais barato!';
+  else tip.innerHTML = '💡 Melhor cotação pet da região!';
+}
+function petAdd() {
+  var input = document.getElementById('quick-input'), v = (input.value || '').trim();
+  if (!v) return;
+  state.items.unshift({ id: Date.now(), name: v, qty: 1, unit: 'un', basePrice: 0, checked: false, ean: '' });
+  input.value = '';
+  if (window.renderShoppingList) window.renderShoppingList(); updateKPIs(); try{window.sparkSync&&window.sparkSync()}catch(_){}
+}
+document.addEventListener('DOMContentLoaded', function () { renderChips(); updateKPIs(); });
+</script>
+<button onclick="location.href='https://sparkbr.online/'" title="Voltar p/ área principal Spark" style="position:fixed;bottom:142px;right:10px;z-index:9000;background:#f59e0b;color:#fff;border:none;border-radius:50%;width:44px;height:44px;font-size:20px;font-weight:800;box-shadow:0 2px 8px rgba(0,0,0,.25)">⚡</button>
+<script src="/navegador/bridge/spark-family.js?v=2.1.0"></script>
+</body>
+</html>

@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="auto">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Spark Dose — Seu cuidado, no momento certo</title>
+  
+  <!-- PWA Meta Tags -->
+  <link rel="icon" href="/apps/sparkdose/favicon.ico" type="image/x-icon">
+<link rel="manifest" href="/apps/sparkdose/manifest.webmanifest">
+  <meta name="theme-color" content="#0284c7">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Spark Dose">
+  <link rel="apple-touch-icon" href="/apps/sparkdose/icons/icon-192.png">
+  
+  <link rel="stylesheet" href="/apps/sparkdose/css/styles.css">
+
+<script src="/spark-life.js" defer></script>
+
+<link rel="stylesheet" href="/assets/brand.css?v=20261013">
+<link rel="stylesheet" href="/assets/app-shell.css?v=20261013b">
+<script defer data-spark-rebrand src="/assets/app-shell.js?v=20261013b"></script>
+</head>
+<body data-spark-page="dose" data-spark-layout="complex">
+<div class="as-topbar" style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:linear-gradient(135deg,#0284c7,#10b981);color:#fff;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Arial,sans-serif;position:sticky;top:0;z-index:50"><a href="https://sparkbr.online/" style="color:#fff;text-decoration:none;font-weight:700;font-size:13px;border:1px solid rgba(255,255,255,.5);padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.12)">Spark</a><span style="font-weight:800;font-size:15px">spark<strong>dose</strong></span><span style="flex:1"></span></div>
+
+
+  <!-- Banner de Instalação PWA (Android / Desktop) -->
+  <div id="pwa-install-banner" class="alert-banner" style="display:none;margin:12px 16px 0;position:relative;">
+    <div style="flex:1;">
+      <strong>Instalar o Spark Dose</strong>
+      <div style="font-size:0.85rem;color:var(--text-muted);">Tenha lembretes precisos mesmo sem abrir o navegador.</div>
+    </div>
+    <button class="btn btn-primary" onclick="PWAManager.promptInstall()">Instalar</button>
+    <button class="btn btn-secondary" onclick="PWAManager.dismissInstallBanner()" aria-label="Fechar aviso de instalacao" title="Dispensar por 7 dias" style="margin-left:8px;padding:6px 10px;line-height:1;">X</button>
+  </div>
+
+  <!-- Banner Safari iPhone / iPad -->
+  <div id="ios-install-banner" class="alert-banner" style="display:none;margin:12px 16px 0;position:relative;">
+    <div style="flex:1;">
+      <strong>Instalar no iPhone</strong>
+      <div style="font-size:0.85rem;color:var(--text-muted);">Toque em Compartilhar e selecione "Adicionar a Tela de Inicio".</div>
+    </div>
+    <button class="btn btn-secondary" onclick="PWAManager.promptInstall()">Ver como</button>
+    <button class="btn btn-secondary" onclick="PWAManager.dismissInstallBanner()" aria-label="Fechar aviso de instalacao" title="Dispensar por 7 dias" style="margin-left:8px;padding:6px 10px;line-height:1;">X</button>
+  </div>
+
+  <div class="app-container">
+    
+    <!-- Sidebar de Navegação Desktop & Tablet -->
+    <aside class="app-sidebar">
+      <div class="brand-header">
+        <img src="/apps/sparkdose/icons/icon-192.png" alt="Spark Dose" class="brand-logo">
+        <div>
+          <div class="brand-title">Spark Dose</div>
+          <div class="brand-tagline">Seu cuidado, no momento certo</div>
+        </div>
+      </div>
+
+      <nav class="nav-group" style="flex:1;overflow-y:auto;">
+        <div class="nav-label">Rotina Diária</div>
+        <button class="nav-item active" data-nav-screen="screen-dashboard">
+          <span class="icon">🏠</span> Minha Saúde Hoje
+        </button>
+        <button class="nav-item" data-nav-screen="screen-agenda">
+          <span class="icon">📅</span> Agenda Diária
+        </button>
+        <button class="nav-item" data-nav-screen="screen-calendar">
+          <span class="icon">🗓️</span> Calendário Terapêutico
+        </button>
+        <button class="nav-item adhd-highlight" data-nav-screen="screen-assisted-memory">
+          <span class="icon">🧠</span> Já Tomei? (TDAH)
+        </button>
+
+        <div class="nav-label">Medicamentos</div>
+        <button class="nav-item" data-nav-screen="screen-catalog-search">
+          <span class="icon">🔍</span> Buscar no Catálogo Anvisa
+        </button>
+        <button class="nav-item" data-nav-screen="screen-add-medication">
+          <span class="icon">➕</span> Cadastrar Tratamento
+        </button>
+        <button class="nav-item" data-nav-screen="screen-inventory">
+          <span class="icon">📦</span> Controle de Estoque
+        </button>
+
+        <div class="nav-label">Acompanhamento</div>
+        <button class="nav-item" data-nav-screen="screen-reports">
+          <span class="icon">📊</span> Relatório de Adesão
+        </button>
+        <button class="nav-item" data-nav-screen="screen-symptoms">
+          <span class="icon">📝</span> Diário de Sintomas
+        </button>
+        <button class="nav-item" data-nav-screen="screen-documents">
+          <span class="icon">📂</span> Cofre de Receitas
+        </button>
+        <button class="nav-item" data-nav-screen="screen-consultas">
+          <span class="icon">💗</span> Consultas
+        </button>
+        <button class="nav-item" data-nav-screen="screen-prontuario">
+          <span class="icon">📋</span> Prontuário
+        </button>
+        <button class="nav-item" data-nav-screen="screen-ai-assistant">
+          <span class="icon">🤖</span> Assistente Spark Dose
+        </button>
+
+        <div class="nav-label">Família & Sistema</div>
+        <button class="nav-item" data-nav-screen="screen-family-profiles">
+          <span class="icon">👨‍👩‍👧</span> Perfis Familiares
+        </button>
+        <button class="nav-item" data-nav-screen="screen-caregiver-permissions">
+          <span class="icon">🤝</span> Permissões de Cuidadores
+        </button>
+        <button class="nav-item" data-nav-screen="screen-push-diagnostics">
+          <span class="icon">🔔</span> Diagnóstico de Push
+        </button>
+        <button class="nav-item" onclick="PWAManager.showInstallBanner(true)" title="Reexibir aviso de instalacao (mesmo se dispensado)">
+          <span class="icon">📲</span> Instalar app
+        </button>
+        <button class="nav-item" data-nav-screen="screen-privacy-settings">
+          <span class="icon">🛡️</span> Privacidade & LGPD
+        </button>
+        <button class="nav-item" data-nav-screen="screen-accessibility-settings">
+          <span class="icon">♿</span> Acessibilidade (Idoso/TDAH)
+        </button>
+        <button class="nav-item" data-nav-screen="screen-meu-perfil">
+          <span class="icon">👤</span> Meu Perfil
+        </button>
+        <button class="nav-item" data-nav-screen="screen-admin-panel">
+          <span class="icon">⚙️</span> Painel Administrativo
+        </button>
+      </nav>
+    </aside>
+
+    <!-- Área de Conteúdo Principal -->
+    <main class="app-main">
+      
+      <!-- Top Bar com Seleção de Perfil e Ações Rápidas -->
+      <header class="app-header">
+        <div id="profile-header-widget"></div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <button class="btn btn-secondary btn-icon" title="Assistente IA" onclick="app.routeTo('screen-ai-assistant')">🤖</button>
+          <button class="btn btn-secondary btn-icon" title="Diagnóstico de Notificações" onclick="app.routeTo('screen-push-diagnostics')">🔔</button>
+          <button class="btn btn-secondary btn-icon" title="Alternar Tema" onclick="app.applyTheme(app.theme === 'dark' ? 'light' : 'dark')">🌓</button>
+          <button class="btn btn-secondary" style="padding:6px 12px;font-size:0.82rem;" title="Sair (limpa token)" onclick="app.doLogoutAction()">Sair</button>
+        </div>
+      </header>
+
+      <!-- ===================================================================
+           AS 30 TELAS FUNCIONAIS DO SPARK DOSE
+           =================================================================== -->
+
+      <!-- TELA 1: SPLASH SCREEN -->
+      <section id="screen-splash" style="display:none;text-align:center;padding:80px 20px;">
+        <img src="/apps/sparkdose/icons/icon-512.png" alt="Spark Dose" style="width:120px;height:120px;margin-bottom:24px;">
+        <h1 style="font-size:2.2rem;font-weight:800;color:var(--primary);">Spark Dose</h1>
+        <p style="color:var(--text-muted);margin-top:8px;">Seu cuidado, no momento certo.</p>
+        <button class="btn btn-primary btn-lg" style="margin-top:32px;" onclick="app.routeTo('screen-dashboard')">Entrar no Aplicativo</button>
+      </section>
+
+      <!-- TELA 2: BOAS-VINDAS -->
+      <section id="screen-welcome" style="display:none;text-align:center;padding:60px 20px;">
+        <h2 style="font-size:2rem;font-weight:800;">Seu tratamento organizado, sua rotina mais tranquila.</h2>
+        <p style="color:var(--text-muted);margin:16px auto;max-width:500px;">
+          Spark Dose combina tecnologia, segurança clínica e acolhimento para cuidar de você e de quem você ama.
+        </p>
+        <div class="btn-group" style="justify-content:center;margin-top:32px;">
+          <button class="btn btn-primary btn-lg" onclick="app.routeTo('screen-onboarding')">Começar Agora</button>
+          <button class="btn btn-secondary btn-lg" onclick="app.routeTo('screen-login')">Já tenho conta</button>
+        </div>
+      </section>
+
+      <!-- TELA 3: LOGIN E CADASTRO (ROTA INICIAL) -->
+      <section id="screen-login" style="display:block;max-width:440px;margin:40px auto;">
+        <div class="card">
+          <h2 style="font-weight:800;margin-bottom:8px;">Entrar no Spark Dose</h2>
+          <p style="color:var(--text-muted);margin-bottom:24px;">Rota inicial é o login. Sem token, sem dados (401). Novo por aqui? Preencha tudo e toque em Criar conta. Conta nova cai em 3 passos.</p>
+          <div class="form-group">
+            <label class="form-label">Nome completo (p/ cadastro)</label>
+            <input type="text" class="form-input" id="reg-name" placeholder="Ex: Maria Silva" autocomplete="name">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Data de nascimento (p/ cadastro)</label>
+            <input type="date" class="form-input" id="reg-birth">
+          </div>
+          <div class="form-group">
+            <label class="form-label">E-mail</label>
+            <input type="email" class="form-input" value="" id="login-email" autocomplete="email" placeholder="seu@email.com">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Senha (mín. 6 caracteres)</label>
+            <input type="password" class="form-input" value="" id="login-pass" autocomplete="current-password" placeholder="••••••">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Telefone (opcional)</label>
+            <input type="tel" class="form-input" id="reg-phone" placeholder="(16) 99999-0000" autocomplete="tel">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Foto (opcional, link)</label>
+            <input type="url" class="form-input" id="reg-photo" placeholder="https://...">
+          </div>
+          <label style="display:flex;align-items:center;gap:8px;font-size:0.88rem;margin:10px 0;"><input type="checkbox" id="login-remember" checked> Manter conectado 30 dias (desmarque = 7 dias)</label>
+          <button class="btn btn-primary" style="width:100%;margin-top:12px;" onclick="app.doLoginAction()">Acessar Minha Saúde</button><button class="btn btn-secondary" style="width:100%;margin-top:8px;" onclick="app.doRegisterAction()">Criar conta</button>
+          <button class="btn btn-secondary" style="width:100%;margin-top:8px;border-style:dashed;" onclick="app.doDemoAction()">👁 Ver demonstração (sessão demo isolada 12h)</button>
+          <div style="text-align:center;margin-top:16px;">
+            <a href="#screen-account-recovery" style="color:var(--primary);font-size:0.85rem;" onclick="app.routeTo('screen-account-recovery')">Esqueceu a senha?</a>
+          </div>
+          <p style="font-size:0.78rem;color:var(--text-muted);margin-top:10px;">Aviso: se a sessão expirar (7/30d), você volta p/ cá com aviso. Sair limpa o token.</p>
+        </div>
+      </section>
+
+      <!-- TELA 4: RECUPERAÇÃO DE CONTA -->
+      <section id="screen-account-recovery" style="display:none;max-width:440px;margin:40px auto;">
+        <div class="card">
+          <h2 style="font-weight:800;margin-bottom:8px;">Recuperar Acesso</h2>
+          <p style="color:var(--text-muted);margin-bottom:20px;">Informe seu e-mail cadastrado para receber instruções seguras.</p>
+          <div class="form-group">
+            <label class="form-label">Seu E-mail</label>
+            <input type="email" class="form-input" placeholder="seu@email.com">
+          </div>
+          <button class="btn btn-primary" style="width:100%;margin-top:8px;" onclick="app.doRecoverAction()">Enviar Instruções</button>
+          <button class="btn btn-secondary" style="width:100%;margin-top:10px;" onclick="app.routeTo('screen-login')">Voltar ao Login</button>
+        </div>
+      </section>
+
+      <!-- TELA 5: ONBOARDING 3 PASSOS FORCADOS + TUTORIAL MANTIDO -->
+      <section id="screen-onboarding" style="display:none;max-width:540px;margin:20px auto;">
+        <div class="card">
+          <div class="card-subtitle">CONFIGURAÇÃO INICIAL — 3 PASSOS FORÇADOS (CONTA NOVA)</div>
+          <h2 style="font-weight:800;margin-bottom:12px;">Vamos configurar seu tratamento</h2>
+          <p style="color:var(--text-muted);margin-bottom:20px;">
+            Conta nova passa por 3 passos: 1 Buscar remédio • 2 Definir horário • 3 Ativar push. Tutorial de 1 min continua em Ajuda.
+          </p>
+          <div style="background:var(--bg-subtle);padding:16px;border-radius:12px;margin-bottom:20px;">
+            <strong>Quem vai utilizar este perfil?</strong>
+            <div style="display:flex;gap:10px;margin-top:10px;">
+              <button class="btn btn-primary" style="flex:1;">Eu mesmo(a)</button>
+              <button class="btn btn-secondary" style="flex:1;">Pai / Mãe / Dependente</button>
+            </div>
+          </div>
+          <button class="btn btn-primary btn-lg" style="width:100%;" onclick="app.routeTo('screen-catalog-search')">Continuar para Primeiro Medicamento</button>
+        </div>
+      </section>
+
+      <!-- TELA 6: DASHBOARD MINHA SAÚDE HOJE -->
+      <section id="screen-dashboard" style="display:none;">
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;"><button class="btn btn-secondary" onclick="app.previewDiaPDF()">Relatorio de hoje PDF</button><button class="btn btn-secondary" onclick="app.previewDiaPNG()">Imagem do dia</button></div>
+        <div id="dashboard-content"></div>
+      </section>
+
+      <!-- TELA 7: AGENDA DIÁRIA -->
+      <section id="screen-agenda" style="display:none;">
+        <h2 style="font-size:1.6rem;font-weight:800;margin-bottom:8px;">Agenda Diária Completa</h2>
+        <p style="color:var(--text-muted);margin-bottom:20px;">Histórico cronológico detalhado com diferenciação visual clínica.</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 14px;"><button class="btn btn-secondary" onclick="app.previewDiaPDF()">Relatorio de hoje PDF</button><button class="btn btn-secondary" onclick="app.previewDiaPNG()">Imagem do dia</button></div>
+        <div class="timeline" id="agenda-timeline-container">
+          <!-- Conteúdo gerado dinamicamente -->
+        </div>
+      </section>
+
+      <!-- TELA 8: CALENDÁRIO COMPLETO -->
+      <section id="screen-calendar" style="display:none;">
+        <h2 style="font-size:1.6rem;font-weight:800;margin-bottom:8px;">Calendário Terapêutico</h2>
+        <p style="color:var(--text-muted);margin-bottom:20px;">Visão semanal e mensal dos seus tratamentos com código de cores.</p>
+        <div class="card" style="padding:24px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+            <h3 style="font-weight:700;">Outubro de 2026</h3>
+            <div class="btn-group">
+              <button class="btn btn-secondary" style="padding:6px 12px;">Semana</button>
+              <button class="btn btn-primary" style="padding:6px 12px;">Mês</button>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(7, 1fr);gap:8px;text-align:center;font-weight:600;font-size:0.85rem;color:var(--text-muted);">
+            <div>Dom</div><div>Seg</div><div>Ter</div><div>Qua</div><div>Qui</div><div>Sex</div><div>Sáb</div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(7, 1fr);gap:8px;margin-top:12px;" id="calendar-month-grid">
+            <!-- Dias do mês -->
+          </div>
+        </div>
+      </section>
+
+      <!-- TELA 9: BUSCAR MEDICAMENTOS -->
+      <section id="screen-catalog-search" style="display:none;">
+        <h2 style="font-size:1.6rem;font-weight:800;margin-bottom:8px;">Catálogo Farmacêutico Oficial</h2>
+        <p style="color:var(--text-muted);margin-bottom:20px;">Consulte medicamentos aprovados pela Anvisa, DCB e OMS ATC.</p>
+        
+        <div style="display:flex;gap:10px;margin-bottom:20px;">
+          <input type="text" id="catalog-search-input" class="form-input" style="flex:1;" placeholder="Ex: Ritalina, Metilfenidato, Sertralina, Losartana..." onkeyup="if(event.key==='Enter') app.performDrugSearch()">
+          <button class="btn btn-primary" onclick="app.performDrugSearch()">Buscar</button>
+        </div>
+
+        <div style="font-size:0.8rem;color:var(--text-muted);background:var(--bg-subtle);padding:8px 12px;border-radius:8px;margin-bottom:12px;">Origem por item: <strong>RxNorm/EUA</strong>, <strong>Local</strong>, <strong>GovBR</strong>. RxNorm (EUA) e base GovBR estática <strong>não comprovam registro BR vigente</strong>. Confira bula/consulta Anvisa. Sem approval claims.</div><div id="catalog-results-container">
+          <p style="color:var(--text-muted);padding:16px;">Digite o nome comercial ou princípio ativo acima para pesquisar.</p>
+        </div>
+      </section>
+
+      <!-- TELA 10: CADASTRO DE MEDICAMENTO (FORMULÁRIO ADAPTÁVEL) -->
+      <section id="screen-add-medication" style="display:none;max-width:640px;margin:0 auto;">
+        <div class="card">
+          <h2 style="font-weight:800;margin-bottom:8px;">Cadastrar Novo Medicamento</h2>
+          <p style="color:var(--text-muted);margin-bottom:20px;">Configure os dados exatamente conforme prescrito pelo seu médico.</p>
+
+          <div class="form-group">
+            <label class="form-label">Nome do Medicamento ou Princípio Ativo</label>
+            <input type="text" class="form-input" id="new-reg-name" placeholder="Ex: Venvanse 30mg">
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+            <div class="form-group">
+              <label class="form-label">Forma Farmacêutica</label>
+              <select class="form-select" id="new-reg-form">
+                <option value="Comprimido">Comprimido</option>
+                <option value="Cápsula">Cápsula</option>
+                <option value="Gotas">Gotas</option>
+                <option value="Solução oral (ml)">Solução oral (ml)</option>
+                <option value="Injeção / Ampola">Injeção / Ampola</option>
+                <option value="Adesivo">Adesivo transdérmico</option>
+                <option value="Inalador / Spray">Inalador / Spray</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Quantidade por Dose</label>
+              <input type="number" class="form-input" id="new-reg-qty" value="1.0" step="0.5">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Frequência da Prescrição</label>
+            <select class="form-select" id="new-reg-freq" onchange="app.toggleFreqFields()">
+              <option value="fixed_times">Horários Fixos no Dia (ex: 08:00 e 20:00)</option>
+              <option value="specific_days">Dias da Semana (multi) + horários</option>
+              <option value="interval_hours">A cada N horas (ex: 8h)</option>
+              <option value="single_dose">Dose única (1 horário)</option>
+              <option value="as_needed">Uso Eventual (se necessário / SOS)</option>
+            </select>
+          </div>
+          <div class="form-group" id="freq-weekdays-wrap" style="display:none;">
+            <label class="form-label">Dias da semana (marque 1+)</label>
+            <div id="new-reg-weekdays" style="display:flex;gap:6px;flex-wrap:wrap;">
+              <label style="font-size:0.85rem;"><input type="checkbox" value="mon" checked> Seg</label>
+              <label style="font-size:0.85rem;"><input type="checkbox" value="tue" checked> Ter</label>
+              <label style="font-size:0.85rem;"><input type="checkbox" value="wed" checked> Qua</label>
+              <label style="font-size:0.85rem;"><input type="checkbox" value="thu" checked> Qui</label>
+              <label style="font-size:0.85rem;"><input type="checkbox" value="fri" checked> Sex</label>
+              <label style="font-size:0.85rem;"><input type="checkbox" value="sat"> Sáb</label>
+              <label style="font-size:0.85rem;"><input type="checkbox" value="sun"> Dom</label>
+            </div>
+          </div>
+          <div class="form-group" id="freq-interval-wrap" style="display:none;">
+            <label class="form-label">A cada N horas</label>
+            <input type="number" class="form-input" id="new-reg-interval" value="8" min="1" max="72">
+          </div>
+          <div class="form-group" id="freq-single-wrap" style="display:none;">
+            <label class="form-label">Data/hora única (dose única)</label>
+            <input type="datetime-local" class="form-input" id="new-reg-single">
+          </div>
+          <div class="form-group" id="freq-times-wrap">
+            <label class="form-label">Horários (separados por vírgula)</label>
+            <input type="text" class="form-input" id="new-reg-times" value="08:00, 20:00">
+          </div>
+          <input type="hidden" id="edit-reg-id" value="">
+
+          <div class="form-group">
+            <label class="form-label">Relação com Refeições</label>
+            <select class="form-select" id="new-reg-meal">
+              <option value="anytime">Qualquer momento</option>
+              <option value="before_meal">Antes das refeições (em jejum)</option>
+              <option value="during_meal">Durante as refeições</option>
+              <option value="after_meal">Após as refeições</option>
+              <option value="bedtime">Antes de dormir</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Estoque Inicial (quantidade de comprimidos/unidades)</label>
+            <input type="number" class="form-input" id="new-reg-stock" value="30">
+          </div>
+
+          <button class="btn btn-primary btn-lg" style="width:100%;margin-top:16px;" onclick="app.saveNewRegimen()">
+            Salvar Tratamento na Minha Agenda
+          </button>
+        </div>
+      </section>
+
+      <!-- TELA 11: CARTÃO INTELIGENTE DO MEDICAMENTO -->
+      <section id="screen-drug-smart-card" style="display:none;">
+        <button class="btn btn-secondary" style="margin-bottom:16px;" onclick="app.routeTo('screen-catalog-search')">← Voltar</button>
+        <div id="drug-smart-card-content"></div>
+      </section>
+
+      <!-- TELA 12: CONFIGURAÇÃO DE HORÁRIOS -->
+      <section id="screen-schedule-config" style="display:none;">
+        <h2 style="font-weight:800;margin-bottom:12px;">Configuração Avançada de Horários</h2>
+        <p style="color:var(--text-muted);margin-bottom:20px;">Ajuste fusos horários, viagens e regras cíclicas.</p>
+      </section>
+
+      <!-- TELA 12B: JA TOMEI? MEMORIA ASSISTIDA (TDAH) -->
+      <section id="screen-assisted-memory" style="display:none;">
+        <h2 style="font-weight:800;margin-bottom:12px;">🧠 Já Tomei? (Memória Assistida TDAH)</h2>
+        <p style="color:var(--text-muted);margin-bottom:20px;">Anti dose-dupla: veja a última confirmação exata antes de tomar de novo.</p>
+        <div id="assisted-memory-content"><p style="color:var(--text-muted);padding:16px;">Carregando memória assistida...</p></div>
+      </section>
+
+      <!-- TELA 13: CONFIRMAÇÃO DE MEDICAÇÃO (TELA RÁPIDA 1-TOQUE) -->
+      <section id="screen-quick-confirm" style="display:none;text-align:center;padding:60px 20px;">
+        <div class="card" style="max-width:480px;margin:0 auto;padding:40px;">
+          <div style="font-size:3.5rem;margin-bottom:16px;">💊</div>
+          <h2 style="font-weight:800;font-size:1.8rem;">Confirmar Medicação</h2>
+          <p style="color:var(--text-muted);margin:12px 0 24px;">Confirmar a ingestão atualiza seu histórico clínico e o lote de estoque.</p>
+          <button class="btn btn-primary btn-lg" style="width:100%;font-size:1.25rem;padding:20px;" onclick="app.routeTo('screen-dashboard')">
+            ✓ Confirmar Agora
+          </button>
+        </div>
+      </section>
+
+      <!-- TELA 14: MEDICAMENTOS PENDENTES -->
+      <section id="screen-pending-medications" style="display:none;">
+        <h2 style="font-weight:800;margin-bottom:12px;">Medicamentos Pendentes e Atrasados</h2>
+        <div id="pending-medications-list"></div>
+      </section>
+
+      <!-- TELA 15: HISTÓRICO DE ADESÃO -->
+      <section id="screen-history" style="display:none;">
+        <h2 style="font-weight:800;margin-bottom:12px;">Histórico Completo de Doses</h2>
+        <p style="color:var(--text-muted);margin-bottom:20px;">Registro imutável e auditável de todas as confirmações e omissões.</p>
+        <div id="history-records-container"></div>
+      </section>
+
+      <!-- TELA 16: RELATÓRIOS E GRÁFICOS -->
+      <section id="screen-reports" style="display:none;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+          <div>
+            <h2 style="font-weight:800;font-size:1.6rem;">Relatório de Adesão Terapêutica</h2>
+            <p style="color:var(--text-muted);">Métricas reais para acompanhamento médico.</p>
+          </div>
+          <button class="btn btn-secondary" onclick="app.exportReportCSV()">📥 Exportar para Consulta</button>
+        </div>
+        <div id="reports-content"></div>
+      </section>
+
+      <!-- TELA 17: CONTROLE DE ESTOQUE -->
+      <section id="screen-inventory" style="display:none;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+          <div>
+            <h2 style="font-weight:800;font-size:1.6rem;">Controle de Estoque & Lotes</h2>
+            <p style="color:var(--text-muted);">Previsão de esgotamento e reposição preventiva.</p>
+          </div>
+          <button class="btn btn-primary" onclick="app.addStockLot()">+ Novo Lote</button>
+        </div>
+        <div id="inventory-content"></div>
+      </section>
+
+      <!-- TELA 18: REPOSIÇÃO E LISTA DE COMPRAS -->
+      <section id="screen-restock" style="display:none;">
+        <h2 style="font-weight:800;margin-bottom:12px;">Reposição & Lista de Compras</h2>
+        <p style="color:var(--text-muted);margin-bottom:20px;">Medicamentos com previsão de término nos próximos 7 dias.</p>
+        <div class="card">
+          <p>Seu estoque está suficiente para os próximos dias.</p>
+        </div>
+      </section>
+
+      <!-- TELA 19: RECEITAS E DOCUMENTOS (COFRE) -->
+      <section id="screen-documents" style="display:none;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+          <div>
+            <h2 style="font-weight:800;font-size:1.6rem;">Cofre de Documentos de Saúde</h2>
+            <p style="color:var(--text-muted);">Receitas médicas, laudos e bulas organizados com criptografia.</p>
+          </div>
+          <button class="btn btn-primary" onclick="app.saveDocumentEntry()">+ Enviar Receita</button>
+          <button class="btn btn-secondary" style="margin-left:8px;" onclick="app.lerReceitaIA()">✨ Ler receita com IA</button>
+        </div>
+        <div id="documents-content"></div>
+      </section>
+
+            <!-- V2-IA: CONSULTAS -->
+      <section id="screen-consultas" style="display:none;">
+        <h2 style="font-weight:800;margin-bottom:8px;">Consultas Médicas</h2>
+        <p style="color:var(--text-muted);margin-bottom:16px;">Agende presenciais ou teleconsultas e leve seu prontuário.</p>
+        <div class="card" style="margin-bottom:16px;">
+          <h3 style="font-weight:700;margin-bottom:10px;">Agendar consulta</h3>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+            <div class="form-group"><label class="form-label">Médico*</label><input id="con-medico" class="form-input" placeholder="Ex: Dra. Ana"></div>
+            <div class="form-group"><label class="form-label">Especialidade</label><input id="con-especialidade" class="form-input" placeholder="Ex: Cardiologista"></div>
+            <div class="form-group"><label class="form-label">Data</label><input id="con-data" class="form-input" type="date"></div>
+            <div class="form-group"><label class="form-label">Hora</label><input id="con-hora" class="form-input" type="time"></div>
+            <div class="form-group"><label class="form-label">Tipo</label><select id="con-tipo" class="form-select"><option value="presencial">Presencial</option><option value="teleconsulta">Teleconsulta</option></select></div>
+            <div class="form-group"><label class="form-label">Link (teleconsulta)</label><input id="con-link" class="form-input" placeholder="https://..."></div>
+          </div>
+          <div class="form-group"><label class="form-label">Observações</label><textarea id="con-obs" class="form-textarea" rows="2" placeholder="Levar exames, jejum..."></textarea></div>
+          <input type="hidden" id="con-edit-id" value="">
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button class="btn btn-primary" onclick="app.saveConsulta()">Salvar consulta</button>
+            <button class="btn btn-secondary" onclick="app.clearConsultaForm()">Limpar</button>
+          </div>
+        </div>
+        <div id="consultas-content"></div>
+      </section>
+
+      <!-- V2-IA: PRONTUARIO -->
+      <section id="screen-prontuario" style="display:none;">
+        <h2 style="font-weight:800;margin-bottom:8px;">Prontuário</h2>
+        <p style="color:var(--text-muted);margin-bottom:16px;">Linha do tempo: consultas, remédios, documentos e sintomas.</p>
+        <div style="margin-bottom:12px;"><button class="btn btn-secondary" onclick="app.loadProntuario()">Atualizar prontuário</button></div>
+        <div id="prontuario-content"></div>
+      </section>
+
+      <!-- TELA 20: DIÁRIO DE SINTOMAS -->
+      <section id="screen-symptoms" style="display:none;">
+        <h2 style="font-weight:800;margin-bottom:12px;">Diário de Sintomas & Bem-estar</h2>
+        <p style="color:var(--text-muted);margin-bottom:20px;">Registre humor, qualidade do sono, energia e possíveis desconfortos para conversar com seu médico.</p>
+        
+        <div class="card" style="margin-bottom:24px;">
+          <h3 style="font-weight:700;margin-bottom:16px;">Como você está se sentindo hoje?</h3>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+            <div class="form-group">
+              <label class="form-label">Qualidade do Sono (1 a 5)</label>
+              <select class="form-select" id="symp-sleep">
+                <option value="5">5 - Excelente</option>
+                <option value="4" selected>4 - Bom</option>
+                <option value="3">3 - Regular</option>
+                <option value="2">2 - Ruim</option>
+                <option value="1">1 - Péssimo / Insônia</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Humor (1 a 5)</label>
+              <select class="form-select" id="symp-mood">
+                <option value="5">5 - Muito Bem / Calmo</option>
+                <option value="4" selected>4 - Bem</option>
+                <option value="3">3 - Neutro</option>
+                <option value="2">2 - Ansioso / Irritado</option>
+                <option value="1">1 - Triste / Deprimido</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Observações pessoais / Eventos adversos relatados</label>
+            <textarea class="form-textarea" id="symp-notes" rows="3" placeholder="Ex: Senti leve dor de cabeça pela manhã..."></textarea>
+          </div>
+          <button class="btn btn-primary" onclick="app.saveSymptomEntry()">Registrar Sintoma</button>
+        </div>
+
+        <div id="symptoms-history"></div>
+      </section>
+
+      <!-- TELA 21: ASSISTENTE INTELIGENTE RESPONSÁVEL -->
+      <section id="screen-ai-assistant" style="display:none;">
+        <h2 style="font-weight:800;margin-bottom:8px;">Assistente Spark Dose</h2>
+        <p style="color:var(--text-muted);margin-bottom:16px;">Tire dúvidas sobre organização de horários, bulas e perguntas para sua próxima consulta médica.</p>
+
+        <div class="chat-window">
+          <div class="chat-messages" id="assistant-messages">
+            <div class="chat-bubble bubble-assistant">
+              Olá! Sou o <strong>Assistente Spark Dose</strong>.<br><br>
+              Posso te ajudar a organizar horários da sua receita médica, consultar informações oficiais de bulas Anvisa ou preparar perguntas para sua próxima consulta médica.<br><br>
+              <em>Lembre-se: não substituo seu médico e nunca altero prescrições.</em>
+            </div>
+          </div>
+          <div class="chat-input-bar">
+            <input type="text" class="form-input" id="assistant-input" placeholder="Faça uma pergunta sobre sua rotina..." onkeyup="if(event.key==='Enter') app.sendAssistantMessage()">
+            <button class="btn btn-primary" onclick="app.sendAssistantMessage()">Enviar</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- TELA 22: PERFIS FAMILIARES -->
+      <section id="screen-family-profiles" style="display:none;">
+        <h2 style="font-weight:800;margin-bottom:8px;">Perfis Familiares</h2>
+        <p style="color:var(--text-muted);margin-bottom:20px;">Gerencie seus dependentes, filhos ou pais sob cuidado em um só aplicativo.</p>
+        <div id="family-profiles-list"></div>
+      </section>
+
+      <!-- TELA 23: PERMISSÕES DE CUIDADORES -->
+      <section id="screen-caregiver-permissions" style="display:none;">
+        <h2 style="font-weight:800;margin-bottom:8px;">Permissões de Cuidadores</h2>
+        <p style="color:var(--text-muted);margin-bottom:20px;">Defina exatamente quem pode ver seus remédios e registrar confirmações.</p>
+        <div class="card">
+          <h4 style="font-weight:700;">Acesso Compartilhado com Cuidadores</h4>
+          <p style="color:var(--text-muted);font-size:0.9rem;margin-top:6px;">
+            Você possui controle total: revogue o acesso a qualquer instante com um toque.
+          </p>
+        </div>
+      </section>
+
+      <!-- TELA 24: CENTRAL DE NOTIFICAÇÕES -->
+      <section id="screen-notifications-center" style="display:none;">
+        <h2 style="font-weight:800;margin-bottom:12px;">Central de Notificações</h2>
+        <p style="color:var(--text-muted);margin-bottom:20px;">Histórico de alertas push e lembretes enviados pelo servidor.</p>
+      </section>
+
+      <!-- TELA 25: DIAGNÓSTICO DE PUSH -->
+      <section id="screen-push-diagnostics" style="display:none;">
+        <h2 style="font-weight:800;margin-bottom:8px;">Diagnóstico de Notificações Web Push</h2>
+        <p style="color:var(--text-muted);margin-bottom:20px;">Verifique o funcionamento real das notificações no seu navegador e dispositivo.</p>
+        <div id="push-diagnostics-content"></div>
+      </section>
+
+      <!-- TELA 26: CENTRAL DE AJUDA -->
+      <section id="screen-help" style="display:none;">
+        <h2 style="font-weight:800;margin-bottom:8px;">Central de Ajuda & Tutoriais</h2>
+        <p style="color:var(--text-muted);margin-bottom:20px;">Guias práticos de uso e direitos dos pacientes.</p>
+      </section>
+
+      <!-- TELA 27: PRIVACIDADE & LGPD -->
+      <section id="screen-privacy-settings" style="display:none;">
+        <h2 style="font-weight:800;margin-bottom:8px;">Privacidade & Proteção de Dados (LGPD)</h2>
+        <p style="color:var(--text-muted);margin-bottom:20px;">Informações de saúde são dados sensíveis protegidos por lei.</p>
+        <div class="card">
+          <h3 style="font-weight:700;margin-bottom:12px;">Modo Discreto na Tela de Bloqueio</h3>
+          <p style="color:var(--text-muted);font-size:0.9rem;">
+            Oculta o nome de substâncias sensíveis das notificações e da tela bloqueada.
+          </p>
+          <div style="margin-top:16px;">
+            <button class="btn btn-secondary" onclick="app.toggleDiscreteMode()">Alternar Modo Discreto</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- TELA 28: ACESSIBILIDADE (MODO IDOSO E MODO TDAH) -->
+      <section id="screen-accessibility-settings" style="display:none;">
+        <h2 style="font-weight:800;margin-bottom:8px;">Preferências de Acessibilidade (WCAG 2.2 AA)</h2>
+        <p style="color:var(--text-muted);margin-bottom:20px;">Adapte o Spark Dose para a sua necessidade cognitiva e visual.</p>
+        
+        <div class="cards-grid">
+          <div class="card">
+            <h3 style="font-weight:700;">Modo Idoso</h3>
+            <p style="color:var(--text-muted);font-size:0.9rem;margin:8px 0 16px;">
+              Botões ampliados (60px+), tipografia em tamanho 20px+ e contraste elevado.
+            </p>
+            <button class="btn btn-primary" onclick="app.toggleSeniorMode()">Ativar / Desativar Modo Idoso</button>
+          </div>
+
+          <div class="card">
+            <h3 style="font-weight:700;">Modo TDAH (Foco e Rotina)</h3>
+            <p style="color:var(--text-muted);font-size:0.9rem;margin:8px 0 16px;">
+              Confirmação rápida em 1 toque, memória assistida em destaque e interface livre de distrações.
+            </p>
+            <button class="btn btn-primary" onclick="app.toggleAdhdMode()">Ativar / Desativar Modo TDAH</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- TELA 29: GERENCIAMENTO DE DADOS (EXPORTAÇÃO LGPD) -->
+      <section id="screen-data-management" style="display:none;">
+        <h2 style="font-weight:800;margin-bottom:8px;">Gerenciamento de Dados</h2>
+        <p style="color:var(--text-muted);margin-bottom:20px;">Exporte todas as suas informações em formato aberto ou solicite exclusão segura.</p>
+        <div class="card">
+          <button class="btn btn-secondary" onclick="app.downloadDataExport()">📥 Baixar Meus Dados (JSON / LGPD Art. 18)</button>
+          <div style="margin-top:10px;"><button class="btn btn-secondary" onclick="app.deleteMyData()">🗑️ Solicitar exclusão (LGPD Art. 18)</button></div>
+          <p style="font-size:0.8rem;color:var(--text-muted);margin-top:8px;">Exclusão cancela tratamentos ativos neste perfil e limpa dados locais. Logs anonimizados mantidos p/ auditoria.</p>
+        </div>
+      </section>
+
+      <!-- TELA MEU PERFIL -->
+      <section id="screen-meu-perfil" style="display:none;max-width:520px;margin:20px auto;">
+        <h2 style="font-weight:800;margin-bottom:8px;">Meu Perfil</h2>
+        <p style="color:var(--text-muted);margin-bottom:16px;">Veja e edite seus dados. A idade é calculada da data de nascimento.</p>
+        <div class="card" style="text-align:center;">
+          <img id="perfil-foto" src="/apps/sparkdose/icons/icon-192.png" alt="Foto" style="width:96px;height:96px;border-radius:50%;object-fit:cover;margin-bottom:12px;">
+          <div id="perfil-resumo" style="font-size:0.95rem;color:var(--text-muted);margin-bottom:12px;">Carregando...</div>
+        </div>
+        <div class="card" style="margin-top:12px;">
+          <div class="form-group"><label class="form-label">Nome completo</label><input id="perfil-nome" class="form-input" type="text"></div>
+          <div class="form-group"><label class="form-label">E-mail (não muda)</label><input id="perfil-email" class="form-input" type="email" disabled></div>
+          <div class="form-group"><label class="form-label">Data de nascimento</label><input id="perfil-nasc" class="form-input" type="date"><div id="perfil-idade" style="font-size:0.85rem;color:var(--text-muted);margin-top:4px;"></div></div>
+          <div class="form-group"><label class="form-label">Telefone</label><input id="perfil-tel" class="form-input" type="tel"></div>
+          <div class="form-group"><label class="form-label">Foto (link)</label><input id="perfil-foto-url" class="form-input" type="url" placeholder="https://..."></div>
+          <button class="btn btn-primary" style="width:100%;margin-top:8px;" onclick="app.saveMyProfile()">Salvar alterações</button>
+          <button class="btn btn-secondary" style="width:100%;margin-top:8px;" onclick="app.routeTo('screen-account-recovery')">Esqueceu a senha? Recuperar acesso</button>
+          <button class="btn btn-secondary" style="width:100%;margin-top:8px;color:var(--danger);" onclick="app.deleteMyAccount()">Excluir minha conta (LGPD)</button>
+        </div>
+      </section>
+
+      <!-- TELA 30: PAINEL ADMINISTRATIVO SEGURO -->
+      <section id="screen-admin-panel" style="display:none;">
+        <h2 style="font-weight:800;margin-bottom:8px;">Painel Administrativo Seguro</h2>
+        <p style="color:var(--text-muted);margin-bottom:20px;">Monitoramento técnico de infraestrutura, fila de notificações e auditoria de integridade.</p>
+        <div id="admin-metrics-content"></div>
+      </section>
+
+    </main>
+
+    <!-- Barra Inferior de Navegação Mobile (Thumb Navigation) -->
+    <nav class="bottom-nav">
+      <button class="bottom-nav-item active" data-nav-screen="screen-dashboard">
+        <span class="icon">🏠</span>
+        <span>Hoje</span>
+      </button>
+      <button class="bottom-nav-item" data-nav-screen="screen-agenda">
+        <span class="icon">📅</span>
+        <span>Agenda</span>
+      </button>
+      <button class="bottom-nav-item" data-nav-screen="screen-assisted-memory">
+        <span class="icon">🧠</span>
+        <span>Já Tomei?</span>
+      </button>
+      <button class="bottom-nav-item" data-nav-screen="screen-inventory">
+        <span class="icon">📦</span>
+        <span>Estoque</span>
+      </button>
+      <button class="bottom-nav-item" data-nav-screen="screen-consultas">
+        <span class="icon">💗</span>
+        <span>Consultas</span>
+      </button>
+      <button class="bottom-nav-item" data-nav-screen="screen-prontuario">
+        <span class="icon">📋</span>
+        <span>Prontuário</span>
+      </button>
+      <button class="bottom-nav-item" data-nav-screen="screen-ai-assistant">
+        <span class="icon">🤖</span>
+        <span>Assistente</span>
+      </button>
+    </nav>
+
+  </div>
+
+  <script src="/apps/sparkdose/js/api.js"></script>
+  <script src="/apps/sparkdose/js/pwa.js"></script>
+  <script src="/apps/sparkdose/js/app.js"></script>
+<button onclick="location.href='https://sparkbr.online/'" title="Voltar p/ área principal Spark" style="position:fixed;bottom:142px;right:10px;z-index:9000;background:#f59e0b;color:#fff;border:none;border-radius:50%;width:44px;height:44px;font-size:20px;font-weight:800;box-shadow:0 2px 8px rgba(0,0,0,.25)">⚡</button></body>
+</html>

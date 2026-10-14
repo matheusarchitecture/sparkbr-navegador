@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#0c2a23">
+  <meta name="description" content="SparkBR: navegador e central de aplicativos úteis para o dia a dia das famílias brasileiras.">
+  <meta name="color-scheme" content="light dark">
+  <title>SparkBR — seu mundo, mais simples.</title>
+  <link rel="manifest" href="./manifest.webmanifest"><link rel="icon" href="./assets/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./style.css">
+  <script defer src="./bridge/spark-bridge.js"></script><script defer src="./config.js"></script><script defer src="./catalog.js"></script><script defer src="./app.js"></script><script defer src="./bridge/spark-family.js"></script>
+</head>
+<body>
+  <svg aria-hidden="true" class="svg-defs" xmlns="http://www.w3.org/2000/svg"><defs>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V10Z"/><path d="M9 21v-8h6v8"/></symbol>
+    <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></symbol>
+    <symbol id="i-star" viewBox="0 0 24 24"><path d="m12 2 3.3 6.9 7.7 1.1-5.5 5.4 1.3 7.6-6.8-3.6-6.8 3.6 1.3-7.6L1 10l7.7-1.1Z"/></symbol>
+    <symbol id="i-bot" viewBox="0 0 24 24"><path d="M12 2v4M7 6h10a5 5 0 0 1 5 5v5a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5v-5a5 5 0 0 1 5-5Z"/><path d="M8 13h.01M16 13h.01M9 17h6"/></symbol>
+    <symbol id="i-compass" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2 5-5 2 2-5Z"/></symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19 13.5c.3.5 1.8 1.5 1.8 2L19 19c-.5.2-2-.5-2.6-.4-.6.1-.8 2-1.4 2.2h-6c-.6-.2-.8-2.1-1.4-2.2S5.5 19.2 5 19l-1.8-3.5c0-.5 1.5-1.5 1.8-2s-1.8-2.3-1.8-2.8L5 7c.5-.3 2 .4 2.6.3.6-.1.8-2 1.4-2.1h6c.6.1.8 2 1.4 2.1.6.1 2.1-.6 2.6-.3l1.8 3.7c0 .5-1.5 1.5-1.8 2.8Z"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.7"/><path d="m16 16 5 5"/></symbol>
+    <symbol id="i-back" viewBox="0 0 24 24"><path d="m14 6-6 6 6 6"/></symbol>
+    <symbol id="i-next" viewBox="0 0 24 24"><path d="m10 6 6 6-6 6"/></symbol>
+    <symbol id="i-reload" viewBox="0 0 24 24"><path d="M20 11a8 8 0 1 0-2.5 6M20 4v7h-7"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 4v16M4 12h16"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M5 5 19 19M19 5 5 19"/></symbol>
+    <symbol id="i-sparkle" viewBox="0 0 24 24"><path d="m12 2 2.8 7.2L22 12l-7.2 2.8L12 22l-2.8-7.2L2 12l7.2-2.8Z"/></symbol>
+    <symbol id="i-external" viewBox="0 0 24 24"><path d="M13 5h6v6M11 13l8-8M19 14v5H5V5h5"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 1v3m0 16v3M1 12h3m16 0h3M4.2 4.2l2.1 2.1m11.4 11.4 2.1 2.1m0-15.6-2.1 2.1M6.3 17.7l-2.1 2.1"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 16.5a9 9 0 0 1-12.5-12A9 9 0 1 0 20 16.5Z"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m4 12 5 5L20 6"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></symbol>
+  </defs></svg>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar" aria-label="Navegação principal">
+      <a href="#inicio" class="brand" id="brandHome" aria-label="Início SparkBR"><img src="./assets/icon.svg" alt=""/><span>spark<strong>BR</strong><small>O seu espaço digital</small></span></a>
+      <div class="nav-cap">SEU UNIVERSO</div>
+      <nav class="side-links">
+        <button class="side-link current" data-view="inicio"><svg><use href="#i-home"/></svg><span>Início</span></button>
+        <button class="side-link" data-view="apps"><svg><use href="#i-grid"/></svg><span>Todos os aplicativos</span><span class="nav-count" id="navCount">23</span></button>
+        <button class="side-link" data-view="favoritos"><svg><use href="#i-star"/></svg><span>Meus favoritos</span></button>
+        <button class="side-link" id="navIA"><svg><use href="#i-sparkle"/></svg><span>Spark IA</span><span class="mini-new">NOVO</span></button>
+      </nav>
+      <div class="nav-cap side-second">PARA O DIA A DIA</div>
+      <nav class="side-links compact">
+        <button class="side-link" data-filter="casa"><span class="side-emoji">🏠</span><span>Casa e família</span></button>
+        <button class="side-link" data-filter="dinheiro"><span class="side-emoji">💸</span><span>Dinheiro e compras</span></button>
+        <button class="side-link" data-filter="saude"><span class="side-emoji">💚</span><span>Saúde e cuidado</span></button>
+        <button class="side-link" data-filter="conex"><span class="side-emoji">✨</span><span>Conexões</span></button>
+      </nav>
+      <div class="side-bottom">
+        <div class="side-note"><div class="note-icon">✦</div><strong>Feito para a vida real.</strong><p>Da lista de compras à rotina das crianças. Tudo começa aqui.</p></div>
+        <button class="side-link settings-btn" id="settingsBtn"><svg><use href="#i-settings"/></svg><span>Preferências</span></button>
+        <div class="side-foot"><span class="online-dot" id="onlineDot"></span><span id="onlineText">Verificando conexão</span><span class="version">v2.1.0</span></div>
+      </div>
+    </aside>
+    <div class="main-column">
+      <header class="topbar">
+        <button class="icon-btn mobile-menu" id="menuBtn" aria-label="Abrir menu"><svg><use href="#i-menu"/></svg></button>
+        <div class="browser-controls">
+          <button class="icon-btn" id="goBack" aria-label="Voltar" title="Voltar"><svg><use href="#i-back"/></svg></button>
+          <button class="icon-btn" id="goForward" aria-label="Avançar" title="Avançar"><svg><use href="#i-next"/></svg></button>
+          <button class="icon-btn" id="reload" aria-label="Recarregar" title="Recarregar"><svg><use href="#i-reload"/></svg></button>
+        </div>
+        <form id="addressForm" class="address-form" autocomplete="off">
+          <svg class="address-icon"><use href="#i-search"/></svg>
+          <input id="address" aria-label="Buscar ou digitar um endereço" type="text" placeholder="Busque aplicativos, pergunte à IA ou digite um endereço" maxlength="600" spellcheck="false">
+          <span class="shortcut">Ctrl K</span>
+          <button type="submit" class="address-go" aria-label="Pesquisar">↗</button>
+        </form>
+        <button class="icon-btn theme-toggle" id="themeBtn" title="Alternar aparência" aria-label="Alternar aparência"><svg><use href="#i-sun"/></svg></button>
+        <button class="top-ai" id="topAI"><svg><use href="#i-sparkle"/></svg><span>Pergunte ao Spark</span></button>
+      </header>
+      <div class="tab-strip" id="tabStrip" role="tablist" aria-label="Abas abertas"></div>
+      <main id="mainArea">
+        <div id="homeView" class="home-view">
+          <div class="welcome-line"><span id="greeting">Olá, bem-vindo!</span><span class="welcome-sep">•</span><span id="today">Seu espaço está pronto</span><span class="home-pill"><span class="dot-gold"></span> FEITO NO BRASIL</span></div>
+          <section class="hero" aria-label="Bem-vindo ao SparkBR">
+            <div class="hero-copy">
+              <div class="hero-eyebrow"><span class="eye-glyph">✳</span> SUA VIDA DIGITAL, MAIS LEVE</div>
+              <h1>Mais tempo pra <em>viver.</em><br>Menos tempo pra <span class="stroke-word">resolver.</span></h1>
+              <p>Um lugar para organizar a casa, cuidar de quem você ama e dar conta da vida. Com ferramentas úteis e um assistente que fala a sua língua.</p>
+              <div class="hero-actions"><button class="primary-cta" id="heroAI"><svg><use href="#i-sparkle"/></svg> Conversar com o Spark <span>↗</span></button><button class="secondary-cta" id="exploreBtn">Explorar aplicativos <span>→</span></button></div>
+              <div class="hero-trust"><span class="trust-icon">♡</span><span><strong>23 ferramentas</strong> para a vida da família brasileira</span><span class="trust-sep"></span><span>Em português, do nosso jeito</span></div>
+            </div>
+            <div class="hero-art" aria-hidden="true">
+              <div class="glow-orb orb-green"></div><div class="glow-orb orb-sun"></div>
+              <div class="illustration-card ill-mercado"><span class="ill-icon">🛒</span><span><small>Lista do mercado</small><strong>Tudo anotado!</strong></span><span class="ill-check">✓</span></div>
+              <div class="illustration-card ill-familia"><span class="ill-icon">🏠</span><span><small>Meu lar</small><strong>Família em dia</strong></span><span class="ill-heart">♥</span></div>
+              <div class="center-emblem"><img src="./assets/icon.svg" alt=""><div class="emblem-ring"></div></div>
+              <div class="illustration-card ill-agua"><span class="ill-icon">💧</span><span><small>Hidratação</small><strong>Seu cuidado importa</strong></span></div>
+              <div class="small-star s1">✦</div><div class="small-star s2">✧</div><div class="small-star s3">✦</div>
+            </div>
+          </section>
+          <section class="quick-section">
+            <div class="section-head"><div><span class="section-kicker">COMECE POR AQUI</span><h2>O que vamos resolver hoje?</h2></div><button class="text-link" id="allAppsLink">Ver todos os apps <span>↗</span></button></div>
+            <div class="quick-grid" id="quickGrid"></div>
+          </section>
+          <section class="apps-section" id="appsSection">
+            <div class="section-head"><div><span class="section-kicker">FEITO PARA VOCÊ</span><h2 id="appsTitle">Um app para cada momento.</h2><p id="appsSubtitle">Ferramentas úteis, sem complicação.</p></div><span class="app-total" id="appTotal">23 aplicativos</span></div>
+            <div class="apps-toolbar"><div class="filters" id="filters" role="group" aria-label="Filtrar aplicativos"><button class="filter active" data-category="todos">Todos</button><button class="filter" data-category="casa">Casa e família</button><button class="filter" data-category="dinheiro">Dinheiro</button><button class="filter" data-category="saude">Saúde</button><button class="filter" data-category="conex">Conexões</button><button class="filter" data-category="favoritos">★ Favoritos</button></div><label class="app-search"><svg><use href="#i-search"/></svg><input id="appSearch" type="search" placeholder="Encontrar um app" aria-label="Encontrar aplicativo"></label></div>
+            <div class="apps-grid" id="appsGrid"></div>
+            <div class="empty-state" id="emptyState" hidden><div>🔎</div><h3>Nada por aqui, por enquanto.</h3><p>Tente outro termo ou uma categoria diferente.</p><button id="clearFilters">Mostrar todos os aplicativos</button></div>
+          </section>
+          <section class="care-banner"><div class="care-emoji">🌿</div><div><span class="section-kicker">A TECNOLOGIA A SERVIÇO DA VIDA</span><h2>Mais leve para você. Melhor para todo mundo.</h2><p>O SparkBR nasceu da ideia de que tecnologia boa é aquela que resolve problemas reais.</p></div><button id="careIA">Conheça o Spark IA <span>→</span></button></section>
+          <footer class="footer"><div class="footer-brand">✳ spark<strong>BR</strong><span> •  Feito para famílias brasileiras</span></div><div><a id="helpLink" target="_blank" rel="noopener noreferrer">Ajuda</a><a id="privacyLink" target="_blank" rel="noopener noreferrer">Privacidade</a><span>© <span id="year"></span> SparkBR</span></div></footer>
+        </div>
+        <div id="workspace" class="workspace" hidden><div class="workspace-bar"><div class="workspace-label"><span id="workIcon">🌐</span><span id="workTitle">Aba</span><small id="workDescription"></small></div><div class="workspace-actions"><button class="secondary-small" id="openOutside"><svg><use href="#i-external"/></svg> Abrir em outra janela</button><button class="secondary-small" id="backHome"><svg><use href="#i-grid"/></svg> Apps</button></div></div><div class="web-surface" id="webSurface"><div class="web-hint" id="webHint"><div class="hint-art">↗</div><h2>Seu aplicativo está abrindo</h2><p>Se o conteúdo não aparecer, abra-o em outra janela. Alguns sites bloqueiam exibição incorporada.</p><button id="openFallback">Abrir aplicativo <span>↗</span></button></div></div></div>
+      </main>
+    </div>
+  </div>
+  <nav class="bottom-nav" aria-label="Navegação do celular"><button class="bottom-current" data-mobile="inicio"><svg><use href="#i-home"/></svg><span>Início</span></button><button data-mobile="apps"><svg><use href="#i-grid"/></svg><span>Apps</span></button><button data-mobile="ia"><svg><use href="#i-sparkle"/></svg><span>Spark IA</span></button><button data-mobile="favoritos"><svg><use href="#i-star"/></svg><span>Favoritos</span></button></nav>
+  <div class="drawer-scrim" id="drawerScrim" hidden></div>
+  <section class="assistant-panel" id="assistantPanel" aria-label="Assistente Spark IA" aria-hidden="true" role="dialog" aria-modal="true">
+    <header class="ai-panel-header"><div class="ai-avatar"><svg><use href="#i-sparkle"/></svg></div><div><strong>Spark IA</strong><span>Seu companheiro para a vida real</span></div><button class="icon-btn" id="closeAI" aria-label="Fechar assistente"><svg><use href="#i-x"/></svg></button></header>
+    <div class="ai-messages" id="aiMessages" role="log" aria-live="polite"><div class="assistant-welcome"><div class="big-spark">✳</div><h2>Oi! Em que posso facilitar seu dia?</h2><p>Conte o que precisa. Posso sugerir ferramentas e, com a IA online configurada, ajudar a organizar suas ideias.</p></div></div>
+    <div class="ai-suggestions" id="aiSuggestions"><button data-prompt="Preciso organizar as compras do mês">🛒 Compras do mês</button><button data-prompt="Como organizar as contas da casa?">🧾 Contas da casa</button><button data-prompt="Quero planejar a semana da família">📅 Nossa semana</button><button data-prompt="Quero lembrar de beber água">💧 Lembrar da água</button></div>
+    <form class="ai-input-form" id="aiForm"><label for="aiInput" class="sr-only">Sua pergunta ao Spark</label><textarea id="aiInput" rows="2" maxlength="2000" placeholder="Conte para o Spark..." required></textarea><button type="submit" id="aiSend" aria-label="Enviar mensagem">↑</button></form>
+    <div class="ai-disclosure" id="aiMode">O Spark pode orientar sobre apps. Recursos generativos exigem conexão e configuração no servidor.</div>
+  </section>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <dialog id="settingsDialog" class="settings-dialog"><div class="settings-top"><div><span class="section-kicker">PERSONALIZAÇÃO</span><h2>Seu Spark, do seu jeito.</h2></div><button class="icon-btn" id="settingsClose" aria-label="Fechar configurações"><svg><use href="#i-x"/></svg></button></div><label class="setting-line"><span><strong>Modo de visualização</strong><small>Escolha a aparência do navegador.</small></span><select id="themeSelect"><option value="auto">Automático</option><option value="light">Claro</option><option value="dark">Escuro</option></select></label><label class="setting-line"><span><strong>Abrir aplicativos</strong><small>No site, a incorporação pode depender de cada aplicativo.</small></span><select id="openSelect"><option value="inside">Dentro do Spark quando possível</option><option value="outside">Sempre em nova janela</option></select></label><div class="settings-info"><svg><use href="#i-lock"/></svg><p>Favoritos e histórico ficam apenas neste dispositivo. O Spark não coleta automaticamente dados internos dos seus aplicativos.</p></div><button class="danger-link" id="clearHistory">Apagar histórico de navegação do Spark</button></dialog>
+</body>
+</html>

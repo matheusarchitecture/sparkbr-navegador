@@ -1,0 +1,1738 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <script defer src="/navegador/bridge/spark-bridge.js?v=2.1.0"></script>
+  <meta charset="UTF-8">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0f172a">
+<link rel="manifest" href="/sparkmat/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/saude/icon-192.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/sparkmat/sw.js").catch(function(){});});}</script>
+  <title>SparkMat Obra — Materiais, NBR e Fases da Obra | Spark Apps</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #0F172A;
+      --primary-dark: #020617;
+      --accent: #F97316;
+      --accent-dark: #EA580C;
+      --accent-light: #FFEDD5;
+      --blueprint: #2563EB;
+      --blueprint-dark: #1D4ED8;
+      --blueprint-light: #DBEAFE;
+      --success: #10B981;
+      --success-dark: #059669;
+      --success-light: #D1FAE5;
+      --danger: #EF4444;
+      --warning: #F59E0B;
+      --surface: #FFFFFF;
+      --surface-subtle: #F8FAFC;
+      --border: #E2E8F0;
+      --text: #1E293B;
+      --text-muted: #64748B;
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --radius-xl: 28px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+      --shadow-lg: 0 12px 24px -4px rgba(0,0,0,0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: #0B0F19;
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: stretch;
+      overflow-x: hidden;
+    }
+
+    /* App Container Frame */
+    .app-viewport {
+      width: 100%;
+      max-width: 490px;
+      background-color: #F8FAFC;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      margin: auto;
+    }
+
+    @media (min-width: 768px) {
+      body {
+        padding: 20px;
+        background: radial-gradient(circle at 50% 20%, #1E293B 0%, #0B0F19 100%);
+      }
+      .app-viewport {
+        border-radius: 36px;
+        height: 940px;
+        max-height: 96vh;
+        overflow: hidden;
+        border: 8px solid #334155;
+      }
+    }
+
+    /* Top Fixed Header */
+    .top-header {
+      background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+      color: white;
+      padding: 16px 18px 12px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .header-branding-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .brand-logo-icon {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, #F97316, #EA580C);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 800;
+      color: white;
+      box-shadow: 0 4px 12px rgba(249, 115, 22, 0.4);
+    }
+
+    .brand-title-wrap {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand-title {
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .brand-sub {
+      font-size: 10px;
+      color: #94A3B8;
+      font-weight: 600;
+      letter-spacing: 0.2px;
+    }
+
+    .eco-badge {
+      background: rgba(37, 99, 235, 0.2);
+      border: 1px solid rgba(37, 99, 235, 0.4);
+      color: #93C5FD;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 12px;
+    }
+
+    /* GPS Obra Location Banner */
+    .obra-location-banner {
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius-sm);
+      padding: 8px 12px;
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11px;
+      color: #CBD5E1;
+    }
+
+    .obra-pin {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 600;
+    }
+
+    /* Stores Strip */
+    .stores-strip {
+      display: flex;
+      gap: 6px;
+      margin-top: 10px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      padding-bottom: 2px;
+    }
+    .stores-strip::-webkit-scrollbar { display: none; }
+
+    .store-chip {
+      flex: 0 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 11px;
+      border-radius: 10px;
+      font-size: 11px;
+      font-weight: 600;
+      background: rgba(255,255,255,0.06);
+      color: #CBD5E1;
+      border: 1px solid rgba(255,255,255,0.12);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .store-chip.active {
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+      box-shadow: 0 4px 12px rgba(249, 115, 22, 0.35);
+    }
+    .store-chip .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    /* Main Scroll Area */
+    .main-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 14px 16px 95px;
+      position: relative;
+    }
+
+    /* Tabs Container */
+    .tab-content {
+      display: none;
+      animation: fadeIn 0.25s ease-out;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Bottom Navigation Bar */
+    .bottom-nav {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(12px);
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-around;
+      padding: 6px 4px 16px;
+      z-index: 60;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 10px;
+      font-weight: 600;
+      padding: 6px 4px;
+      border-radius: 12px;
+      transition: all 0.2s;
+      flex: 1;
+    }
+
+    .nav-item svg {
+      width: 20px;
+      height: 20px;
+      stroke-width: 2;
+      transition: transform 0.2s;
+    }
+
+    .nav-item.active {
+      color: var(--accent-dark);
+    }
+    .nav-item.active svg {
+      transform: translateY(-2px);
+      stroke: var(--accent-dark);
+    }
+
+    /* Cards & Components */
+    .card {
+      background: white;
+      border-radius: var(--radius-md);
+      padding: 15px;
+      margin-bottom: 12px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .card-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .pill {
+      font-size: 10px;
+      padding: 3px 8px;
+      border-radius: 20px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .pill-orange { background: var(--accent-light); color: var(--accent-dark); }
+    .pill-blue { background: var(--blueprint-light); color: var(--blueprint-dark); }
+    .pill-green { background: var(--success-light); color: var(--success-dark); }
+    .pill-red { background: #FEE2E2; color: #991B1B; }
+
+    /* Summary Bar */
+    .summary-strip {
+      background: linear-gradient(135deg, #0F172A, #1E293B);
+      color: white;
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .summary-item {
+      display: flex;
+      flex-direction: column;
+    }
+    .summary-label {
+      font-size: 10px;
+      color: #94A3B8;
+      text-transform: uppercase;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+    .summary-val {
+      font-size: 20px;
+      font-weight: 800;
+      color: #F8FAFC;
+    }
+    .summary-val.orange { color: #FB923C; }
+    .summary-val.green { color: #34D399; }
+
+    /* Action Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 11px 16px;
+      border-radius: var(--radius-md);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+      width: 100%;
+    }
+    .btn-accent {
+      background: linear-gradient(135deg, #F97316 0%, #EA580C 100%);
+      color: white;
+      box-shadow: 0 4px 12px rgba(249, 115, 22, 0.35);
+    }
+    .btn-accent:active { transform: scale(0.98); }
+    .btn-blueprint {
+      background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%);
+      color: white;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+    }
+    .btn-secondary {
+      background: #F1F5F9;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-whatsapp {
+      background: #25D366;
+      color: white;
+      box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+    }
+
+    /* Material Item Row */
+    .mat-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid #F1F5F9;
+    }
+    .mat-item:last-child { border-bottom: none; }
+
+    .mat-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 1;
+    }
+    .mat-checkbox {
+      width: 20px;
+      height: 20px;
+      border-radius: 6px;
+      border: 2px solid #CBD5E1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .mat-checkbox.checked {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: white;
+    }
+    .mat-info {
+      display: flex;
+      flex-direction: column;
+    }
+    .mat-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .mat-name.checked {
+      text-decoration: line-through;
+      color: var(--text-muted);
+    }
+    .mat-meta {
+      font-size: 11px;
+      color: var(--text-muted);
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      margin-top: 2px;
+    }
+    .mat-price {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--accent-dark);
+      text-align: right;
+    }
+
+    /* Timeline & Cronograma Físico-Financeiro */
+    .phase-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 13px;
+      margin-bottom: 10px;
+      position: relative;
+    }
+    .phase-card.active-phase {
+      border-left: 5px solid var(--accent);
+      background: #FFFDF9;
+    }
+    .phase-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 6px;
+    }
+    .phase-title {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--text);
+    }
+    .phase-dates {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+    .phase-items-list {
+      font-size: 11px;
+      color: var(--text);
+      line-height: 1.45;
+      background: #F8FAFC;
+      border-radius: var(--radius-sm);
+      padding: 8px 10px;
+      margin-top: 6px;
+    }
+
+    /* AI Multimodal Panel */
+    .ai-hero-card {
+      background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+      color: white;
+      border-radius: var(--radius-lg);
+      padding: 18px;
+      margin-bottom: 12px;
+      box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.4);
+    }
+    .ai-hero-title {
+      font-size: 16px;
+      font-weight: 800;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .ai-hero-desc {
+      font-size: 12px;
+      color: #94A3B8;
+      line-height: 1.4;
+      margin-bottom: 12px;
+    }
+
+    .mic-button-mat {
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #F97316, #EA580C);
+      color: white;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 14px auto;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(249, 115, 22, 0.4);
+      transition: all 0.2s;
+    }
+    .mic-button-mat.recording {
+      animation: pulseRecord 1.4s infinite;
+      background: #EA580C;
+    }
+    @keyframes pulseRecord {
+      0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.6); }
+      70% { transform: scale(1.08); box-shadow: 0 0 0 16px rgba(249, 115, 22, 0); }
+      100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(249, 115, 22, 0); }
+    }
+
+    .code-block {
+      background: #0B0F19;
+      color: #38BDF8;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      padding: 12px;
+      border-radius: var(--radius-sm);
+      overflow-x: auto;
+      margin-top: 8px;
+      line-height: 1.45;
+    }
+
+    /* Modal Sheet */
+    .modal-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(15, 23, 42, 0.7);
+      backdrop-filter: blur(4px);
+      z-index: 100;
+      display: none;
+      align-items: flex-end;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal-sheet {
+      background: white;
+      width: 100%;
+      border-top-left-radius: 28px;
+      border-top-right-radius: 28px;
+      padding: 22px 18px 30px;
+      max-height: 85%;
+      overflow-y: auto;
+      animation: slideUp 0.3s ease-out;
+    }
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+  </style>
+
+
+<link rel="stylesheet" href="/assets/brand.css?v=20261013">
+<link rel="stylesheet" href="/assets/app-shell.css?v=20261013b">
+<script defer data-spark-rebrand src="/assets/app-shell.js?v=20261013b"></script>
+</head>
+<body data-spark-page="sparkmat" data-spark-layout="complex">
+
+  <div class="app-viewport">
+    
+    <!-- Top Fixed Header -->
+    <header class="top-header">
+      <div class="header-branding-row">
+        <div class="brand-group">
+          <div class="brand-logo-icon">📐</div>
+          <div class="brand-title-wrap">
+            <div class="brand-title">
+              <span>SparkMat</span>
+              <span class="eco-badge">Spark Apps</span>
+            </div>
+            <span class="brand-sub">Agente de Cotação & Compras da Obra</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Obra Location Tag -->
+      <div class="obra-location-banner">
+        <div class="obra-pin">
+          <span>📍</span>
+          <span>Obra: Casa Alphaville Ribeirão / Cravinhos</span>
+        </div>
+        <span style="color: #38BDF8; font-weight: 700;">Raio 25km</span>
+      </div>
+
+      <!-- Stores Strip in Ribeirão Preto -->
+      <div class="stores-strip">
+        <div class="store-chip active" onclick="selectStore('sodimac')">
+          <span class="dot" style="background:#EF4444;"></span>
+          <span>Sodimac (Amin Calil)</span>
+        </div>
+        <div class="store-chip" onclick="selectStore('leroy')">
+          <span class="dot" style="background:#10B981;"></span>
+          <span>Leroy Merlin (Iguatemi)</span>
+        </div>
+        <div class="store-chip" onclick="selectStore('castilho')">
+          <span class="dot" style="background:#3B82F6;"></span>
+          <span>Castilho Materiais</span>
+        </div>
+        <div class="store-chip" onclick="selectStore('santacruz')">
+          <span class="dot" style="background:#F59E0B;"></span>
+          <span>Santa Cruz Constr.</span>
+        </div>
+        <div class="store-chip" onclick="selectStore('deposito')">
+          <span class="dot" style="background:#8B5CF6;"></span>
+          <span>Depósito Cravinhos</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content Scroll Area -->
+    <main class="main-content">
+
+      <!-- ================= TAB 1: CESTA & COTAÇÃO ================= -->
+      <div id="tab-cesta" class="tab-content active">
+        
+        <!-- Summary KPI -->
+        <div class="summary-strip">
+          <div class="summary-item">
+            <span class="summary-label">Itens Orçados</span>
+            <span class="summary-val" id="kpi-mat-count">7 itens</span>
+          </div>
+          <div class="summary-item" style="text-align: right;">
+            <span class="summary-label">Total no <span id="kpi-store-name">Sodimac</span></span>
+            <span class="summary-val orange" id="kpi-mat-total">R$ 4.280,00</span>
+          </div>
+        </div>
+
+        <!-- Quick AI Material Input Bar -->
+        <div class="card" style="padding: 10px; margin-bottom: 10px;">
+          <div style="display: flex; gap: 8px;">
+            <input type="text" id="quick-mat-input" placeholder="Adicionar material (ex: 50 sacos cimento CP-II)..." style="flex:1; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 9px 12px; font-size: 13px; font-family: inherit; outline: none;">
+            <button class="btn btn-accent" onclick="addQuickMaterial()" style="width: auto; padding: 9px 14px;">+ Inserir</button>
+          </div>
+        </div>
+
+        <!-- Optimization Callout -->
+        <div class="card" style="background: linear-gradient(135deg, #FFF7ED 0%, #FFEDD5 100%); border-color: #FED7AA;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <div style="font-size: 12px; font-weight: 800; color: #9A3412;">⚡ Otimização Logística + GPS</div>
+              <div style="font-size: 11px; color: #C2410C;" id="mat-savings-tip">
+                Dividindo entre <b>Sodimac</b> (Pisos) e <b>Castilho</b> (Cimento/Areia), você economiza <b>R$ 540,00</b> já considerando o frete de caminhão!
+              </div>
+            </div>
+            <button class="pill pill-orange" style="border:none; cursor:pointer;" onclick="splitOptimalPurchase()">Otimizar Cesta</button>
+          </div>
+        </div>
+
+        <!-- Materials List -->
+        <div class="card">
+          <div class="card-title">
+            <span>Lista de Insumos da Fase Atual</span>
+            <span class="pill pill-blue">Catálogo Real Sincronizado</span>
+          </div>
+
+          <div id="materials-list-container">
+            <!-- Populated via JS -->
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div style="margin-top: 14px; display: flex; flex-direction: column; gap: 8px;">
+          <button class="btn btn-accent" onclick="openDispatchModal()">
+            <span>📦 Fechar Pedido com Fornecedores</span>
+            <span style="background: rgba(0,0,0,0.15); padding: 2px 8px; border-radius: 10px;" id="btn-total-preview">R$ 4.280,00</span>
+          </button>
+          <button class="btn btn-whatsapp" onclick="sendOrderToWholesaleWhatsApp()">
+            <span>📱 Enviar Cotação Formatada via WhatsApp</span>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- ================= TAB 2: CÉREBRO DA OBRA (IA) ================= -->
+      <div id="tab-brain" class="tab-content">
+        
+        <div class="ai-hero-card">
+          <div class="ai-hero-title">
+            <span>🧠</span>
+            <span>Agente Cérebro de Compras</span>
+          </div>
+          <div class="ai-hero-desc">
+            Compreende o áudio do mestre de obras, faz OCR de memoriais descritivos e valida se os materiais cumprem as normas ABNT/NBR do seu projeto.
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">
+            <button class="btn btn-secondary" style="font-size: 11px; padding: 8px;" onclick="simulateMestreAudio()">
+              🎙️ Simular Áudio Mestre de Obras
+            </button>
+            <button class="btn btn-secondary" style="font-size: 11px; padding: 8px;" onclick="simulateMemorialOCR()">
+              📄 OCR Memorial / Projeto
+            </button>
+          </div>
+        </div>
+
+        <!-- Audio Interaction Box -->
+        <div class="card">
+          <div class="card-title">
+            <span>Comando de Voz do Canteiro</span>
+            <span class="pill pill-orange" id="brain-status-pill">Pronto</span>
+          </div>
+          <p style="font-size: 12px; color: var(--text-muted); text-align: center;">
+            Grave o áudio direto da obra ou teste a transcrição:
+          </p>
+
+          <button class="mic-button-mat" id="brain-mic-btn" onclick="toggleMestreAudio()">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+              <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+              <line x1="12" y1="19" x2="12" y2="23"></line>
+              <line x1="8" y1="23" x2="16" y2="23"></line>
+            </svg>
+          </button>
+
+          <div id="brain-transcript-box" style="background: #F8FAFC; border: 1px dashed #CBD5E1; border-radius: var(--radius-sm); padding: 10px; font-size: 12px; font-style: italic;">
+            "Aguardando comando de voz..."
+          </div>
+
+          <div id="brain-extracted-box" style="display:none; margin-top: 10px;">
+            <div style="font-size: 11px; font-weight: 700; color: #C2410C;">✨ Materiais estruturados e cotados em Ribeirão Preto:</div>
+            <div class="code-block" id="brain-json-code"></div>
+            <button class="btn btn-accent" style="margin-top: 8px;" onclick="commitBrainMaterials()">Adicionar à Cesta de Compras</button>
+          </div>
+        </div>
+
+        <!-- Technical Compliance Checker -->
+        <div class="card" style="background: #FEF2F2; border-color: #FECACA;">
+          <div class="card-title" style="color: #991B1B;">
+            <span>⚠️ Consultor Técnico NBR (Spark Apps)</span>
+          </div>
+          <div style="font-size: 11px; color: #7F1D1D; line-height: 1.45;">
+            <b>Alerta Normativo Detectado:</b><br>
+            Você cotou argamassa <b>AC-I</b> para o porcelanato 80x80cm da suíte. A norma <b>NBR 14081</b> exige no mínimo <b>AC-III</b> para grandes formatos e piso sobre piso, sob pena de desplacamento futuro!<br>
+            👉 <a href="javascript:void(0)" onclick="fixNormativeItem()" style="color: #DC2626; font-weight: 800;">Clique aqui para corrigir para Argamassa Votoran AC-III</a>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ================= TAB 3: CRONOGRAMA FÍSICO-FINANCEIRO ================= -->
+      <div id="tab-cronograma" class="tab-content">
+        
+        <div class="card">
+          <div class="card-title">
+            <span>Cronograma de Compras por Fase</span>
+            <span class="pill pill-blue">Curva S Dinâmica</span>
+          </div>
+          <p style="font-size: 11px; color: var(--text-muted); line-height: 1.4; margin-bottom: 12px;">
+            Comprar no momento certo evita perda de material por intempérie e quebra no canteiro de obras, preservando o fluxo financeiro do cliente.
+          </p>
+
+          <!-- Phase 1 -->
+          <div class="phase-card">
+            <div class="phase-header">
+              <div class="phase-title">Fase 1: Fundação & Terraplanagem</div>
+              <span class="pill pill-green">CONCLUÍDO</span>
+            </div>
+            <div class="phase-dates">Concluído em Setembro • Custo Real: R$ 18.450,00</div>
+            <div class="phase-items-list">
+              ✔️ Brocas, Cimento CP-IV, Aço CA-50 10mm, Brita 1 e Impermeabilizante Vedacit.
+            </div>
+          </div>
+
+          <!-- Phase 2 (Active) -->
+          <div class="phase-card active-phase">
+            <div class="phase-header">
+              <div class="phase-title">Fase 2: Alvenaria & Lajes (FASE ATUAL)</div>
+              <span class="pill pill-orange">COMPRAR AGORA</span>
+            </div>
+            <div class="phase-dates">Semana 5 a 8 • Custo Previsto: R$ 24.800,00</div>
+            <div class="phase-items-list">
+              ⏳ <b>Itens Críticos:</b> 4.000 Blocos Cerâmicos, 70 Sacos Cimento CP-II, Areia Média e Vigotas de Laje.
+            </div>
+            <button class="btn btn-accent" style="margin-top: 8px; font-size: 11px; padding: 6px;" onclick="loadPhaseItems('alvenaria')">
+              Carregar Insumos da Fase 2 na Cesta
+            </button>
+          </div>
+
+          <!-- Phase 3 -->
+          <div class="phase-card">
+            <div class="phase-header">
+              <div class="phase-title">Fase 3: Instalações Hidráulicas & Elétricas</div>
+              <span class="pill pill-blue">PROGRAMADO (+21 DIAS)</span>
+            </div>
+            <div class="phase-dates">Semana 9 a 12 • Custo Previsto: R$ 15.200,00</div>
+            <div class="phase-items-list">
+              Tubos Tigre 100mm/50mm, Conexões, Fios de Cobre Sil 2.5mm/4mm, Caixas de Passagem.
+            </div>
+            <button class="btn btn-accent" style="margin-top: 8px; font-size: 11px; padding: 6px;" onclick="loadPhaseItems('instalacoes')">
+              Carregar Insumos da Fase 3 na Cesta
+            </button>
+          </div>
+
+          <!-- Phase 4 -->
+          <div class="phase-card">
+            <div class="phase-header">
+              <div class="phase-title">Fase 4: Acabamentos, Pisos & Revestimentos</div>
+              <span class="pill pill-blue">PROGRAMADO (+45 DIAS)</span>
+            </div>
+            <div class="phase-dates">Semana 13 a 18 • Custo Previsto: R$ 38.900,00</div>
+            <div class="phase-items-list">
+              ⚠️ <i>Aviso de Lead-Time:</i> Porcelanato Portobello tem prazo de entrega de 30 dias na Sodimac/Leroy. Comprar com antecedência!
+            </div>
+            <button class="btn btn-accent" style="margin-top: 8px; font-size: 11px; padding: 6px;" onclick="loadPhaseItems('acabamentos')">
+              Carregar Insumos da Fase 4 na Cesta
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ================= TAB 4: GPS & RADAR REGIONAL ================= -->
+      <div id="tab-gps" class="tab-content">
+        
+        <div class="card">
+          <div class="card-title">
+            <span>Radar de Fornecedores por GPS</span>
+            <span class="pill pill-blue">Logística Ribeirão Preto</span>
+          </div>
+          <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 10px;">
+            O custo real da obra é <b>Preço do Material + Frete do Caminhão</b>. A IA calcula a viabilidade da rota até o canteiro.
+          </p>
+
+          <div style="display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap;">
+            <select id="mat-cidade" onchange="matCarregarLojas()" style="flex:1;border:1px solid #FED7AA;border-radius:8px;padding:8px;font-size:12px;">
+              <option value="">Todas as cidades</option><option>Ribeirao Preto</option><option>Sertaozinho</option><option>Jaboticabal</option><option>Cravinhos</option><option>Dumont</option>
+            </select>
+            <button onclick="matGPS()" style="background:#fff;border:1px solid #FED7AA;border-radius:8px;padding:8px;font-size:12px;">GPS</button>
+          </div>
+          <div style="display:flex;gap:6px;margin-bottom:8px;">
+            <input id="mat-busca" placeholder="Buscar loja, bairro..." oninput="matCarregarLojas()" style="flex:1;border:1px solid #FED7AA;border-radius:8px;padding:8px;font-size:12px;">
+          </div>
+          <div id="mat-lojas-api"></div>
+          <div id="mat-lojas-static">
+          <!-- Store 1: Sodimac -->
+          <div style="padding: 10px 0; border-bottom: 1px solid #F1F5F9;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+              <div>
+                <div style="font-size: 13px; font-weight: 800;">Sodimac Homecenter</div>
+                <div style="font-size: 11px; color: var(--text-muted);">Rotatória Amin Calil, Ipiranga (RP) • 8.4 km da obra</div>
+              </div>
+              <span class="pill pill-green">Frete: R$ 45,00</span>
+            </div>
+            <div style="font-size: 11px; color: #059669; font-weight: 600; margin-top: 4px;">
+              Melhor preço para tintas, ferramentas e acabamentos gerais.
+            </div>
+          </div>
+
+          <!-- Store 2: Leroy Merlin -->
+          <div style="padding: 10px 0; border-bottom: 1px solid #F1F5F9;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+              <div>
+                <div style="font-size: 13px; font-weight: 800;">Leroy Merlin Ribeirão Preto</div>
+                <div style="font-size: 11px; color: var(--text-muted);">Shopping Iguatemi, Vila do Golf • 6.2 km da obra</div>
+              </div>
+              <span class="pill pill-blue">Frete: R$ 60,00</span>
+            </div>
+            <div style="font-size: 11px; color: #2563EB; font-weight: 600; margin-top: 4px;">
+              Maior variedade em iluminação, louças Deca e metais sanitários.
+            </div>
+          </div>
+
+          <!-- Store 3: Castilho Materiais -->
+          <div style="padding: 10px 0; border-bottom: 1px solid #F1F5F9;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+              <div>
+                <div style="font-size: 13px; font-weight: 800;">Castilho Materiais para Construção</div>
+                <div style="font-size: 11px; color: var(--text-muted);">Ribeirão Preto • 9.8 km da obra</div>
+              </div>
+              <span class="pill pill-green">Frete Grátis acima R$ 2mil</span>
+            </div>
+            <div style="font-size: 11px; color: #059669; font-weight: 600; margin-top: 4px;">
+              Líder em cimento Votoran, areia lavada, brita e vergalhão Gerdau.
+            </div>
+          </div>
+
+          <!-- Store 4: Depósito Cravinhos -->
+          <div style="padding: 10px 0;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+              <div>
+                <div style="font-size: 13px; font-weight: 800;">Depósito Regional Cravinhos</div>
+                <div style="font-size: 11px; color: var(--text-muted);">Rodovia Anhanguera / Cravinhos • 11.5 km da obra</div>
+              </div>
+              <span class="pill pill-orange">Frete Rápido: R$ 35,00</span>
+            </div>
+            <div style="font-size: 11px; color: #D97706; font-weight: 600; margin-top: 4px;">
+              Ideal para entregas emergenciais de tijolos e agregados no mesmo dia.
+            </div>
+          </div>
+          </div>
+        </div>
+
+      </div>
+
+        <div class="card" id="orc-pdf-card">
+          <div class="card-title">
+            <span>Orçamento por PDF</span>
+            <span class="pill pill-blue">IA + SINAPI</span>
+          </div>
+          <p style="font-size: 11px; color: var(--text-muted); line-height: 1.4; margin-bottom: 8px;">
+            Envie 1 ou mais PDFs do projeto (planta, quantitativos). A IA lê, levanta materiais e gera orçamento + memorial + cronograma + PDF.
+          </p>
+          <div style="display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap;">
+            <input type="file" id="orc-files" accept="application/pdf,.pdf" multiple style="flex:1;border:1px solid #FED7AA;border-radius:8px;padding:8px;font-size:12px;">
+            <button onclick="orcEnviar()" style="background:#16a34a;color:#fff;border:none;border-radius:8px;padding:8px 14px;font-weight:800;cursor:pointer">Analisar</button>
+          </div>
+          <div id="orc-status" style="font-size:12px;color:#64748b;"></div>
+          <div id="orc-result" style="font-size:12px;"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">
+            <span>Tabela SINAPI de Referência</span>
+            <span class="pill pill-blue" id="mat-sinapi-total">SINAPI</span>
+          </div>
+          <p style="font-size: 11px; color: var(--text-muted); line-height: 1.4; margin-bottom: 8px;">
+            SINAPI 08/2026 oficial (Caixa) sem desoneração: 4.876 insumos com preço SP. Confirme na tabela do mês.
+          </p>
+          <div style="display:flex;gap:6px;margin-bottom:8px;">
+            <input id="mat-sinapi-q" placeholder="Buscar insumo (ex: cimento, tijolo)..." oninput="matBuscaSinapi()" style="flex:1;border:1px solid #FED7AA;border-radius:8px;padding:8px;font-size:12px;">
+          </div>
+          <div id="mat-sinapi-box" style="font-size:12px;"></div>
+        </div>
+
+      <!-- ================= TAB 5: SPARKBR.ONLINE (SAAS) ================= -->
+      <div id="tab-saas" class="tab-content">
+        
+        <div class="card" style="background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%); color: white;">
+          <div class="card-title" style="color: white; margin-bottom: 4px;">
+            <span>Integração: Spark Apps</span>
+            <span class="pill pill-orange">SaaS Pro</span>
+          </div>
+          <p style="font-size: 11px; color: #94A3B8; line-height: 1.4; margin-bottom: 12px;">
+            Incorpore o SparkMat diretamente no portal <b>sparkbr.online</b> como uma ferramenta proprietária de inteligência de custos para seus clientes e alunos.
+          </p>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+            <div style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: var(--radius-sm); padding: 10px;">
+              <div style="font-size: 11px; color: #CBD5E1;">Plano Cliente Obra</div>
+              <div style="font-size: 17px; font-weight: 800; color: #FB923C;">R$ 49,90/mês</div>
+              <div style="font-size: 10px; color: #94A3B8;">Acesso à cotação regional</div>
+            </div>
+            <div style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: var(--radius-sm); padding: 10px;">
+              <div style="font-size: 11px; color: #CBD5E1;">Plano Arquiteto Pro</div>
+              <div style="font-size: 17px; font-weight: 800; color: #38BDF8;">R$ 149,90/mês</div>
+              <div style="font-size: 10px; color: #94A3B8;">Obras ilimitadas + Laudo</div>
+            </div>
+          </div>
+        </div>
+
+        
+
+      </div>
+
+    </main>
+
+    <!-- Bottom Navigation Tabs -->
+    <nav class="bottom-nav">
+      <button class="nav-item active" onclick="switchMatTab('cesta', this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        <span>Cesta</span>
+      </button>
+
+      <button class="nav-item" onclick="switchMatTab('brain', this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2a10 10 0 1 0 10 10H12V2z"/><path d="M12 12L2.1 12a10 10 0 0 0 9.9 10V12z"/><circle cx="12" cy="12" r="3"/></svg>
+        <span>Cérebro IA</span>
+      </button>
+
+      <button class="nav-item" onclick="switchMatTab('cronograma', this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        <span>Cronograma</span>
+      </button>
+
+      <button class="nav-item" onclick="switchMatTab('gps', this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+        <span>Radar GPS</span>
+      </button>
+
+      <button class="nav-item" onclick="switchMatTab('saas', this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        <span>SaaS / VPS</span>
+      </button>
+    </nav>
+
+    <!-- Modal Dispatch -->
+    <div class="modal-overlay" id="dispatch-modal">
+      <div class="modal-sheet">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <div style="font-size: 16px; font-weight: 800;">Fechar Cotação de Materiais</div>
+          <button onclick="closeDispatchModal()" style="background: none; border: none; font-size: 20px; cursor: pointer; color: #94A3B8;">✕</button>
+        </div>
+
+        <div style="background: #F1F5F9; border-radius: var(--radius-sm); padding: 10px; margin-bottom: 12px;">
+          <div style="font-size: 11px; color: var(--text-muted);">Fornecedor Selecionado:</div>
+          <div style="font-size: 14px; font-weight: 800; color: var(--text);" id="modal-store-name">Sodimac Homecenter (Amin Calil)</div>
+          <div style="font-size: 10px; color: #059669; font-weight: 700; margin-top: 2px;">⚡ Conexão com Vendas Corporativas / Faturamento PJ</div>
+        </div>
+
+        <div style="margin-bottom: 12px; font-size: 12px;">
+          <div style="display: flex; justify-content: space-between; padding: 4px 0;">
+            <span style="color: var(--text-muted);">Subtotal Materiais</span>
+            <span style="font-weight: 700;" id="modal-mat-subtotal">R$ 4.280,00</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; padding: 4px 0;">
+            <span style="color: var(--text-muted);">Frete Caminhão (8.4 km até a Obra)</span>
+            <span style="font-weight: 700; color: #2563EB;">R$ 45,00</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; padding: 4px 0;">
+            <span style="color: var(--text-muted);">Economia Estimada vs. Balcão</span>
+            <span style="font-weight: 700; color: #059669;">- R$ 540,00 (Otimização IA)</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; padding: 8px 0; border-top: 1px dashed var(--border); margin-top: 6px; font-size: 14px; font-weight: 800;">
+            <span>Total da Ordem</span>
+            <span style="color: var(--accent-dark);" id="modal-mat-total">R$ 4.325,00</span>
+          </div>
+        </div>
+
+        <button class="btn btn-accent" style="margin-bottom: 6px;" onclick="dispatchToStoreAPI()">
+          Emitir Ordem de Compra / Faturamento PJ
+        </button>
+        <button class="btn btn-whatsapp" onclick="sendOrderToWholesaleWhatsApp()">
+          Disparar Pedido no WhatsApp da Loja
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // State of SparkMat
+    const matState = {
+      activeStore: 'sodimac',
+      stores: {
+        sodimac: { name: 'Sodimac (Amin Calil)', color: '#EF4444', multiplier: 1.0, freight: 45 },
+        leroy: { name: 'Leroy Merlin (Iguatemi)', color: '#10B981', multiplier: 1.04, freight: 60 },
+        castilho: { name: 'Castilho Materiais', color: '#3B82F6', multiplier: 0.94, freight: 0 },
+        santacruz: { name: 'Santa Cruz Constr.', color: '#F59E0B', multiplier: 0.98, freight: 40 },
+        deposito: { name: 'Depósito Cravinhos', color: '#8B5CF6', multiplier: 0.92, freight: 35 }
+      },
+      items: [
+        { id: 1, name: 'Cimento Votoran Todas as Obras CP-II E-32 50kg', qty: 50, unit: 'sacos', basePrice: 34.90, checked: false, sku: 'VOT-CP2-50' },
+        { id: 2, name: 'Areia Média Lavada para Reboco/Concreto', qty: 4, unit: 'm³', basePrice: 110.00, checked: false, sku: 'AREIA-MED-01' },
+        { id: 3, name: 'Brita 1 Calcária para Concreto Estrutural', qty: 3, unit: 'm³', basePrice: 115.00, checked: false, sku: 'BRITA-01-M3' },
+        { id: 4, name: 'Aço Vergalhão CA-50 Gerdau 10mm (3/8) 12m', qty: 25, unit: 'barras', basePrice: 42.50, checked: false, sku: 'GER-CA50-10' },
+        { id: 5, name: 'Bloco Cerâmico 8 Furos 14x19x39cm Estrutural', qty: 1200, unit: 'un', basePrice: 2.10, checked: false, sku: 'BLOC-CER-14' },
+        { id: 6, name: 'Tubo Esgoto PVC 100mm Tigre Barra 6m', qty: 8, unit: 'barras', basePrice: 78.90, checked: false, sku: 'TIG-ESG-100' },
+        { id: 7, name: 'Argamassa Votoran AC-III Cinza 20kg', qty: 20, unit: 'sacos', basePrice: 36.90, checked: false, sku: 'VOT-AC3-20' }
+      ],
+      isRecording: false
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderMaterialsList();
+      updateMatKPIs();
+      try{window.matSync&&window.matSync()}catch(_){}
+    });
+
+    function switchMatTab(tabId, el) {
+      document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+      
+      const target = document.getElementById('tab-' + tabId);
+      if (target) target.classList.add('active');
+      if (el) el.classList.add('active');
+    }
+
+    function selectStore(storeKey) {
+      matState.activeStore = storeKey;
+      document.querySelectorAll('.store-chip').forEach(c => c.classList.remove('active'));
+      event.currentTarget.classList.add('active');
+      renderMaterialsList();
+      updateMatKPIs();
+      try{window.matSync&&window.matSync()}catch(_){}
+    }
+
+    function renderMaterialsList() {
+      const container = document.getElementById('materials-list-container');
+      const mult = matState.stores[matState.activeStore].multiplier;
+
+      container.innerHTML = matState.items.map(item => {
+        const itemTotal = (item.basePrice * mult * item.qty).toFixed(2).replace('.', ',');
+        const unitPrice = (item.basePrice * mult).toFixed(2).replace('.', ',');
+        return `
+          <div class="mat-item">
+            <div class="mat-left">
+              <div class="mat-checkbox ${item.checked ? 'checked' : ''}" onclick="toggleMatCheck(${item.id})">
+                ${item.checked ? '✓' : ''}
+              </div>
+              <div class="mat-info">
+                <span class="mat-name ${item.checked ? 'checked' : ''}">${item.name}</span>
+                <span class="mat-meta">
+                  <span>${item.qty} ${item.unit}</span>
+                  <span>•</span>
+                  <span>R$ ${unitPrice}/${item.unit}</span>
+                  <span>•</span>
+                  <span class="pill pill-blue" style="font-size:9px; padding:1px 5px;">SKU: ${item.sku}</span>
+                </span>
+              </div>
+            </div>
+            <div class="mat-price">R$ ${itemTotal}</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function toggleMatCheck(id) {
+      const it = matState.items.find(i => i.id === id);
+      if (it) {
+        it.checked = !it.checked;
+        renderMaterialsList();
+        updateMatKPIs();
+        try{window.matSync&&window.matSync()}catch(_){}
+      }
+    }
+
+    function updateMatKPIs() {
+      const mult = matState.stores[matState.activeStore].multiplier;
+      let total = 0;
+      matState.items.forEach(i => {
+        if (!i.checked) total += (i.basePrice * mult * i.qty);
+      });
+
+      const formatted = 'R$ ' + total.toFixed(2).replace('.', ',');
+      document.getElementById('kpi-mat-total').textContent = formatted;
+      document.getElementById('btn-total-preview').textContent = formatted;
+      document.getElementById('kpi-mat-count').textContent = matState.items.length + ' itens';
+      document.getElementById('kpi-store-name').textContent = matState.stores[matState.activeStore].name.split(' ')[0];
+
+      // Castilho is cheaper for basic bulk materials
+      const castilhoTotal = total * (matState.stores.castilho.multiplier / mult);
+      const diff = total - castilhoTotal;
+      const tip = document.getElementById('mat-savings-tip');
+      if (matState.activeStore !== 'castilho' && diff > 0) {
+        tip.innerHTML = `Na <b>Castilho Materiais</b> esta mesma lista fica <b>R$ ${diff.toFixed(2).replace('.', ',')} mais barata</b> com entrega direta no canteiro!`;
+      } else {
+        tip.innerHTML = `Melhor cotação alcançada para fornecimento em lote em Ribeirão Preto e Cravinhos!`;
+      }
+    }
+
+    function splitOptimalPurchase() {
+      var base = 0;
+      try{ matState.items.forEach(function(i){ if(!i.checked) base += ((i.basePrice||0) * (i.qty||0)); }); }catch(_){}
+      if (!(base > 0)) { alert('Cesta vazia ou sem preços.'); return; }
+      var rows = [];
+      try{
+        Object.keys(matState.stores).forEach(function(k){
+          var s = matState.stores[k];
+          var t = base * (s.multiplier || 1) + (s.freight || 0);
+          rows.push({k:k, name:s.name, total:t});
+        });
+      }catch(_){}
+      if (!rows.length) { alert('Sem lojas.'); return; }
+      rows.sort(function(a,b){return a.total-b.total;});
+      var best = rows[0];
+      matState.activeStore = best.k;
+      renderMaterialsList();
+      updateMatKPIs();
+      try{window.matSync&&window.matSync()}catch(_){}
+      try{
+        document.querySelectorAll('.store-chip').forEach(function(c){c.classList.remove('active');});
+        var chip = document.querySelector('[onclick="selectStore(\'' + best.k + '\')"]');
+        if (chip) chip.classList.add('active');
+      }catch(_){}
+      var msg = 'OTIMIZAÇÃO DA CESTA\n\n';
+      rows.forEach(function(r,ix){ msg += (ix===0?'TOP 1 ':'  ') + r.name + ': R$ ' + r.total.toFixed(2).replace('.',',') + '\n'; });
+      msg += '\nFornecedor aplicado: ' + best.name;
+      alert(msg);
+    }
+
+    var _macT = null;
+    function matAC() {
+      try {
+        var inp = document.getElementById('quick-mat-input');
+        if (!inp || inp._acon) return; inp._acon = true;
+        inp.setAttribute('autocomplete', 'off');
+        inp.addEventListener('input', function () {
+          try {
+            if (_macT) clearTimeout(_macT);
+            var v = inp.value.trim();
+            var box = document.getElementById('mat-ac-sug');
+            if (v.length < 2) { if (box) box.style.display = 'none'; return; }
+            _macT = setTimeout(function () { matACSug(v); }, 300);
+          } catch (_) {}
+        });
+      } catch (_) {}
+    }
+    async function matACSug(q) {
+      try {
+        var inp = document.getElementById('quick-mat-input');
+        var box = document.getElementById('mat-ac-sug');
+        if (!box) {
+          box = document.createElement('div');
+          box.id = 'mat-ac-sug';
+          box.style.cssText = 'display:none;flex-direction:column;gap:4px;margin-top:6px;max-height:230px;overflow:auto;';
+          inp.parentNode.parentNode.insertBefore(box, inp.parentNode.nextSibling);
+        }
+        var r = await(await fetch('/sparkmat-api/sinapi?q=' + encodeURIComponent(q), { cache: 'no-store' })).json();
+        var arr = (r && r.itens) || [];
+        if (!arr.length) { box.style.display = 'none'; box.innerHTML = ''; return; }
+        box._arr = arr;
+        box.innerHTML = arr.slice(0, 7).map(function (x, ix) {
+          var pr = (x.preco_sp != null) ? ('R$ ' + Number(x.preco_sp).toFixed(2).replace('.', ',')) : 's/ preço';
+          return '<div data-ix="' + ix + '" class="macr" style="display:flex;gap:8px;align-items:center;background:#fffbeb;border:1px solid #fed7aa;border-radius:8px;padding:7px 9px;font-size:12px;cursor:pointer"><div style="flex:1;min-width:0"><b>' + matEsc(x.desc) + '</b><div style="color:#64748b;font-size:11px">' + matEsc(x.cod || '') + ' · ' + pr + '</div></div><div style="color:#16a34a;font-weight:800">+ inserir</div></div>';
+        }).join('');
+        box.style.display = 'flex';
+        var rows = box.querySelectorAll('.macr');
+        for (var i = 0; i < rows.length; i++) {
+          (function (el) {
+            el.onmousedown = function () {
+              try {
+                var x = box._arr[parseInt(el.getAttribute('data-ix'), 10)];
+                if (!x) return;
+                inp.value = x.desc;
+                box.style.display = 'none'; box.innerHTML = '';
+                addQuickMaterial();
+              } catch (_) {}
+            };
+          })(rows[i]);
+        }
+      } catch (_) {}
+    }
+    try { matAC(); } catch (_) {}
+    try { document.addEventListener('DOMContentLoaded', matAC); } catch (_) {}
+    try { setTimeout(matAC, 1500); } catch (_) {}
+    function orcMsg(t) {
+      try {
+        var d = document.getElementById('orc-status');
+        if (d) d.textContent = String(t || '');
+      } catch (_) {}
+    }
+    function orcEsc(s) { try { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); } catch (_) { return ''; } }
+    async function orcEnviar() {
+      try {
+        var inp = document.getElementById('orc-files');
+        var fs = (inp && inp.files) ? inp.files : [];
+        if (!fs.length) { orcMsg('Escolha 1 ou mais PDFs.'); return; }
+        if (fs.length > 5) { orcMsg('Máximo 5 PDFs.'); return; }
+        var tk = '';
+        try { tk = localStorage.getItem('spark_token') || ''; } catch (_) {}
+        if (!tk) { orcMsg('Entre na conta para analisar.'); return; }
+        var fd = new FormData();
+        for (var i = 0; i < fs.length; i++) {
+          if (fs[i].size > 20 * 1024 * 1024) { orcMsg('PDF maior que 20MB: ' + fs[i].name); return; }
+          fd.append('f' + (i + 1), fs[i], fs[i].name);
+        }
+        orcMsg('Enviando e analisando... pode levar 1 min.');
+        document.getElementById('orc-result').innerHTML = '';
+        var r = await fetch('/spark-api/orcamento/upload', { method: 'POST', headers: { 'Authorization': 'Bearer ' + tk }, body: fd });
+        var j = await r.json();
+        if (!j || !j.ok) { orcMsg('Falhou: ' + ((j && j.error) || r.status) + '. Tente de novo.'); return; }
+        orcMsg('');
+        var h = '<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:10px;margin-top:6px">'
+          + '<div style="font-size:14px;font-weight:800">TOTAL R$ ' + Number(j.total || 0).toFixed(2).replace('.', ',') + '</div>'
+          + '<div style="font-size:11px;color:#64748b">' + orcEsc(j.titulo) + ' · ' + (j.itens || []).length + ' itens · ' + (j.dias || '?') + ' dias</div></div>';
+        h += '<div style="margin-top:8px;overflow:auto"><table style="width:100%;font-size:11px;border-collapse:collapse"><tr style="background:#0f172a;color:#fff"><th style="padding:5px;text-align:left">Item</th><th>Qtd</th><th>PU</th><th>Total</th></tr>';
+        (j.itens || []).slice(0, 60).forEach(function (x) {
+          h += '<tr style="border-bottom:1px solid #f1f5f9"><td>' + orcEsc(x.nome) + '</td><td>' + orcEsc(x.qtd) + ' ' + orcEsc(x.un) + '</td><td>' + Number(x.pu || 0).toFixed(2).replace('.', ',') + '</td><td>' + Number(x.total || 0).toFixed(2).replace('.', ',') + '</td></tr>';
+        });
+        h += '</table></div>';
+        h += '<div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">'
+          + '<a href="' + j.pdf + '" target="_blank" rel="noopener" style="flex:1;text-align:center;background:#0284c7;color:#fff;border-radius:8px;padding:10px;font-weight:800;font-size:12px;text-decoration:none">📄 Baixar PDF</a>'
+          + '<a href="' + j.whatsapp + '" target="_blank" rel="noopener" style="flex:1;text-align:center;background:#16a34a;color:#fff;border-radius:8px;padding:10px;font-weight:800;font-size:12px;text-decoration:none">📱 WhatsApp</a>'
+          + '<button onclick="orcPorNaLista()" style="flex:1;background:#fff;border:1px solid #16a34a;color:#16a34a;border-radius:8px;padding:10px;font-weight:800;font-size:12px;cursor:pointer">+ Lista</button></div>';
+        h += '<details style="margin-top:8px;font-size:11px"><summary style="cursor:pointer;font-weight:700">Memorial + cronograma</summary><pre style="white-space:pre-wrap;font-size:11px;">' + orcEsc(j.memorial || '') + '</pre></details>';
+        document.getElementById('orc-result').innerHTML = h;
+        window._orcLast = j;
+      } catch (_) { orcMsg('Falha de rede. Tente de novo.'); }
+    }
+    function orcPorNaLista() {
+      try {
+        var j = window._orcLast;
+        if (!j || !j.itens) return;
+        if (typeof matState === 'undefined' || !matState.items) { orcMsg('Abra a lista de obra.'); return; }
+        var n = 0;
+        j.itens.forEach(function (x) {
+          try {
+            var dup = matState.items.some(function (i) { return (i.name || '').toLowerCase() === String(x.nome || '').toLowerCase(); });
+            if (dup) return;
+            matState.items.unshift({ id: Date.now() + Math.random(), name: x.nome, qty: x.qtd || 1, unit: x.un || 'un', basePrice: x.pu || 0, checked: false, sku: x.cod || '' });
+            n++;
+          } catch (_) {}
+        });
+        if (typeof renderMaterialsList === 'function') renderMaterialsList();
+        if (typeof updateMatKPIs === 'function') updateMatKPIs();
+        try { if (window.matSync) window.matSync(); } catch (_) {}
+        orcMsg(n + ' itens na lista! ✅');
+      } catch (_) {}
+    }
+    async function addQuickMaterial() {
+      const input = document.getElementById('quick-mat-input');
+      const val = input.value.trim();
+      if (!val) return;
+      var qty = 1, nome = val;
+      try {
+        var m0 = val.match(/^(\d+(?:[.,]\d+)?)\s*(sacos?|saco|un|kg|m3|m²|m2|latas?|pct|potes?|sc)?\s+(.*)$/i);
+        if (m0) { qty = Math.max(1, parseFloat(m0[1].replace(',', '.'))); nome = (m0[3] || val).trim() || val; }
+      } catch (_) {}
+      var preco = 0, sku = '', un = 'un';
+      try {
+        var r = await(await fetch('/sparkmat-api/sinapi?q=' + encodeURIComponent(nome), { cache: 'no-store' })).json();
+        var it0 = ((r && r.itens) || [])[0];
+        if (it0) {
+          if (it0.preco_sp != null) preco = Number(it0.preco_sp) || 0;
+          sku = it0.cod || '';
+          un = it0.un || 'un';
+          nome = it0.desc || nome;
+        }
+      } catch (_) {}
+      matState.items.unshift({
+        id: Date.now(),
+        name: nome,
+        qty: qty,
+        unit: un,
+        basePrice: preco,
+        checked: false,
+        sku: sku || ('MAN-' + Math.floor(1000 + Math.random() * 9000))
+      });
+      input.value = '';
+      renderMaterialsList();
+      updateMatKPIs();
+      try{window.matSync&&window.matSync()}catch(_){}
+      try {
+        var d = document.getElementById('voz-toast');
+        if (!d) { d = document.createElement('div'); d.id = 'voz-toast'; d.style.cssText = 'position:fixed;left:50%;bottom:120px;transform:translateX(-50%);background:#0f172a;color:#fff;font-size:13px;font-weight:700;padding:10px 16px;border-radius:12px;z-index:99999;max-width:88vw;text-align:center;'; document.body.appendChild(d); }
+        d.textContent = preco > 0 ? ('"' + nome + '" R$ ' + preco.toFixed(2).replace('.', ',') + ' (SINAPI) ✅') : ('"' + nome + '" sem preço SINAPI — confira.');
+        d.style.display = 'block';
+        try { if (d._t) clearTimeout(d._t); } catch (_) {}
+        d._t = setTimeout(function () { try { d.style.display = 'none'; } catch (_) {} }, 3200);
+      } catch (_) {}
+    }
+
+    function toggleMestreAudio() {
+      const btn = document.getElementById('brain-mic-btn');
+      const pill = document.getElementById('brain-status-pill');
+      const box = document.getElementById('brain-transcript-box');
+
+      if (!matState.isRecording) {
+        matState.isRecording = true;
+        btn.classList.add('recording');
+        pill.textContent = 'Gravando Canteiro...';
+        box.textContent = 'Ouvindo áudio da obra em tempo real...';
+
+        setTimeout(() => {
+          simulateMestreAudio();
+        }, 2500);
+      } else {
+        matState.isRecording = false;
+        btn.classList.remove('recording');
+        pill.textContent = 'Processado IA';
+      }
+    }
+
+    let pendingMatEntities = [];
+
+    function simulateMestreAudio() {
+      const btn = document.getElementById('brain-mic-btn');
+      const pill = document.getElementById('brain-status-pill');
+      const box = document.getElementById('brain-transcript-box');
+      const jsonBox = document.getElementById('brain-extracted-box');
+      const codeBox = document.getElementById('brain-json-code');
+
+      btn.classList.remove('recording');
+      matState.isRecording = false;
+      pill.textContent = 'Transcrito (Whisper NLU)';
+
+      box.textContent = '"Ó arquiteto Matheus, o pessoal vai concretar a laje na terça. Pede aí urgente 40 sacos de cimento Votoran, 2 rolos de arame recozido 1kg e 15 barras de ferro 3/8 da Gerdau."';
+
+      pendingMatEntities = [
+        { name: 'Cimento Votoran Todas as Obras CP-II 50kg', qty: 40, unit: 'sacos', basePrice: 34.90, sku: 'VOT-CP2-50' },
+        { name: 'Aço Vergalhão CA-50 Gerdau 10mm (3/8) 12m', qty: 15, unit: 'barras', basePrice: 42.50, sku: 'GER-CA50-10' },
+        { name: 'Arame Recozido Gerdau BWG 18 1kg', qty: 2, unit: 'rolos', basePrice: 22.90, sku: 'GER-ARAME-18' }
+      ];
+
+      codeBox.textContent = JSON.stringify(pendingMatEntities, null, 2);
+      jsonBox.style.display = 'block';
+    }
+
+    function simulateMemorialOCR() {
+      alert();
+    }
+
+    function commitBrainMaterials() {
+      pendingMatEntities.forEach(ent => {
+        matState.items.unshift({
+          id: Date.now() + Math.random(),
+          name: ent.name,
+          qty: ent.qty,
+          unit: ent.unit,
+          basePrice: ent.basePrice,
+          checked: false,
+          sku: ent.sku
+        });
+      });
+      document.getElementById('brain-extracted-box').style.display = 'none';
+      switchMatTab('cesta', document.querySelectorAll('.nav-item')[0]);
+      renderMaterialsList();
+      updateMatKPIs();
+      try{window.matSync&&window.matSync()}catch(_){}
+    }
+
+    function fixNormativeItem() {
+      var done = false;
+      try{
+        for (var i = 0; i < matState.items.length; i++) {
+          var nm = String(matState.items[i].name || '');
+          if (/ac-?i\b/i.test(nm) && !/ac-?iii/i.test(nm)) {
+            matState.items[i].name = 'Argamassa Votoran AC-III Cinza 20kg';
+            matState.items[i].sku = 'VOT-AC3-20';
+            done = true;
+            break;
+          }
+        }
+      }catch(_){}
+      renderMaterialsList();
+      updateMatKPIs();
+      try{window.matSync&&window.matSync()}catch(_){}
+      alert(done ? 'Corrigido para Argamassa Votoran AC-III (NBR 14081).' : 'Nenhum item AC-I/AC-II na cesta.');
+    }
+
+    var MAT_FASES = {
+      fundacao: [
+        {name:'Cimento CP-IV 50kg',qty:40,unit:'sacos',basePrice:36.90,sku:'CIM-CPIV-50'},
+        {name:'Aço Vergalhão CA-50 10mm 12m',qty:25,unit:'barras',basePrice:42.50,sku:'ACO-CA50-10'},
+        {name:'Brita 1 Calcária',qty:6,unit:'m³',basePrice:115.00,sku:'BRITA-01-M3'},
+        {name:'Impermeabilizante Vedacit 18kg',qty:2,unit:'baldes',basePrice:0,sku:'VEDA-18'}],
+      alvenaria: [
+        {name:'Bloco Cerâmico 8 Furos 14x19x39cm',qty:4000,unit:'un',basePrice:2.10,sku:'BLOC-CER-14'},
+        {name:'Cimento Votoran CP-II 50kg',qty:70,unit:'sacos',basePrice:34.90,sku:'VOT-CP2-50'},
+        {name:'Areia Média Lavada',qty:8,unit:'m³',basePrice:110.00,sku:'AREIA-MED-01'},
+        {name:'Vigota de Laje Treliçada',qty:60,unit:'un',basePrice:0,sku:'VIGOTA-TR'}],
+      instalacoes: [
+        {name:'Tubo Esgoto PVC 100mm 6m',qty:8,unit:'barras',basePrice:78.90,sku:'TIG-ESG-100'},
+        {name:'Tubo Esgoto PVC 50mm 6m',qty:6,unit:'barras',basePrice:0,sku:'TIG-ESG-50'},
+        {name:'Fio Cobre Flexível 2.5mm 100m',qty:2,unit:'rolos',basePrice:0,sku:'FIO-25-100'},
+        {name:'Fio Cobre Flexível 4mm 100m',qty:1,unit:'rolos',basePrice:0,sku:'FIO-4-100'},
+        {name:'Caixa de Passagem Elétrica',qty:6,unit:'un',basePrice:0,sku:'CX-PASS'},
+        {name:'Registro de Pressão 3/4',qty:2,unit:'un',basePrice:0,sku:'REG-34'}],
+      acabamentos: [
+        {name:'Porcelanato 80x80cm',qty:60,unit:'m²',basePrice:0,sku:'PORC-80'},
+        {name:'Argamassa Votoran AC-III 20kg',qty:20,unit:'sacos',basePrice:36.90,sku:'VOT-AC3-20'},
+        {name:'Rejunte Flexível',qty:10,unit:'kg',basePrice:0,sku:'REJ-FLEX'},
+        {name:'Tinta Acrílica Premium 18L',qty:3,unit:'latas',basePrice:0,sku:'TINT-ACR-18'},
+        {name:'Selador Acrílico 18L',qty:1,unit:'latas',basePrice:0,sku:'SEL-18'},
+        {name:'Massa Corrida PVA 25kg',qty:2,unit:'sacos',basePrice:0,sku:'MASSA-25'}]
+    };
+    function loadPhaseItems(phase) {
+      var itens = MAT_FASES[phase] || MAT_FASES.alvenaria;
+      var n = 0;
+      itens.forEach(function(o){
+        try{
+          var dup = matState.items.some(function(i){return (i.name||'').toLowerCase() === String(o.name).toLowerCase();});
+          if (dup) return;
+          matState.items.unshift({id: Date.now()+Math.random(), name:o.name, qty:o.qty, unit:o.unit, basePrice:o.basePrice||0, checked:false, sku:o.sku||''});
+          n++;
+        }catch(_){}
+      });
+      renderMaterialsList();
+      updateMatKPIs();
+      try{window.matSync&&window.matSync()}catch(_){}
+      switchMatTab('cesta', document.querySelectorAll('.nav-item')[0]);
+    }
+
+    // Modal & Dispatch
+    function openDispatchModal() {
+      const store = matState.stores[matState.activeStore];
+      const mult = store.multiplier;
+      let total = 0;
+      matState.items.forEach(i => {
+        if (!i.checked) total += (i.basePrice * mult * i.qty);
+      });
+
+      const formatted = 'R$ ' + total.toFixed(2).replace('.', ',');
+      document.getElementById('modal-store-name').textContent = store.name;
+      document.getElementById('modal-mat-subtotal').textContent = formatted;
+      document.getElementById('modal-mat-total').textContent = 'R$ ' + (total + store.freight).toFixed(2).replace('.', ',');
+      document.getElementById('dispatch-modal').classList.add('active');
+    }
+
+    function closeDispatchModal() {
+      document.getElementById('dispatch-modal').classList.remove('active');
+    }
+
+    function dispatchToStoreAPI() {
+      alert(`🚀 ORDEM DE COMPRA DISPARADA!
+
+Fornecedor: ${matState.stores[matState.activeStore].name}
+Destino: Canteiro de Obras Alphaville (RP/Cravinhos)
+Faturamento: PJ com Nota Fiscal Eletrônica e Laudo de Cotação anexado.`);
+      closeDispatchModal();
+    }
+
+    function sendOrderToWholesaleWhatsApp() {
+      let msg = `*COTAÇÃO DE MATERIAIS - SPARKMAT / A CULPA É DO ARQUITETO*%0A`;
+      msg += `Fornecedor: ${matState.stores[matState.activeStore].name}%0A`;
+      msg += `Local da Obra: Alphaville Ribeirão / Cravinhos, SP%0A%0A`;
+      msg += `*RELAÇÃO DE INSUMOS:*%0A`;
+      matState.items.forEach(i => {
+        if (!i.checked) {
+          msg += `• ${i.qty} ${i.unit} - ${i.name} (SKU: ${i.sku})%0A`;
+        }
+      });
+      msg += `%0A*Valor Estimado:* ${document.getElementById('kpi-mat-total').textContent}%0A`;
+      msg += `Por favor, confirmar disponibilidade e prazo de frete do caminhão toco.`;
+
+      window.open(`https://api.whatsapp.com/send?phone=5516981231719&text=${msg}`, '_blank');
+      closeDispatchModal();
+    }
+
+    function exportClientReport() {
+      alert();
+    }
+  </script>
+<script>window.SPARK_GOOGLE_ID='468525623041-knelde8kgjcmhcaa5hqjv0i3pns6ldpl.apps.googleusercontent.com';</script><script src="sparkmat_conta.js?v=2"></script><button onclick="location.href='https://sparkbr.online/'" title="Voltar p/ área principal Spark" style="position:fixed;bottom:142px;right:10px;z-index:9000;background:#f59e0b;color:#fff;border:none;border-radius:50%;width:44px;height:44px;font-size:20px;font-weight:800;box-shadow:0 2px 8px rgba(0,0,0,.25)">⚡</button>
+<script src="/navegador/bridge/spark-family.js?v=2.1.0"></script>
+</body>
+<script>
+function matEsc(s){try{return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}catch(_){return'';}}
+async function matCarregarLojas(){
+  var box=document.getElementById('mat-lojas-api');if(!box)return;
+  try{
+    var cid=(document.getElementById('mat-cidade')||{}).value||'';
+    var q=(document.getElementById('mat-busca')||{}).value||'';
+    var url='/sparkmat-api/lojas?cidade='+encodeURIComponent(cid)+'&q='+encodeURIComponent(q);
+    if(window._matGeo&&window._matGeo.lat)url+='&lat='+window._matGeo.lat+'&lng='+window._matGeo.lng;
+    var r=await(await fetch(url,{cache:'no-store'})).json();
+    if(!r||!r.ok||!(r.lojas||[]).length)return;
+    var h='<p style="font-size:10px;color:#64748b;">'+r.total+' fornecedores'+((window._matGeo&&window._matGeo.lat)?' (perto da obra)':'')+'</p>';
+    (r.lojas||[]).forEach(function(l){
+      var mq=(l.lat&&l.lng)?(l.lat+','+l.lng):((l.nome||'')+' '+(l.cidade||''));
+      var dist=(l.dist_km!==undefined&&l.dist_km<9000)?' · '+l.dist_km+' km':'';
+      var tag=l.verificado?'<span class="pill pill-green">verificado</span>':'<span class="pill pill-orange">confira</span>';
+      h+='<div style="padding:10px 0;border-bottom:1px solid #F1F5F9;">'
+        +'<div style="display:flex;justify-content:space-between;align-items:flex-start;">'
+        +'<div><div style="font-size:13px;font-weight:800;">'+matEsc(l.nome)+'</div>'
+        +'<div style="font-size:11px;color:var(--text-muted);">'+matEsc(l.bairro?l.bairro+' · ':'')+matEsc(l.cidade||'')+dist+'</div></div>'
+        +'<span class="pill pill-blue">'+matEsc(l.tipo||'')+'</span></div>'
+        +'<div style="font-size:11px;margin-top:4px;">'+tag
+        +' <a href="https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(mq)+'" target="_blank">ver no mapa</a>'
+        +((l.lat&&l.lng)?' · <a href="https://www.google.com/maps/dir/?api=1&destination='+l.lat+','+l.lng+'" target="_blank">rota</a>':'')
+        +' · <a href="javascript:void(0)" onclick="matPrecoMedio(\''+matEsc(l.nome).replace(/\'/g,'')+'\','+l.id+')">preço médio</a></div>'
+        +'<div id="mat-preco-'+l.id+'" style="font-size:11px;color:#059669;"></div></div>';
+    });
+    box.innerHTML=h;
+    var st=document.getElementById('mat-lojas-static');if(st)st.style.display='none';
+  }catch(e){}
+}
+function matGPS(){
+  try{
+    if(!navigator.geolocation){alert('GPS indisponível. Escolha a cidade.');return;}
+    navigator.geolocation.getCurrentPosition(function(pos){
+      window._matGeo={lat:pos.coords.latitude,lng:pos.coords.longitude};
+      matCarregarLojas();
+    },function(){alert('GPS negado. Escolha a cidade.');},{timeout:12000});
+  }catch(e){}
+}
+async function matPrecoMedio(nome,id){
+  var box=document.getElementById('mat-preco-'+id);if(box)box.textContent='consultando...';
+  try{
+    var r=await(await fetch('/sparkmat-api/precos?item='+encodeURIComponent(String(nome||'').toLowerCase()),{cache:'no-store'})).json();
+    if(box)box.textContent=(r&&r.media)?('Média R$ '+r.media+' ('+r.n+' regs · mín '+r.min+')'):'Sem preço ainda. Seja o primeiro a informar!';
+  }catch(e){if(box)box.textContent='Falhou.';}
+}
+/* VOZ-MAT 20261012: falar material -> entender -> preco SINAPI -> lista */
+(function () {
+  if (window._vozMat) return; window._vozMat = true;
+  function vtoast(t) {
+    try { if (typeof toast === 'function') { toast(t); return; } } catch (_) {}
+    try {
+      var d = document.getElementById('voz-toast');
+      if (!d) { d = document.createElement('div'); d.id = 'voz-toast'; d.style.cssText = 'position:fixed;left:50%;bottom:120px;transform:translateX(-50%);background:#0f172a;color:#fff;font-size:13px;font-weight:700;padding:10px 16px;border-radius:12px;z-index:99999;max-width:88vw;text-align:center;'; document.body.appendChild(d); }
+      d.textContent = String(t == null ? '' : t); d.style.display = 'block';
+      try { if (d._t) clearTimeout(d._t); } catch (_) {}
+      d._t = setTimeout(function () { try { d.style.display = 'none'; } catch (_) {} }, 3200);
+    } catch (_) {}
+  }
+  function esc(s) { try { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); } catch (_) { return ''; } }
+  function addBtn() {
+    try {
+      var inp = document.getElementById('mat-sinapi-q');
+      if (!inp || document.getElementById('mat-voz')) return;
+      var b = document.createElement('button');
+      b.id = 'mat-voz'; b.textContent = '🎤'; b.title = 'Segure e fale o material';
+      b.style.cssText = 'border:1px solid #FED7AA;background:#fff;border-radius:8px;min-width:38px;font-size:17px;cursor:pointer;flex:none';
+      inp.parentNode.insertBefore(b, inp.nextSibling);
+      b.addEventListener('pointerdown', vozIni);
+      b.addEventListener('pointerup', vozFim);
+      b.addEventListener('pointerleave', function () { try { vozFim(); } catch (_) {} });
+    } catch (_) {}
+  }
+  var rec = null, chunks = [], holding = false;
+  function pickMime() {
+    try {
+      var c = ['audio/webm;codecs=opus', 'audio/webm', 'audio/mp4', 'audio/ogg;codecs=opus'];
+      for (var i = 0; i < c.length; i++) { try { if (window.MediaRecorder && MediaRecorder.isTypeSupported(c[i])) return c[i]; } catch (_) {} }
+    } catch (_) {}
+    return '';
+  }
+  async function vozIni(ev) {
+    try { if (ev) ev.preventDefault(); } catch (_) {}
+    holding = true; chunks = [];
+    vtoast('Ouvindo material... solte para enviar.');
+    try {
+      var stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      var mime = pickMime();
+      rec = mime ? new MediaRecorder(stream, { mimeType: mime }) : new MediaRecorder(stream);
+      rec.ondataavailable = function (e) { try { if (e.data && e.data.size) chunks.push(e.data); } catch (_) {} };
+      rec.onstop = vozEnvia;
+      rec.start();
+      setBtn(true);
+    } catch (_) { holding = false; setBtn(false); vtoast('Microfone bloqueado. Libere no cadeado.'); }
+  }
+  async function vozFim() {
+    if (!holding) return; holding = false; setBtn(false);
+    try { if (rec && rec.state !== 'inactive') rec.stop(); } catch (_) {}
+  }
+  function setBtn(r) { try { var b = document.getElementById('mat-voz'); if (b) b.textContent = r ? '🔴' : '🎤'; } catch (_) {} }
+  async function vozEnvia() {
+    try {
+      if (!chunks.length) { vtoast('Nada gravado. Segure e fale.'); return; }
+      var blob = new Blob(chunks, { type: (rec.mimeType || 'audio/webm') });
+      if (blob.size < 8000) { vtoast('Áudio curto: segure e fale por 2 segundos.'); return; }
+      var ext = 'webm';
+      try { if ((rec.mimeType || '').indexOf('mp4') >= 0) ext = 'm4a'; else if ((rec.mimeType || '').indexOf('ogg') >= 0) ext = 'ogg'; } catch (_) {}
+      vtoast('Transcrevendo...');
+      var tr = await fetch('/sparkmat-api/ia/transcrever?ext=' + ext, { method: 'POST', headers: { 'Content-Type': blob.type || 'audio/webm' }, body: blob });
+      var tj = await tr.json();
+      if (!tj || !tj.ok) { vtoast('Não entendi o áudio. Fale de novo.'); return; }
+      vtoast('Entendendo: "' + String(tj.texto || '').slice(0, 60) + '"');
+      var enr = await fetch('/sparkmat-api/ia/entender-mat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ texto: tj.texto }) });
+      var en = await enr.json();
+      mostraMat((en && en.itens) || [], tj.texto);
+    } catch (_) { vtoast('Falha de rede no áudio.'); }
+  }
+  async function mostraMat(arr, txt) {
+    try {
+      var box = document.getElementById('mat-sinapi-box');
+      if (!box) return;
+      if (!arr.length) { vtoast('Disse "' + String(txt || '').slice(0, 60) + '" — sem itens.'); return; }
+      var html = '<div style="font-size:12px;font-weight:800;color:#9a3412">🎤 Você disse: "' + esc(txt) + '" — toque p/ por na lista:</div>';
+      for (var i = 0; i < Math.min(arr.length, 8); i++) {
+        var pr = 0;
+        try {
+          var rq = await fetch('/sparkmat-api/sinapi?q=' + encodeURIComponent(arr[i].nome || ''));
+          var jq = await rq.json();
+          var it0 = ((jq && jq.itens) || [])[0];
+          if (it0 && it0.preco_sp != null) pr = Number(it0.preco_sp) || 0;
+        } catch (_) {}
+        arr[i]._preco = pr;
+        html += '<div data-ix="' + i + '" class="matv" style="display:flex;gap:8px;align-items:center;background:#fffbeb;border:1px solid #fed7aa;border-radius:8px;padding:7px;font-size:12px;cursor:pointer;margin-top:6px"><div style="flex:1"><b>' + esc(arr[i].nome) + '</b><div style="color:#64748b;font-size:11px">qtd ' + esc(arr[i].qtd || arr[i].qty || 1) + (pr ? ' · R$ ' + pr.toFixed(2).replace('.', ',') : '') + '</div></div><div style="color:#16a34a;font-weight:800">+ lista</div></div>';
+      }
+      box._varr = arr;
+      box.innerHTML = html + box.innerHTML;
+      var rows = box.querySelectorAll('.matv');
+      for (var k = 0; k < rows.length; k++) {
+        (function (el) {
+          el.onmousedown = function () {
+            try {
+              var x = box._varr[parseInt(el.getAttribute('data-ix'), 10)];
+              if (!x) return;
+              if (typeof matState === 'undefined' || !matState.items) { vtoast('Abra a lista de obra.'); return; }
+              matState.items.unshift({ id: Date.now() + Math.random(), name: x.nome, qty: x.qtd || x.qty || 1, unit: 'un', basePrice: x._preco || 0, checked: false, sku: '' });
+              if (typeof renderMaterialsList === 'function') renderMaterialsList();
+              if (typeof updateMatKPIs === 'function') updateMatKPIs();
+              try { if (window.matSync) window.matSync(); } catch (_) {}
+              vtoast('"' + x.nome + '" na lista! ✅');
+            } catch (_) {}
+          };
+        })(rows[k]);
+      }
+    } catch (_) {}
+  }
+  function boot() { try { addBtn(); } catch (_) {} }
+  try { boot(); } catch (_) {}
+  try { document.addEventListener('DOMContentLoaded', boot); } catch (_) {}
+  try { setTimeout(boot, 1500); } catch (_) {}
+  try { setTimeout(boot, 4000); } catch (_) {}
+})();
+
+async function matBuscaSinapi(){
+  var box=document.getElementById('mat-sinapi-box');if(!box)return;
+  var q=(document.getElementById('mat-sinapi-q')||{}).value||'';
+  try{
+    var r=await(await fetch('/sparkmat-api/sinapi?q='+encodeURIComponent(q),{cache:'no-store'})).json();
+    if(!r||!r.ok){box.innerHTML='Falhou.';return;}
+    var h='<p style="font-size:10px;color:#64748b;">'+r.total+' insumos</p>';
+    try { var _tt = document.getElementById('mat-sinapi-total'); if (_tt) _tt.textContent = r.total + ' insumos (SINAPI 08/2026)'; } catch (_) {}
+    (r.itens||[]).slice(0,20).forEach(function(it,ix){
+      var _pr = (it.preco_sp != null) ? ('R$ ' + Number(it.preco_sp).toFixed(2).replace('.', ',') + '/' + matEsc(it.un)) : 's/ preço';
+      window._matBusca = window._matBusca || {};
+      window._matBusca[ix] = it;
+      h+='<div style="border-bottom:1px solid #F1F5F9;padding:5px 0;"><b>'+matEsc(it.cod)+'</b> '+matEsc(it.desc)+' <span style="color:#64748b;">/'+matEsc(it.un)+'</span> '
+        +'<span style="color:#059669;font-weight:800;">' + _pr + '</span> '
+        +'<a href="'+(it.link||'#')+'" target="_blank" rel="noopener" style="font-size:11px;">ficha</a> '
+        +'<button onclick="matAddBusca('+ix+')" style="border:1px solid #bbf7d0;background:#f0fdf4;color:#16a34a;border-radius:8px;font-size:11px;font-weight:800;padding:2px 8px;cursor:pointer">+ lista</button>'
+        +'<div id="mat-preco-sn'+ix+'" style="font-size:11px;color:#059669;"></div></div>';
+    });
+    box.innerHTML=h;
+  }catch(e){}
+}
+function matAddBusca(ix){
+    try{
+      var it=(window._matBusca||{})[ix]; if(!it) return;
+      if (typeof matState==='undefined'||!matState.items) return;
+      matState.items.unshift({id:Date.now()+Math.random(),name:it.desc,qty:1,unit:it.un||'un',basePrice:(it.preco_sp!=null?Number(it.preco_sp):0)||0,checked:false,sku:it.cod||''});
+      if(typeof renderMaterialsList==='function')renderMaterialsList();
+      if(typeof updateMatKPIs==='function')updateMatKPIs();
+      try{if(window.matSync)window.matSync();}catch(_){}
+    }catch(_){}
+  }
+document.addEventListener('DOMContentLoaded',function(){try{matCarregarLojas();matBuscaSinapi();}catch(e){}});
+</script>
+</html>

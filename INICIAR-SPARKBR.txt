@@ -1,0 +1,30 @@
+SPARKBR 2.1 — INÍCIO RÁPIDO
+
+PASTA DO PROJETO
+C:\Users\Arquitetura\Desktop\SparkBR-2.1-ECOSSISTEMA
+
+1) TESTAR O CÓDIGO
+Abra o PowerShell e execute:
+cd "$env:USERPROFILE\Desktop\SparkBR-2.1-ECOSSISTEMA"
+npm test
+
+2) ABRIR O SITE LOCAL
+npm start
+Depois abra http://localhost:3080/ e http://localhost:3080/navegador/ no navegador.
+
+3) TESTAR O SHELL NO ELECTRON
+Em outro PowerShell, com o servidor local ainda aberto:
+cd "$env:USERPROFILE\Desktop\SparkBR-2.1-ECOSSISTEMA"
+npm install
+$env:SPARK_START_URL='http://localhost:3080/navegador/'
+npm run desktop
+
+4) ABRIR O SHELL PUBLICADO
+Sem SPARK_START_URL definido, o Electron abre https://sparkbr.online/navegador/.
+
+IMPORTANTE
+- O painel de família reutiliza a conta principal do SparkBR.
+- A autenticação compartilhada depende do patch revisável em backend-patch\patch_spark_auth_cookie.py. Primeiro execute a opção --check e leia backend-patch\README.md.
+- Não foi feita publicação automática na VPS.
+- A sincronização interna de todos os 23 aplicativos ainda exige conectar e testar cada fluxo de dados. O conector inicial da lista do Spark Mercado está incluído, mas precisa de validação com contas reais.
+- Não coloque chaves de IA ou senhas em arquivos HTML, JavaScript público ou no pacote do cliente.

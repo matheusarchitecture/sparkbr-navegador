@@ -1,0 +1,227 @@
+{
+  "pages": [
+    {
+      "path": "agenda/index.html",
+      "page": "agenda",
+      "layout": "simple"
+    },
+    {
+      "path": "agua/index.html",
+      "page": "agua",
+      "layout": "simple"
+    },
+    {
+      "path": "apps/dosefiel/index.html",
+      "page": "dose",
+      "layout": "complex"
+    },
+    {
+      "path": "apps/sparkdose/index.html",
+      "page": "dose",
+      "layout": "complex"
+    },
+    {
+      "path": "astromatch/index.html",
+      "page": "astromatch",
+      "layout": "complex"
+    },
+    {
+      "path": "baixar/index.html",
+      "page": "baixar",
+      "layout": "auxiliary"
+    },
+    {
+      "path": "bico/index.html",
+      "page": "bico",
+      "layout": "simple"
+    },
+    {
+      "path": "cardapio/index.html",
+      "page": "cardapio",
+      "layout": "simple"
+    },
+    {
+      "path": "carteirinha/index.html",
+      "page": "carteirinha",
+      "layout": "simple"
+    },
+    {
+      "path": "cofrinho/index.html",
+      "page": "cofrinho",
+      "layout": "simple"
+    },
+    {
+      "path": "contas/index.html",
+      "page": "contas",
+      "layout": "simple"
+    },
+    {
+      "path": "dose/index.html",
+      "page": "dose",
+      "layout": "complex"
+    },
+    {
+      "path": "energia/index.html",
+      "page": "energia",
+      "layout": "simple"
+    },
+    {
+      "path": "escola/index.html",
+      "page": "escola",
+      "layout": "simple"
+    },
+    {
+      "path": "familia/index.html",
+      "page": "familia",
+      "layout": "simple"
+    },
+    {
+      "path": "farmacia/index.html",
+      "page": "farmacia",
+      "layout": "simple"
+    },
+    {
+      "path": "faxina/index.html",
+      "page": "faxina",
+      "layout": "simple"
+    },
+    {
+      "path": "financeiro/index.html",
+      "page": "financeiro",
+      "layout": "simple"
+    },
+    {
+      "path": "ideias/index.html",
+      "page": "ideias",
+      "layout": "simple"
+    },
+    {
+      "path": "manual/index.html",
+      "page": "manual",
+      "layout": "auxiliary"
+    },
+    {
+      "path": "mural/index.html",
+      "page": "mural",
+      "layout": "simple"
+    },
+    {
+      "path": "parcerias/index.html",
+      "page": "parcerias",
+      "layout": "auxiliary"
+    },
+    {
+      "path": "posto/index.html",
+      "page": "posto",
+      "layout": "simple"
+    },
+    {
+      "path": "saude/admin/index.html",
+      "page": "saude-admin",
+      "layout": "auxiliary"
+    },
+    {
+      "path": "saude/afiliados/index.html",
+      "page": "saude-afiliados",
+      "layout": "auxiliary"
+    },
+    {
+      "path": "saude/afiliados/materiais/index.html",
+      "page": "saude-afiliados-materiais",
+      "layout": "auxiliary"
+    },
+    {
+      "path": "saude/afiliados/painel/index.html",
+      "page": "saude-afiliados-painel",
+      "layout": "auxiliary"
+    },
+    {
+      "path": "saude/app/auth/index.html",
+      "page": "saude-auth",
+      "layout": "auxiliary"
+    },
+    {
+      "path": "saude/corp/index.html",
+      "page": "saude-corp",
+      "layout": "auxiliary"
+    },
+    {
+      "path": "saude/exercise-player.html",
+      "page": "exercise-player",
+      "layout": "auxiliary"
+    },
+    {
+      "path": "saude/index.html",
+      "page": "saude",
+      "layout": "complex"
+    },
+    {
+      "path": "saude/landing/index.html",
+      "page": "saude-landing",
+      "layout": "auxiliary"
+    },
+    {
+      "path": "saude/manual/index.html",
+      "page": "saude-manual",
+      "layout": "auxiliary"
+    },
+    {
+      "path": "saude/membros/index.html",
+      "page": "saude-membros",
+      "layout": "auxiliary"
+    },
+    {
+      "path": "saude/planejamento/index.html",
+      "page": "saude-planejamento",
+      "layout": "auxiliary"
+    },
+    {
+      "path": "saude/pro/index.html",
+      "page": "saude-pro",
+      "layout": "auxiliary"
+    },
+    {
+      "path": "saude/setuppro.html",
+      "page": "saude",
+      "layout": "complex"
+    },
+    {
+      "path": "sono/index.html",
+      "page": "sono",
+      "layout": "simple"
+    },
+    {
+      "path": "spark/index.html",
+      "page": "spark",
+      "layout": "complex"
+    },
+    {
+      "path": "sparkmat/index.html",
+      "page": "sparkmat",
+      "layout": "complex"
+    },
+    {
+      "path": "sparkpet/index.html",
+      "page": "sparkpet",
+      "layout": "complex"
+    },
+    {
+      "path": "whindersson/index.html",
+      "page": "whindersson",
+      "layout": "auxiliary"
+    },
+    {
+      "path": "zero-ads/index.html",
+      "page": "zero-ads",
+      "layout": "auxiliary"
+    },
+    {
+      "path": "instalar/index.html",
+      "page": "instalar",
+      "layout": "simple"
+    }
+  ],
+  "telemetry_scripts_removed": 83,
+  "old_visual_links_replaced": 24,
+  "zoom_pages_restored": 5
+}

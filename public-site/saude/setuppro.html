@@ -1,0 +1,2548 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta property="og:title" content="Spark Saúde — Evolucao Corporal">
+    <meta property="og:description" content="Plano de 12 meses, check-ins, dieta e IA Coach.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://sparkbr.online.br/setup/">
+    <meta property="og:image" content="https://sparkbr.online/assets/img/og-image.jpg">
+    <title>Evolução Corporal PRO - Tamiris</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <meta name="theme-color" content="#f43f5e">
+    <meta name="description" content="Spark Saúde — Evolucao Corporal: plano de 12 meses, check-ins, dieta e IA Coach.">
+    <link rel="canonical" href="https://sparkbr.online.br/setup/">
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="apple-touch-icon" href="/assets/img/favicon-192.png">
+    <link rel="icon" type="image/png" href="/assets/img/favicon-192.png">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            -webkit-tap-highlight-color: transparent;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 414px;
+            background: #f8fafc;
+            height: 100vh;
+            max-height: 100vh;
+            position: relative;
+            box-shadow: 0 0 40px rgba(0,0,0,0.15);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        @media (min-width: 415px) {
+            body {
+                background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            }
+            .app-container {
+                height: 90vh;
+                border-radius: 40px;
+                border: 8px solid #ffffff;
+            }
+        }
+
+        .view {
+            display: none;
+            flex: 1;
+            overflow-y: auto;
+            position: relative;
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        .view.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .view::-webkit-scrollbar { display: none; }
+        .view { -ms-overflow-style: none; scrollbar-width: none; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #f43f5e, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #f43f5e, #8b5cf6);
+        }
+
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 24px;
+            width: 24px;
+            border-radius: 50%;
+            background: #f43f5e;
+            cursor: pointer;
+            margin-top: -8px;
+            box-shadow: 0 2px 6px rgba(244, 63, 94, 0.4);
+            border: 2px solid white;
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 8px;
+            cursor: pointer;
+            background: #e2e8f0;
+            border-radius: 4px;
+        }
+    </style>
+    <style id="ia-css">
+        .ia-card{background:linear-gradient(135deg,#fff1f2,#faf5ff);border:1px solid #fecdd3;border-radius:24px;padding:18px;}
+        .ia-score{width:92px;height:92px;border-radius:9999px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;font-weight:900;}
+        .ia-bloco{background:#fff;border:1px solid #f1f5f9;border-radius:18px;padding:14px;margin-bottom:10px;}
+        .ia-bloco h4{font-size:12px;font-weight:900;color:#0f172a;margin-bottom:4px;}
+        .ia-bloco p{font-size:11.5px;color:#475569;line-height:1.55;}
+        .ia-hist{font-size:10.5px;color:#64748b;border-bottom:1px dashed #e2e8f0;padding:6px 0;}
+    </style>
+
+<link rel="stylesheet" href="/assets/brand.css?v=20261013">
+<link rel="stylesheet" href="/assets/app-shell.css?v=20261013b">
+<script defer data-spark-rebrand src="/assets/app-shell.js?v=20261013b"></script>
+</head>
+<body data-spark-page="saude" data-spark-layout="complex">
+
+<div class="app-container">
+    
+    <!-- Toast Notification -->
+    <div id="toast" class="absolute top-6 left-1/2 transform -translate-x-1/2 bg-slate-900 text-white px-6 py-3 rounded-full text-sm font-medium opacity-0 transition-opacity duration-300 pointer-events-none z-50 flex items-center shadow-2xl w-max max-w-[90%]">
+        <i class="fas fa-bolt text-yellow-400 mr-2"></i>
+        <span id="toast-message">Mensagem</span>
+    </div>
+
+    <!-- VIEW 1: ONBOARDING / PROFILE FORM -->
+    <div id="view-setup" class="view active bg-white">
+        <div class="px-6 pt-10 pb-6 text-center shrink-0 bg-slate-50 border-b border-slate-100">
+            <div class="w-16 h-16 gradient-bg rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-rose-200 transform rotate-3">
+                <i class="fas fa-dumbbell text-white text-2xl -rotate-3"></i>
+            </div>
+            <h1 class="text-3xl font-black text-slate-800 tracking-tight">Spark Saúde <span class="gradient-text">PRO</span></h1>
+            <p class="text-slate-500 mt-2 text-xs font-medium px-4">Inteligência Dinâmica: Perca de 1 a 4kg/mês com treinos em casa.</p>
+        </div>
+
+        <form id="profile-form" class="flex-1 overflow-y-auto px-6 space-y-7 py-6 pb-32">
+            <!-- Dados Pessoais Iniciais -->
+            <div class="space-y-4">
+                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest border-b border-slate-100 pb-2">Perfil Biológico</h3>
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Nome</label>
+                        <input type="text" id="user-name" value="" placeholder="Seu nome" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-rose-500 text-slate-800 font-bold">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Gênero</label>
+                        <select id="user-gender" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-rose-500 text-slate-800 font-bold appearance-none">
+                            <option value="F" selected>Feminino</option>
+                            <option value="M">Masculino</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Idade</label>
+                        <input type="number" id="user-age" value="" placeholder="Ex: 30" required class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-rose-500 font-bold text-slate-800">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Altura (cm)</label>
+                        <input type="number" id="user-height" value="" placeholder="Ex: 170" required class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-rose-500 font-bold text-slate-800">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-rose-50 p-3 rounded-xl border border-rose-100">
+                        <label class="block text-[10px] font-bold text-rose-500 uppercase tracking-wider mb-1.5">Peso Atual (kg)</label>
+                        <input type="number" id="user-weight" value="" placeholder="0.0" required step="0.1" class="w-full px-3 py-2 bg-white border border-rose-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500 text-rose-600 font-black text-lg text-center">
+                    </div>
+                    <div class="bg-indigo-50 p-3 rounded-xl border border-indigo-100">
+                        <label class="block text-[10px] font-bold text-indigo-500 uppercase tracking-wider mb-1.5">Meta Final (kg)</label>
+                        <input type="number" id="user-target-weight" value="" placeholder="0.0" required step="0.1" class="w-full px-3 py-2 bg-white border border-indigo-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-indigo-600 font-black text-lg text-center">
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-4">
+                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest border-b border-slate-100 pb-2">Medidas de Backtest (cm)</h3>
+                <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100 shadow-sm space-y-4">
+                    <div>
+                        <span class="block text-[10px] font-bold text-slate-400 mb-1.5 uppercase">Cintura/Barriga</span>
+                        <input type="number" id="user-measure-belly" value="" placeholder="Opc" step="0.5" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-rose-500 font-bold">
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <span class="block text-[10px] font-bold text-slate-400 mb-1.5 uppercase">Braços</span>
+                            <div class="flex space-x-2">
+                                <input type="number" id="user-measure-arm-r" value="" placeholder="Dir" step="0.5" class="w-full px-2 py-2.5 bg-white border border-slate-200 rounded-lg text-sm text-center font-bold" placeholder="Dir">
+                                <input type="number" id="user-measure-arm-l" value="" placeholder="Esq" step="0.5" class="w-full px-2 py-2.5 bg-white border border-slate-200 rounded-lg text-sm text-center font-bold" placeholder="Esq">
+                            </div>
+                        </div>
+                        <div>
+                            <span class="block text-[10px] font-bold text-slate-400 mb-1.5 uppercase">Coxas</span>
+                            <div class="flex space-x-2">
+                                <input type="number" id="user-measure-thigh-r" value="" placeholder="Dir" step="0.5" class="w-full px-2 py-2.5 bg-white border border-slate-200 rounded-lg text-sm text-center font-bold" placeholder="Dir">
+                                <input type="number" id="user-measure-thigh-l" value="" placeholder="Esq" step="0.5" class="w-full px-2 py-2.5 bg-white border border-slate-200 rounded-lg text-sm text-center font-bold" placeholder="Esq">
+                            </div>
+                        </div>
+                        <div class="col-span-2">
+                            <span class="block text-[10px] font-bold text-slate-400 mb-1.5 uppercase">Panturrilhas</span>
+                            <div class="flex space-x-2">
+                                <input type="number" id="user-measure-calf-r" value="" placeholder="Dir" step="0.5" class="w-full px-2 py-2.5 bg-white border border-slate-200 rounded-lg text-sm text-center font-bold" placeholder="Dir">
+                                <input type="number" id="user-measure-calf-l" value="" placeholder="Esq" step="0.5" class="w-full px-2 py-2.5 bg-white border border-slate-200 rounded-lg text-sm text-center font-bold" placeholder="Esq">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-4">
+                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest border-b border-slate-100 pb-2">Objetivo Principal</h3>
+                <div class="grid grid-cols-1 gap-3">
+                    <label class="relative flex cursor-pointer rounded-2xl border-2 border-transparent bg-white p-4 shadow-sm focus:outline-none transition-all has-[:checked]:border-rose-500 has-[:checked]:bg-rose-50 has-[:checked]:shadow-md">
+                        <input type="radio" name="goal" value="emagrecimento" class="peer sr-only" checked>
+                        <div class="flex w-full items-center justify-between">
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 rounded-full bg-rose-100 flex items-center justify-center mr-3">
+                                    <i class="fas fa-fire text-rose-500 text-lg"></i>
+                                </div>
+                                <div>
+                                    <p class="font-bold text-slate-900 text-sm">Secar & Definir</p>
+                                    <p class="text-[11px] text-slate-500 font-medium">Foco em déficit calórico</p>
+                                </div>
+                            </div>
+                            <div class="h-6 w-6 rounded-full border-2 border-slate-200 peer-checked:border-rose-500 peer-checked:bg-rose-500 flex items-center justify-center transition-colors">
+                                <i class="fas fa-check text-white text-xs opacity-0 peer-checked:opacity-100"></i>
+                            </div>
+                        </div>
+                    </label>
+
+                    <label class="relative flex cursor-pointer rounded-2xl border-2 border-transparent bg-white p-4 shadow-sm focus:outline-none transition-all has-[:checked]:border-indigo-500 has-[:checked]:bg-indigo-50 has-[:checked]:shadow-md">
+                        <input type="radio" name="goal" value="hipertrofia" class="peer sr-only">
+                        <div class="flex w-full items-center justify-between">
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center mr-3">
+                                    <i class="fas fa-dumbbell text-indigo-500 text-lg"></i>
+                                </div>
+                                <div>
+                                    <p class="font-bold text-slate-900 text-sm">Ganho de Massa</p>
+                                    <p class="text-[11px] text-slate-500 font-medium">Foco em hipertrofia</p>
+                                </div>
+                            </div>
+                            <div class="h-6 w-6 rounded-full border-2 border-slate-200 peer-checked:border-indigo-500 peer-checked:bg-indigo-500 flex items-center justify-center transition-colors">
+                                <i class="fas fa-check text-white text-xs opacity-0 peer-checked:opacity-100"></i>
+                            </div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <div class="space-y-6">
+                <div>
+                    <div class="flex justify-between items-end mb-2">
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest">Nível Atual</label>
+                        <span id="level-badge" class="text-[10px] font-black bg-rose-100 text-rose-600 px-2 py-0.5 rounded-full">Iniciante</span>
+                    </div>
+                    <input type="range" id="user-level" min="1" max="3" value="1" class="w-full mt-2">
+                </div>
+                
+                <div>
+                     <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Tempo Diário Disponível</label>
+                     <select id="user-time" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-rose-500 text-sm font-bold text-slate-800">
+                         <option value="15">15 min (Alta Intensidade)</option>
+                         <option value="30" selected>30 min (Recomendado)</option>
+                         <option value="45">45 min (Completo)</option>
+                     </select>
+                </div>
+            </div>
+        </form>
+
+        <p class="px-6 pb-2 text-center text-[10px] text-slate-400">App de organizacao pessoal. Nao substitui medico, nutricionista ou educador fisico. Seus dados ficam neste aparelho. <a href="/setup/manual/" style="color:#f43f5e;font-weight:800">Manual de uso</a>.</p>
+        <div class="px-6 pb-2 text-center">
+            <button onclick="showConta()" class="text-[12px] font-black text-indigo-500 underline">Já tenho conta — Entrar</button>
+        </div>
+        <!-- Fixed Bottom Button -->
+        <div class="absolute bottom-0 left-0 right-0 p-4 bg-white border-t border-slate-100 z-10">
+            <button onclick="generateProgram()" class="w-full gradient-bg text-white font-black text-lg py-4 rounded-2xl shadow-lg shadow-rose-200 hover:scale-[1.02] transition-transform active:scale-95 flex justify-center items-center">
+                Gerar Motor Algorítmico <i class="fas fa-rocket ml-2"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- VIEW 2: LOADING -->
+    <div id="view-loading" class="view items-center justify-center px-6 bg-slate-900">
+        <div class="relative w-32 h-32 mb-8 mx-auto mt-10">
+            <div class="absolute inset-0 border-4 border-rose-500 border-dashed rounded-full animate-spin-slow opacity-50" style="animation-duration: 4s;"></div>
+            <div class="absolute inset-4 gradient-bg rounded-full flex items-center justify-center text-white text-4xl shadow-[0_0_30px_rgba(244,63,94,0.6)] z-10 animate-pulse">
+                <i class="fas fa-brain"></i>
+            </div>
+        </div>
+        <h2 class="text-2xl font-black text-white text-center mb-2 tracking-tight">Processando DNA...</h2>
+        <p class="text-slate-400 text-center text-sm px-4 font-medium h-10" id="loading-text">Calculando Taxa Metabólica Basal...</p>
+        
+        <div class="w-full max-w-xs bg-slate-800 rounded-full h-3 mt-8 mx-auto p-0.5 border border-slate-700">
+            <div id="loading-progress" class="gradient-bg h-full rounded-full w-0 transition-all duration-300 relative overflow-hidden">
+                <div class="absolute inset-0 bg-white/20 w-full h-full" style="background-image: linear-gradient(45deg, rgba(255,255,255,.15) 25%, transparent 25%, transparent 50%, rgba(255,255,255,.15) 50%, rgba(255,255,255,.15) 75%, transparent 75%, transparent); background-size: 1rem 1rem; animation: progress-stripes 1s linear infinite;"></div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        @keyframes progress-stripes { from { background-position: 1rem 0; } to { background-position: 0 0; } }
+        .animate-spin-slow { animation: spin 3s linear infinite; }
+    </style>
+
+    <!-- VIEW 3: DASHBOARD / EVOLUTION PLAN -->
+    <div id="view-dashboard" class="view bg-slate-50">
+        <div class="gradient-bg text-white px-5 pt-8 pb-16 rounded-b-[40px] shadow-lg shrink-0 relative overflow-hidden">
+            <div class="absolute top-0 right-0 -mr-10 -mt-10 w-40 h-40 bg-white opacity-10 rounded-full blur-2xl"></div>
+            <div class="flex justify-between items-center mb-4 relative z-10">
+                <div>
+                    <p class="text-[10px] opacity-80 font-bold uppercase tracking-widest mb-1"><i class="fas fa-chart-pie mr-1"></i> Dashboard PRO</p>
+                    <h1 class="text-2xl font-black truncate max-w-[200px]" id="dash-name">Tamiris</h1>
+                    <p class="text-[10px] font-bold opacity-80 mt-0.5" id="streak-pill"></p>
+                </div>
+                <button onclick="showConta()" class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-md active:scale-95 transition-transform mr-2 overflow-hidden" title="Minha conta"><span id="header-avatar"><i class="fas fa-user text-white text-sm"></i></span></button>
+                <button onclick="showIA()"<i class="fas fa-robot text-white text-sm"></i></button>
+                <button onclick="resetApp()" class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-md active:scale-95 transition-transform" title="Recomeçar">
+                    <i class="fas fa-power-off text-white text-sm"></i>
+                </button>
+            </div>
+            
+            <!-- Resumo Meta -->
+            <div class="flex items-center space-x-3 mt-2">
+                <div class="bg-white/20 px-3 py-1.5 rounded-lg backdrop-blur-sm border border-white/10">
+                    <span class="block text-[9px] uppercase tracking-wider font-bold opacity-80">Peso Atual</span>
+                    <span class="font-black text-lg" id="dash-current-weight">0.0 kg</span>
+                </div>
+                <i class="fas fa-arrow-right opacity-50 text-sm"></i>
+                <div class="bg-black/20 px-3 py-1.5 rounded-lg backdrop-blur-sm border border-white/5">
+                    <span class="block text-[9px] uppercase tracking-wider font-bold opacity-80 text-rose-200">Meta Final</span>
+                    <span class="font-black text-lg text-rose-100" id="dash-goal-weight">0.0 kg</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex-1 overflow-y-auto pb-28 -mt-10 px-4 relative z-10">
+            
+            <!-- Status Card Metabólico (Novo) -->
+            <div class="bg-white rounded-3xl p-5 shadow-[0_10px_30px_rgba(0,0,0,0.05)] mb-6 border border-slate-100">
+                <h2 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4 flex items-center">
+                    <i class="fas fa-fire-alt text-orange-400 mr-2"></i> Motor Metabólico
+                </h2>
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="text-center p-3 bg-slate-50 rounded-2xl">
+                        <p class="text-[10px] font-bold text-slate-500 uppercase mb-1">Taxa Basal (TMB)</p>
+                        <p class="text-xl font-black text-slate-800" id="dash-bmr">0</p>
+                        <p class="text-[9px] text-slate-400 font-medium">kcal/dia (Repouso)</p>
+                    </div>
+                    <div class="text-center p-3 bg-rose-50 rounded-2xl border border-rose-100">
+                        <p class="text-[10px] font-bold text-rose-500 uppercase mb-1">Gasto Total (TDEE)</p>
+                        <p class="text-xl font-black text-rose-600" id="dash-tdee">0</p>
+                        <p class="text-[9px] text-rose-400 font-medium">kcal/dia (C/ Treino)</p>
+                    </div>
+                </div>
+
+                <div class="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between">
+                    <div>
+                        <p class="text-[10px] font-bold text-slate-400 uppercase">Evolução de Peso</p>
+                        <p class="text-sm font-black text-slate-800 mt-0.5" id="dash-weight-left">Faltam X kg</p>
+                    </div>
+                    <div class="w-1/2 bg-slate-100 rounded-full h-2.5 overflow-hidden">
+                        <div id="dash-progress-bar" class="gradient-bg h-full rounded-full w-0 transition-all duration-1000"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dados Biológicos (IMC / Gordura) -->
+            <div class="grid grid-cols-2 gap-3 mb-6">
+                <div class="bg-white p-4 rounded-3xl border border-slate-100 shadow-sm flex items-center">
+                    <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-500 flex items-center justify-center mr-3 shrink-0">
+                        <i class="fas fa-heartbeat text-lg"></i>
+                    </div>
+                    <div>
+                        <p class="text-[9px] text-slate-400 font-bold uppercase tracking-wider">IMC</p>
+                        <p class="text-lg font-black text-slate-800 leading-none mt-0.5" id="dash-bmi">0.0</p>
+                        <p class="text-[9px] font-bold mt-1" id="dash-bmi-label">Status</p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-4 rounded-3xl border border-slate-100 shadow-sm flex items-center">
+                    <div class="w-10 h-10 rounded-xl bg-orange-50 text-orange-500 flex items-center justify-center mr-3 shrink-0">
+                        <i class="fas fa-percentage text-lg"></i>
+                    </div>
+                    <div>
+                        <p class="text-[9px] text-slate-400 font-bold uppercase tracking-wider">Gordura Est.</p>
+                        <p class="text-lg font-black text-slate-800 leading-none mt-0.5" id="dash-bf">0%</p>
+                        <p class="text-[9px] text-slate-400 font-medium mt-1">Fórmula Deurenberg</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-8 hidden" id="measurements-section">
+                <div class="flex items-center justify-between mb-3 px-1">
+                    <h2 class="text-[11px] font-black text-slate-500 uppercase tracking-widest"><i class="fas fa-ruler-combined mr-1"></i> Acompanhamento de Medidas</h2>
+                </div>
+                <div class="grid grid-cols-4 gap-2" id="dashboard-measurements">
+                    <!-- Injetado via JS -->
+                </div>
+            </div>
+
+            <div class="mb-6 ia-card">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 class="text-[11px] font-black text-rose-600 uppercase tracking-widest"><i class="fas fa-robot mr-1"></i> IA Coach</h2>
+                        <p class="text-[11px] text-slate-500 mt-1">Analise do seu ritmo, alertas de plato e ajustes do plano.</p>
+                    </div>
+                    <button onclick="showIA()" class="gradient-bg text-white text-[11px] font-black px-4 py-3 rounded-2xl shadow active:scale-95">Analisar</button>
+                </div>
+                <div id="ia-history-mini"></div>
+                <button onclick="enableReminders()" class="mt-2 text-[11px] font-black text-indigo-500 underline">Ativar lembrete mensal de check-in</button>
+            </div>
+
+            <div class="mb-6 bg-white rounded-3xl p-5 shadow-sm border border-slate-100" id="weight-card">
+                <h2 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3"><i class="fas fa-chart-line text-rose-400 mr-1"></i> Evolucao do peso</h2>
+                <canvas id="weight-chart" width="600" height="220" style="width:100%;height:auto"></canvas>
+                <p class="text-[10px] text-slate-400 mt-1" id="weight-chart-legenda"></p>
+            </div>
+            <div class="mb-6" id="desafio-card" style="background:linear-gradient(135deg,#f97316,#db2777);border-radius:24px;padding:18px;color:#fff">
+                <h2 class="text-[11px] font-black uppercase tracking-widest mb-1">Desafio 7 dias sem desculpa</h2>
+                <p class="text-[11px] opacity-90 mb-3">30 min de treino + dieta registrada por dia. Complete os 7 e compartilhe!</p>
+                <div id="desafio-body"></div>
+            </div>
+            <div class="mb-4 px-1">
+                <div class="flex items-center justify-between mb-5">
+                    <h2 class="text-[11px] font-black text-slate-500 uppercase tracking-widest"><i class="fas fa-calendar-alt mr-1"></i> Plano Dinâmico (12 Meses)</h2>
+                    <span class="text-[9px] font-bold bg-slate-200 text-slate-600 px-2 py-1 rounded-md">Motor 1-4kg/mês</span>
+                </div>
+                <div class="space-y-5 relative before:absolute before:inset-0 before:ml-[1.15rem] before:-translate-x-px before:h-full before:w-0.5 before:bg-slate-200" id="timeline-container">
+                    <!-- Timeline items injetados via JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Fixed Bottom Navigation -->
+        <div class="absolute bottom-0 left-0 right-0 bg-white/80 backdrop-blur-lg border-t border-slate-100 p-5 z-20 shadow-[0_-10px_30px_rgba(0,0,0,0.05)] rounded-b-[40px]">
+            <div class="flex space-x-2 mb-2">
+                <button onclick="openDiet()" class="flex-1 bg-emerald-500 text-white font-black py-3 text-xs rounded-2xl active:scale-95 flex justify-center items-center"><i class="fas fa-utensils mr-2"></i> Dieta</button>
+                <button onclick="showSocial()" class="flex-1 bg-indigo-500 text-white font-black py-3 text-xs rounded-2xl active:scale-95 flex justify-center items-center"><i class="fas fa-users mr-2"></i> Comunidade</button>
+            </div>
+            <button onclick="showCheckinModal()" class="w-full bg-slate-900 text-white font-black py-4 text-sm rounded-2xl shadow-lg shadow-slate-300 hover:bg-slate-800 transition-all flex justify-center items-center active:scale-95">
+                <i class="fas fa-clipboard-check mr-2 text-rose-400 text-lg"></i> Atualizar Check-in Mensal
+            </button>
+        </div>
+    </div>
+
+    <!-- VIEW 4: IA COACH -->
+    <div id="view-ia" class="view bg-slate-50">
+        <div class="gradient-bg text-white px-5 pt-8 pb-16 rounded-b-[40px] shadow-lg shrink-0 relative overflow-hidden">
+            <div class="flex justify-between items-center mb-4 relative z-10">
+                <div>
+                    <p class="text-[10px] opacity-80 font-bold uppercase tracking-widest mb-1"><i class="fas fa-robot mr-1"></i> IA Coach</p>
+                    <h1 class="text-2xl font-black">Sua análise</h1>
+                </div>
+                <button onclick="switchView('view-dashboard')" class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center active:scale-95" title="Voltar"><i class="fas fa-arrow-left text-white text-sm"></i></button>
+            </div>
+            <div class="flex items-center space-x-4 mt-2 relative z-10">
+                <div class="ia-score gradient-bg border-2 border-white/40" id="ia-score">--</div>
+                <div>
+                    <p class="text-[10px] uppercase tracking-wider font-bold opacity-80">Score de aderência</p>
+                    <p class="font-black text-lg" id="ia-nivel">--</p>
+                    <p class="text-[10px] opacity-80" id="ia-data">--</p>
+                </div>
+            </div>
+        </div>
+        <div class="flex-1 overflow-y-auto pb-28 -mt-10 px-4 relative z-10">
+            <div id="ia-blocos"></div>
+            <h2 class="text-[11px] font-black text-slate-500 uppercase tracking-widest mt-4 mb-2"><i class="fas fa-history mr-1"></i> Últimas análises</h2>
+            <div id="ia-history" class="bg-white rounded-2xl border border-slate-100 p-3 mb-4"></div>
+            <div class="ia-card mb-4">
+                <h2 class="text-[11px] font-black text-rose-600 uppercase tracking-widest mb-1"><i class="fas fa-comments mr-1"></i> Coach IA online</h2>
+                <p class="text-[11px] text-slate-500 mb-2">Pergunte qualquer coisa (precisa da conta). <button onclick="deepAnalysis()" class="text-rose-600 font-black underline">Ou peca analise profunda</button><br>
+                <button onclick="weeklyReport()" class="mt-1 text-indigo-600 font-black underline text-[11px]">Relatorio semanal da IA (PRO)</button></p>
+                <div class="flex space-x-2">
+                    <input id="coach-q" maxlength="300" placeholder="Ex: o que jantar hoje?" class="flex-1 px-3 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-bold focus:outline-none focus:ring-2 focus:ring-rose-400">
+                    <button onclick="askCoach()" class="gradient-bg text-white text-xs font-black px-4 rounded-xl active:scale-95">Enviar</button>
+                </div>
+                <div id="coach-a" class="mt-2"></div>
+            </div>
+        </div>
+        <div class="absolute bottom-0 left-0 right-0 bg-white/80 backdrop-blur-lg border-t border-slate-100 p-4 z-20 rounded-b-[40px]">
+            <div class="flex space-x-2">
+                <button onclick="showIA()" class="flex-1 gradient-bg text-white font-black py-3.5 text-xs rounded-2xl active:scale-95"><i class="fas fa-sync-alt mr-1"></i> Nova análise</button>
+                <button onclick="shareIaWhats()" class="flex-1 bg-emerald-500 text-white font-black py-3.5 text-xs rounded-2xl active:scale-95"><i class="fab fa-whatsapp mr-1"></i> WhatsApp</button>
+                <button onclick="copyIa()" class="w-12 bg-slate-900 text-white rounded-2xl active:scale-95" title="Copiar"><i class="fas fa-copy text-sm"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- VIEW: DIETA -->
+    <div id="view-diet" class="view bg-slate-50">
+        <div class="bg-emerald-500 text-white px-5 pt-8 pb-16 rounded-b-[40px] shadow-lg shrink-0 relative overflow-hidden">
+            <div class="flex justify-between items-center mb-4 relative z-10">
+                <div>
+                    <p class="text-[10px] opacity-80 font-bold uppercase tracking-widest mb-1"><i class="fas fa-utensils mr-1"></i> Nutricao</p>
+                    <h1 class="text-2xl font-black">Dieta de hoje</h1>
+                </div>
+                <div class="flex space-x-2"><button id="install-btn" onclick="instalarApp()" class="hidden bg-white text-indigo-600 text-xs font-black px-3 rounded-xl active:scale-95">📲 Instalar app</button><button onclick="switchView('view-dashboard')" aria-label="Voltar" class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center active:scale-95"><i class="fas fa-arrow-left text-white text-sm"></i></button></div>
+            </div>
+            <div class="flex items-center justify-between mt-2 relative z-10">
+                <div class="text-center"><p class="text-[9px] uppercase font-bold opacity-80">Meta</p><p class="font-black text-lg" id="diet-target">0</p></div>
+                <div class="text-center"><p class="text-[9px] uppercase font-bold opacity-80">Consumido</p><p class="font-black text-lg" id="diet-consumed">0</p></div>
+                <div class="text-center"><p class="text-[9px] uppercase font-bold opacity-80" id="diet-status-text">Restam</p><p class="text-lg font-black text-white" id="diet-remaining">0 kcal</p></div>
+            </div>
+            <div class="mt-3 h-2.5 bg-white/30 rounded-full overflow-hidden relative z-10"><div id="diet-progress-bar" class="bg-white h-full rounded-full transition-all duration-500" style="width:0%"></div></div>
+        </div>
+        <div class="flex-1 overflow-y-auto pb-28 -mt-10 px-4 relative z-10">
+            <div class="bg-white rounded-3xl p-5 shadow-sm border border-slate-100 mb-4">
+                <h2 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3"><i class="fas fa-lightbulb text-yellow-400 mr-1"></i> Sugestao do dia</h2>
+                <div id="diet-suggestion-list"></div>
+            </div>
+            <div class="flex items-center justify-between mb-3 px-1">
+                <h2 class="text-[11px] font-black text-slate-500 uppercase tracking-widest"><i class="fas fa-list mr-1"></i> Registros</h2>
+                <button onclick="showFoodModal()" class="bg-emerald-500 text-white text-[11px] font-black px-4 py-2.5 rounded-xl active:scale-95">+ Registrar</button>
+            </div>
+            <div id="food-log"></div>
+            <p id="empty-diet-msg" class="text-center text-xs text-slate-400 py-6">Nada registrado hoje. Toque em + Registrar.</p>
+        </div>
+    </div>
+
+    <!-- VIEW: CONTA -->
+    <div id="view-conta" class="view bg-slate-50">
+        <div class="gradient-bg text-white px-5 pt-8 pb-16 rounded-b-[40px] shadow-lg shrink-0 relative overflow-hidden">
+            <div class="flex justify-between items-center mb-4 relative z-10">
+                <div>
+                    <p class="text-[10px] opacity-80 font-bold uppercase tracking-widest mb-1"><i class="fas fa-user mr-1"></i> Comunidade</p>
+                    <h1 class="text-2xl font-black">Minha conta</h1>
+                </div>
+                <button onclick="switchView('view-dashboard')" aria-label="Voltar" class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center active:scale-95"><i class="fas fa-arrow-left text-white text-sm"></i></button>
+            </div>
+        </div>
+        <div class="flex-1 overflow-y-auto pb-28 -mt-10 px-4 relative z-10">
+            <div id="conta-box"></div>
+        </div>
+    </div>
+
+    <!-- VIEW: PERFIL -->
+    <div id="view-perfil" class="view bg-slate-50">
+        <div class="gradient-bg text-white px-5 pt-8 pb-16 rounded-b-[40px] shadow-lg shrink-0 relative overflow-hidden">
+            <div class="flex justify-between items-center mb-4 relative z-10">
+                <div>
+                    <p class="text-[10px] opacity-80 font-bold uppercase tracking-widest mb-1"><i class="fas fa-id-card mr-1"></i> Perfil publico</p>
+                    <h1 class="text-2xl font-black">Meu perfil</h1>
+                </div>
+                <button onclick="showConta()" aria-label="Voltar" class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center active:scale-95"><i class="fas fa-arrow-left text-white text-sm"></i></button>
+            </div>
+        </div>
+        <div class="flex-1 overflow-y-auto pb-28 -mt-10 px-4 relative z-10">
+            <div class="bg-white rounded-3xl p-5 shadow-sm border border-slate-100">
+                <div class="flex items-center space-x-4 mb-4">
+                    <img id="perfil-foto" src="" alt="Foto" class="w-20 h-20 rounded-full object-cover bg-slate-100 border-2 border-rose-200 hidden">
+                    <div id="perfil-foto-vazio" class="w-20 h-20 rounded-full bg-slate-100 border-2 border-dashed border-slate-300 flex items-center justify-center text-slate-400"><i class="fas fa-camera text-xl"></i></div>
+                    <div>
+                        <label for="perfil-file" class="bg-slate-900 text-white text-[11px] font-black px-4 py-2.5 rounded-xl cursor-pointer active:scale-95 inline-block">Trocar foto</label>
+                        <input id="perfil-file" type="file" accept="image/jpeg,image/png" class="hidden">
+                        <p class="text-[10px] text-slate-400 mt-1">JPG/PNG ate 400KB</p>
+                    </div>
+                </div>
+                <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Apelido (unico)</label>
+                <input id="perfil-apelido" maxlength="20" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl font-bold mb-3 focus:outline-none focus:ring-2 focus:ring-rose-500">
+                <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Bio (160)</label>
+                <input id="perfil-bio" maxlength="160" placeholder="Ex: Foco total no shape!" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl font-bold mb-3 focus:outline-none focus:ring-2 focus:ring-rose-500">
+                <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Cidade</label>
+                <input id="perfil-cidade" maxlength="60" placeholder="Ex: Sao Paulo" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl font-bold mb-3 focus:outline-none focus:ring-2 focus:ring-rose-500">
+                <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Objetivo</label>
+                <select id="perfil-objetivo" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl font-bold mb-4 focus:outline-none focus:ring-2 focus:ring-rose-500">
+                    <option value="emagrecimento">Secar &amp; Definir</option>
+                    <option value="hipertrofia">Ganho de Massa</option>
+                </select>
+                <button onclick="savePerfil()" class="w-full gradient-bg text-white font-black py-4 rounded-2xl active:scale-95">Salvar perfil</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- VIEW: COMUNIDADE / CHAT -->
+    <div id="view-social" class="view bg-slate-50">
+        <div class="bg-indigo-500 text-white px-5 pt-8 pb-14 rounded-b-[40px] shadow-lg shrink-0 relative overflow-hidden">
+            <div class="flex justify-between items-center mb-3 relative z-10">
+                <div>
+                    <p class="text-[10px] opacity-80 font-bold uppercase tracking-widest mb-1"><i class="fas fa-users mr-1"></i> Amigos do shape</p>
+                    <h1 class="text-2xl font-black">Comunidade</h1>
+                </div>
+                <button onclick="switchView('view-dashboard')" aria-label="Voltar" class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center active:scale-95"><i class="fas fa-arrow-left text-white text-sm"></i></button>
+            </div>
+            <div class="flex space-x-2 relative z-10">
+                <button id="tab-chat" onclick="socialTab('chat')" class="flex-1 bg-white text-indigo-600 text-xs font-black py-2.5 rounded-xl">Chat</button>
+                <button id="tab-online" onclick="socialTab('online')" class="flex-1 bg-white/20 text-white text-xs font-black py-2.5 rounded-xl">Online (<span id="online-n">0</span>)</button>
+            </div>
+        </div>
+        <div class="flex-1 overflow-y-auto pb-32 -mt-8 px-4 relative z-10">
+            <div class="text-center mb-1"><button id="chat-new" onclick="verNovas()" class="hidden bg-indigo-500 text-white text-[11px] font-black px-4 py-1.5 rounded-full shadow active:scale-95">↓ novas mensagens</button></div><div id="chat-list" class="space-y-2"></div>
+            <div id="online-list" class="hidden bg-white rounded-3xl border border-slate-100 p-4"></div>
+        </div>
+        <div id="chat-bar" class="absolute bottom-0 left-0 right-0 bg-white/90 backdrop-blur-lg border-t border-slate-100 p-4 z-20 rounded-b-[40px]">
+            <div id="sticker-panel" class="hidden grid-cols-8 gap-1 mb-2 bg-slate-50 border border-slate-200 rounded-2xl p-2"></div>
+            <p id="rec-ind" class="hidden text-xs font-black text-rose-500 mb-2">Gravando... <span id="rec-t">0s</span> <button onclick="stopRec(true)" class="underline">enviar</button> · <button onclick="stopRec(false)" class="underline">cancelar</button></p>
+            <p class="text-[10px] text-slate-400 mb-2">Dica: <b>@coach</b> chama a IA · figurinhas no 😊</p>
+            <div class="flex space-x-2 items-center">
+                <button onclick="toggleStickers()" aria-label="Figurinhas" class="w-11 h-11 text-xl shrink-0 active:scale-95">😊</button>
+                <label for="chat-img" aria-label="Enviar foto" class="w-11 h-11 grid place-items-center text-xl shrink-0 cursor-pointer active:scale-95">📷</label>
+                <input id="chat-img" type="file" accept="image/*" class="hidden">
+                <input id="chat-audio-file" type="file" accept="audio/*" class="hidden">
+                <button onclick="toggleRec()" onpointerdown="recDown(event)" onpointerup="recUp()" onpointerleave="recLeave()" oncontextmenu="return false" aria-label="Toque para gravar, ou segure e solte para enviar" id="rec-btn" class="w-11 h-11 text-xl shrink-0 active:scale-95" style="touch-action:none;-webkit-touch-callout:none;user-select:none;-webkit-user-select:none">🎤</button>
+                <label for="chat-audio-file" aria-label="Enviar audio pronto" class="w-11 h-11 grid place-items-center text-xl shrink-0 cursor-pointer active:scale-95">📎</label>
+                <input id="chat-input" maxlength="300" placeholder="Conversar..." class="flex-1 px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-bold focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <button onclick="sendChat()" aria-label="Enviar" class="w-12 h-12 bg-indigo-500 text-white rounded-2xl active:scale-95 shrink-0"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CHECKOUT PRO MODAL -->
+    <div id="modal-pro" class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm z-[60] hidden flex-col items-center justify-end">
+        <div class="bg-white rounded-t-[40px] w-full p-6 pt-8 max-h-[88vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-3">
+                <h3 class="text-xl font-black text-slate-900" id="pro-titulo">Spark Saúde</h3>
+                <button onclick="closePro()" aria-label="Fechar" class="text-slate-400 w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center"><i class="fas fa-times"></i></button>
+            </div>
+            <div id="pro-body"></div>
+        </div>
+    </div>
+
+    <!-- CONFIRM MODAL -->
+    <div id="modal-confirm" class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm z-[60] hidden flex-col items-center justify-center px-8">
+        <div class="bg-white rounded-3xl w-full p-6 text-center shadow-2xl">
+            <h3 class="text-lg font-black text-slate-900" id="confirm-title">Confirmar?</h3>
+            <p class="text-xs text-slate-500 mt-2" id="confirm-msg"></p>
+            <div class="flex space-x-2 mt-5">
+                <button onclick="closeConfirm()" class="flex-1 bg-slate-100 text-slate-700 font-black py-3 rounded-2xl text-sm active:scale-95">Voltar</button>
+                <button id="confirm-yes" class="flex-1 gradient-bg text-white font-black py-3 rounded-2xl text-sm active:scale-95">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CHECK-IN MODAL -->
+    <div id="modal-checkin" class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex-col items-center justify-end opacity-0 transition-opacity duration-300 pb-0">
+        <div class="bg-white rounded-t-[40px] w-full p-6 pt-8 transform translate-y-full transition-transform duration-300 max-h-[90vh] flex flex-col" id="modal-content">
+            <div class="w-12 h-1.5 bg-slate-200 rounded-full mx-auto absolute top-3 left-1/2 transform -translate-x-1/2"></div>
+            
+            <div class="flex justify-between items-center mb-2 shrink-0">
+                <div>
+                    <h3 class="text-2xl font-black text-slate-900 tracking-tight">Check-in do Mês</h3>
+                    <p class="text-[11px] text-slate-500 font-medium uppercase tracking-wider mt-1">O Algoritmo recalculará a rota</p>
+                </div>
+                <button onclick="closeCheckinModal()" class="text-slate-400 hover:text-slate-700 w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center active:scale-90 transition-transform">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="flex-1 overflow-y-auto mt-4 pr-1 pb-20 space-y-6">
+                
+                <div class="relative gradient-bg p-[2px] rounded-3xl shadow-lg shadow-rose-200/50">
+                    <div class="bg-white p-5 rounded-[22px] flex flex-col items-center text-center">
+                        <label class="block text-[10px] font-black text-rose-500 uppercase tracking-widest mb-1">Novo Peso (KG)</label>
+                        <p class="text-[10px] text-slate-400 font-medium mb-3">Peso anterior: <span id="checkin-old-weight">--</span>kg</p>
+                        <input type="number" id="checkin-weight" step="0.1" class="w-full bg-transparent text-center text-5xl font-black text-slate-800 focus:outline-none">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-[11px] font-black text-slate-500 uppercase tracking-widest mb-3 flex items-center">
+                        <i class="fas fa-ruler-vertical mr-2 text-slate-400"></i> Novas Medidas (Opcional)
+                    </label>
+                    <div class="space-y-4 bg-slate-50 p-4 rounded-3xl border border-slate-100">
+                        <div>
+                            <span class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Cintura/Barriga</span>
+                            <input type="number" id="checkin-belly" step="0.5" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm font-bold text-slate-800 focus:border-rose-500 focus:outline-none">
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <span class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Braços</span>
+                                <div class="flex space-x-2">
+                                    <input type="number" id="checkin-arm-r" step="0.5" class="w-full px-2 py-3 bg-white border border-slate-200 rounded-xl text-xs font-bold text-center focus:border-rose-500 focus:outline-none" placeholder="Dir">
+                                    <input type="number" id="checkin-arm-l" step="0.5" class="w-full px-2 py-3 bg-white border border-slate-200 rounded-xl text-xs font-bold text-center focus:border-rose-500 focus:outline-none" placeholder="Esq">
+                                </div>
+                            </div>
+                            <div>
+                                <span class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Coxas</span>
+                                <div class="flex space-x-2">
+                                    <input type="number" id="checkin-thigh-r" step="0.5" class="w-full px-2 py-3 bg-white border border-slate-200 rounded-xl text-xs font-bold text-center focus:border-rose-500 focus:outline-none" placeholder="Dir">
+                                    <input type="number" id="checkin-thigh-l" step="0.5" class="w-full px-2 py-3 bg-white border border-slate-200 rounded-xl text-xs font-bold text-center focus:border-rose-500 focus:outline-none" placeholder="Esq">
+                                </div>
+                            </div>
+                            <div class="col-span-2">
+                                <span class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Panturrilhas</span>
+                                <div class="flex space-x-2">
+                                    <input type="number" id="checkin-calf-r" step="0.5" class="w-full px-2 py-3 bg-white border border-slate-200 rounded-xl text-xs font-bold text-center focus:border-rose-500 focus:outline-none" placeholder="Dir">
+                                    <input type="number" id="checkin-calf-l" step="0.5" class="w-full px-2 py-3 bg-white border border-slate-200 rounded-xl text-xs font-bold text-center focus:border-rose-500 focus:outline-none" placeholder="Esq">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botão Salvar absoluto dentro do modal -->
+            <div class="absolute bottom-0 left-0 right-0 p-5 bg-white border-t border-slate-100">
+                <button onclick="saveCheckin()" class="w-full gradient-bg text-white font-black py-4 rounded-2xl shadow-[0_10px_20px_rgba(244,63,94,0.3)] hover:scale-[1.02] transition-transform active:scale-95 text-lg flex items-center justify-center">
+                    <i class="fas fa-save mr-2"></i> Confirmar Evolução
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modal-food" class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex-col items-center justify-end opacity-0 transition-opacity duration-300">
+        <div class="bg-white rounded-t-[40px] w-full p-6 pt-8 max-h-[85vh] overflow-y-auto" id="modal-food-content">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-black text-slate-900">Registrar refeição</h3>
+                <button onclick="closeFoodModal()" aria-label="Fechar" class="text-slate-400 w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center"><i class="fas fa-times"></i></button>
+            </div>
+            <p class="text-[10px] font-black text-slate-400 uppercase mb-2">Toque rápido</p>
+            <input id="food-search" placeholder="Buscar alimento..." class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl font-bold mb-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
+            <div class="grid grid-cols-2 gap-2 mb-4 max-h-56 overflow-y-auto" id="quick-food-list"></div>
+            <p class="text-[10px] font-black text-slate-400 uppercase mb-2">Personalizada</p>
+            <input id="food-name" placeholder="Ex: Marmita fit" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl font-bold mb-2 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+            <input id="food-cal" type="number" placeholder="kcal" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl font-bold mb-3 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+            <button onclick="addCustomFood()" class="w-full bg-emerald-500 text-white font-black py-3.5 rounded-2xl active:scale-95">Adicionar</button>
+        </div>
+    </div>
+    <div id="modal-exercise" class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex-col items-center justify-end opacity-0 transition-opacity duration-300">
+        <div class="bg-white rounded-t-[40px] w-full p-6 pt-8 max-h-[85vh] overflow-y-auto" id="modal-exercise-content">
+            <div class="flex justify-between items-center mb-3">
+                <h3 class="text-xl font-black text-slate-900" id="exercise-title">Exercicio</h3>
+                <button onclick="closeExerciseModal()" aria-label="Fechar" class="text-slate-400 w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center"><i class="fas fa-times"></i></button>
+            </div>
+            <img id="exercise-img" src="" alt="Execucao" class="w-full h-44 object-cover rounded-2xl bg-slate-100 mb-3">
+            <div id="exercise-extra"></div>
+        </div>
+    </div>
+<script>
+    let userData = {
+        name: 'Tamiris',
+        gender: 'F',
+        age: 0,
+        height: 0,
+        weight: 0,
+        targetWeight: 0,
+        goal: '',
+        level: 1,
+        time: 30,
+        startWeight: 0,
+        bmr: 0, // Basal Metabolic Rate
+        tdee: 0, // Total Daily Energy Expenditure
+        measurements: { armR: 0, armL: 0, belly: 0, thighR: 0, thighL: 0, calfR: 0, calfL: 0 },
+        startMeasurements: { armR: 0, armL: 0, belly: 0, thighR: 0, thighL: 0, calfR: 0, calfL: 0 }
+    };
+
+    let currentMonthIndex = 0; // 0 a 11
+
+    // ESTADO DA DIETA
+    let dietState = { target: 0, consumed: 0, logs: [], date: '' };
+    function dietDayReset() {
+        const hoje = new Date().toISOString().slice(0, 10);
+        if (dietState.date !== hoje) { dietState = { target: dietState.target, consumed: 0, logs: [], date: hoje }; }
+    }
+
+    const basicFoods = [
+        { name: "Arroz Branco (100g)", cal: 130 }, { name: "Arroz Integral (100g)", cal: 124 },
+        { name: "Feijao (100g)", cal: 76 }, { name: "Feijao Preto (100g)", cal: 77 },
+        { name: "Frango Grelhado (100g)", cal: 165 }, { name: "Frango Desfiado (100g)", cal: 150 },
+        { name: "Carne Magra (100g)", cal: 170 }, { name: "Peixe Grelhado (100g)", cal: 140 },
+        { name: "Atum em Agua (100g)", cal: 110 }, { name: "Ovo Cozido (1 un)", cal: 78 },
+        { name: "Omelete 2 Ovos", cal: 180 }, { name: "Clara de Ovo (3 un)", cal: 51 },
+        { name: "Batata Doce (100g)", cal: 86 }, { name: "Batata Inglesa (100g)", cal: 77 },
+        { name: "Mandioquinha (100g)", cal: 75 }, { name: "Macarrao Cozido (100g)", cal: 131 },
+        { name: "Pao Integral (1 fatia)", cal: 70 }, { name: "Pao Frances (1 un)", cal: 135 },
+        { name: "Tapioca (2 col)", cal: 130 }, { name: "Aveia (30g)", cal: 117 },
+        { name: "Granola (30g)", cal: 135 }, { name: "Banana (1 un)", cal: 89 },
+        { name: "Maca (1 un)", cal: 72 }, { name: "Mamao (100g)", cal: 43 },
+        { name: "Morango (100g)", cal: 32 }, { name: "Uva (100g)", cal: 69 },
+        { name: "Abacate (100g)", cal: 160 }, { name: "Laranja (1 un)", cal: 62 },
+        { name: "Whey Protein (30g)", cal: 120 }, { name: "Leite Desnatado (200ml)", cal: 70 },
+        { name: "Leite Integral (200ml)", cal: 124 }, { name: "Iogurte Natural (170g)", cal: 110 },
+        { name: "Iogurte Grego (100g)", cal: 97 }, { name: "Queijo Branco (30g)", cal: 75 },
+        { name: "Queijo Mussarela (30g)", cal: 95 }, { name: "Requeijao Light (30g)", cal: 55 },
+        { name: "Salada Completa", cal: 40 }, { name: "Salada Caesar (prato)", cal: 280 },
+        { name: "Brócolis (100g)", cal: 34 }, { name: "Cenoura (100g)", cal: 41 },
+        { name: "Azeite (1 col)", cal: 119 }, { name: "Pasta de Amendoim (15g)", cal: 90 },
+        { name: "Castanha de Caju (30g)", cal: 165 }, { name: "Amendoim (30g)", cal: 170 },
+        { name: "Chocolate 70% (25g)", cal: 140 }, { name: "Mel (1 col)", cal: 64 },
+        { name: "Cafe com Acucar (200ml)", cal: 45 }, { name: "Cafe Preto", cal: 5 },
+        { name: "Suco de Laranja (200ml)", cal: 90 }, { name: "Suco Verde (300ml)", cal: 80 },
+        { name: "Vitamina Banana+Leite (300ml)", cal: 200 }, { name: "Acai Puro (100g)", cal: 60 },
+        { name: "Acai Completo (300ml)", cal: 350 }, { name: "Marmita Fit (400g)", cal: 420 },
+        { name: "Sanduiche Natural", cal: 250 }, { name: "Pizza (2 fatias)", cal: 480 },
+        { name: "Hamburguer Artesanal", cal: 650 }, { name: "Coxinha (1 un)", cal: 280 },
+        { name: "Pao de Queijo (3 un)", cal: 180 }, { name: "Bolo de Cenoura (fatia)", cal: 250 },
+        { name: "Sorvete (2 bolas)", cal: 220 }, { name: "Refrigerante (350ml)", cal: 150 }
+    ];
+
+    // --- Utility Functions ---
+    function showToast(message) {
+        const toast = document.getElementById('toast');
+        document.getElementById('toast-message').innerText = message;
+        toast.classList.remove('opacity-0');
+        setTimeout(() => toast.classList.add('opacity-0'), 3500);
+    }
+
+    function switchView(viewId) {
+        document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+        document.getElementById(viewId).classList.add('active');
+        try { if (viewId !== 'view-social' && typeof stopChat === 'function') stopChat(); } catch (e) {}
+    }
+
+    const levelSlider = document.getElementById('user-level');
+    const levelBadge = document.getElementById('level-badge');
+    levelSlider.addEventListener('input', function() {
+        const val = this.value;
+        if(val == 1) { levelBadge.innerText = 'Iniciante'; levelBadge.className = 'text-[10px] font-black bg-emerald-100 text-emerald-600 px-2 py-0.5 rounded-full'; }
+        else if(val == 2) { levelBadge.innerText = 'Intermediário'; levelBadge.className = 'text-[10px] font-black bg-blue-100 text-blue-600 px-2 py-0.5 rounded-full'; }
+        else { levelBadge.innerText = 'Avançado'; levelBadge.className = 'text-[10px] font-black bg-rose-100 text-rose-600 px-2 py-0.5 rounded-full'; }
+    });
+
+    function calculateBMI(weight, heightCm) {
+        if(heightCm === 0) return 0;
+        const heightM = heightCm / 100;
+        return (weight / (heightM * heightM)).toFixed(1);
+    }
+
+    function getBMILabel(bmi) {
+        if (bmi < 18.5) return { label: 'Abaixo do Peso', color: 'text-blue-500' };
+        if (bmi >= 18.5 && bmi < 24.9) return { label: 'Peso Ideal', color: 'text-emerald-500' };
+        if (bmi >= 25 && bmi < 29.9) return { label: 'Sobrepeso', color: 'text-yellow-500' };
+        return { label: 'Obesidade', color: 'text-rose-500' };
+    }
+
+    function calculateMetabolism(weight, height, age, gender) {
+        // Equação Mifflin-St Jeor
+        let bmr = (10 * weight) + (6.25 * height) - (5 * age) + (gender === 'M' ? 5 : -161);
+        // Fator de atividade moderada (Treino em casa 3-5x)
+        let tdee = bmr * 1.375; 
+        return { bmr: Math.round(bmr), tdee: Math.round(tdee) };
+    }
+
+    function generateProgram() {
+        const name = document.getElementById('user-name').value || "Usuário";
+        const gender = document.getElementById('user-gender').value;
+        const age = parseInt(document.getElementById('user-age').value) || 0;
+        const height = parseFloat(document.getElementById('user-height').value) || 0;
+        const weight = parseFloat(document.getElementById('user-weight').value.replace(',', '.')) || 0;
+        const targetWeight = parseFloat(document.getElementById('user-target-weight').value.replace(',', '.')) || 0;
+        const goal = document.querySelector('input[name="goal"]:checked').value;
+        const level = parseInt(document.getElementById('user-level').value) || 1;
+        const time = parseInt(document.getElementById('user-time').value) || 30;
+
+        if (!name || age < 10 || age > 100 || height < 100 || height > 250 || weight < 30 || weight > 400 || targetWeight < 30 || targetWeight > 400) {
+            showToast("Confira os dados: nome, idade 10-100, altura 100-250cm, pesos 30-400kg.");
+            return;
+        }
+        if (goal === 'emagrecimento' && targetWeight >= weight) {
+            showToast("Para secar, a meta final precisa ser MENOR que o peso atual.");
+            return;
+        }
+        if (goal === 'hipertrofia' && targetWeight <= weight) {
+            showToast("Para ganho de massa, a meta final precisa ser MAIOR que o peso atual.");
+            return;
+        }
+
+        const getVal = id => parseFloat(document.getElementById(id).value) || 0;
+        const meas = { 
+            armR: getVal('user-measure-arm-r'), armL: getVal('user-measure-arm-l'), 
+            belly: getVal('user-measure-belly'), thighR: getVal('user-measure-thigh-r'), 
+            thighL: getVal('user-measure-thigh-l'), calfR: getVal('user-measure-calf-r'), calfL: getVal('user-measure-calf-l') 
+        };
+
+        const metabolism = calculateMetabolism(weight, height, age, gender);
+        dietDayReset();
+        dietState.target = goal === 'emagrecimento' ? Math.max(1200, metabolism.tdee - 400) : metabolism.tdee + 250;
+        dietState.date = new Date().toISOString().slice(0, 10);
+
+        userData = {
+            name: name, gender: gender, age: age, height: height,
+            weight: weight, targetWeight: targetWeight, startWeight: weight, created: new Date().toISOString().slice(0, 10),
+            goal: goal, level: level, time: time,
+            bmr: metabolism.bmr, tdee: metabolism.tdee,
+            measurements: { ...meas }, startMeasurements: { ...meas }
+        };
+        checkins = []; setupSave();
+
+        switchView('view-loading');
+        simulateLoading();
+    }
+
+    function simulateLoading() {
+        const texts = [
+            "Analisando taxa metabólica basal...",
+            "Calculando curva de déficit calórico...",
+            "Mapeando estrutura muscular...",
+            "Distribuindo metas de 1 a 4kg mensais...",
+            "Sincronizando Sistema PRO!"
+        ];
+        
+        let progress = 0;
+        const progressBar = document.getElementById('loading-progress');
+        const textElement = document.getElementById('loading-text');
+        
+        const interval = setInterval(() => {
+            progress += 3.5;
+            if(progress > 100) progress = 100;
+            progressBar.style.width = `${progress}%`;
+            
+            if (progress > 15 && progress < 35) textElement.innerText = texts[1];
+            if (progress > 35 && progress < 60) textElement.innerText = texts[2];
+            if (progress > 60 && progress < 85) textElement.innerText = texts[3];
+            if (progress > 85) textElement.innerText = texts[4];
+
+            if (progress >= 100) {
+                clearInterval(interval);
+                setTimeout(() => {
+                    buildDashboard();
+                    switchView('view-dashboard');
+                }, 500);
+            }
+        }, 100);
+    }
+
+    function generateDynamicCurve() {
+        // Algoritmo fisiológico: Determina meta mensal baseada no peso atual vs alvo
+        const isEmagrecimento = userData.goal === 'emagrecimento';
+        let tempRemaining = isEmagrecimento ? (userData.weight - userData.targetWeight) : (userData.targetWeight - userData.weight);
+        let tempMonths = 12 - currentMonthIndex;
+        let targets = [];
+
+        for(let m = 0; m < 12; m++) {
+            // Se o mês já passou, não calculamos projeção, registramos "Concluído"
+            if(m < currentMonthIndex) {
+                targets.push({ target: 0, type: 'Passado' });
+                continue;
+            }
+
+            // Mês atual ou futuro
+            if (tempRemaining <= 0.2) {
+                targets.push({ target: 0, type: 'Manutenção' });
+                continue;
+            }
+
+            // Lógica de emagrecimento ou ganho (Max 4kg/mês perda, Max 2kg/mês ganho)
+            let maxVal = isEmagrecimento ? 4.0 : 2.0;
+            let minVal = isEmagrecimento ? 1.0 : 0.5;
+
+            // Peso que precisa perder/ganhar dividido pelos meses restantes
+            let baseFactor = tempRemaining / tempMonths; 
+            
+            // Front-load: Dá um boost nos primeiros meses projetados (simula perda de líquido e choque inicial)
+            let plannedLoss = baseFactor * 1.4; 
+            if (m === currentMonthIndex) plannedLoss *= 1.2; // O "próximo mês" é sempre mais agressivo
+
+            // Garante que o valor fique dentro dos limites seguros 1 a 4kg
+            plannedLoss = Math.max(minVal, Math.min(maxVal, plannedLoss)); 
+            
+            // Não deixa passar da meta restante
+            if (plannedLoss > tempRemaining) plannedLoss = tempRemaining;
+
+            targets.push({ 
+                target: plannedLoss.toFixed(1), 
+                type: isEmagrecimento ? 'Perda' : 'Ganho' 
+            });
+
+            tempRemaining -= plannedLoss;
+            tempMonths--;
+        }
+        return targets;
+    }
+
+    function generate12Months() {
+        const plans = [];
+        const isEmagrecimento = userData.goal === 'emagrecimento';
+        const curve = generateDynamicCurve();
+        
+        const faseNomes = [
+            "Choque Metabólico", "Aceleração", "Resistência Base", 
+            "Força Funcional", "Escultura", "Pico Semestral",
+            "Destruição de Platô", "Definição PRO I", "Definição PRO II",
+            "Lapidação Muscular", "Superação", "Lifestyle (Hábito)"
+        ];
+
+        // Banco de exercícios avançado
+        const wp = ["Polichinelos 1min", "Corrida Estática 1min", "Rotação de Tronco 30s"]; // Warmup
+        const baseEma = [
+            ["Agachamento com Salto", "Burpees", "Prancha com Toque", "Elevação Pélvica"],
+            ["Avanço Alternado", "Mountain Climbers", "Flexão Adaptada", "Abdominal Infra"],
+            ["Sprawl", "Agachamento Isométrico", "Prancha Lateral", "Skater Jumps"]
+        ];
+        const baseHip = [
+            ["Agachamento Lento (4s)", "Flexão Declinada", "Remada com Toalha", "Panturrilha Unilateral"],
+            ["Afundo Búlgaro", "Mergulho no Banco", "Ponte de Glúteo 1 Perna", "Prancha Estática"],
+            ["Pistol Squat (Apoio)", "Flexão Diamante", "Remada Invertida", "Abdominal Canivete"]
+        ];
+        const finEma = ["HIIT Tiro 30s", "Burpee Máximo 1min", "Prancha até a falha"]; // Finisher
+
+        let selectedBase = isEmagrecimento ? baseEma : baseHip;
+
+        for (let i = 0; i < 12; i++) {
+            let exIndex = i % 3;
+            let difMulti = 1 + (userData.level * 0.2) + Math.floor(i / 4) * 0.2; 
+            
+            let exList = [
+                `<span class="text-[10px] text-orange-500 font-bold">AQUECIMENTO:</span> ${wp[i%3]}`,
+                ...selectedBase[exIndex].map(ex => `<span class="font-semibold text-slate-700">${ex}</span> (4x ${Math.round(10 * difMulti)})`),
+                `<span class="text-[10px] text-rose-500 font-bold">FINISHER:</span> ${isEmagrecimento ? finEma[i%3] : "Sustentação Mág. até falha"}`
+            ];
+
+            let targetData = curve[i];
+            let metaText = "";
+            let calDeficit = 0;
+
+            if (targetData.type === 'Passado') {
+                metaText = `Mês Concluído`;
+            } else if (targetData.type === 'Manutenção') {
+                metaText = `Manutenção (0kg)`;
+                calDeficit = 0;
+            } else {
+                let sigla = targetData.type === 'Perda' ? '-' : '+';
+                metaText = `Meta: ${sigla}${targetData.target}kg`;
+                // Cálculo: 1kg de gordura = ~7700 kcal. Dividido por 30 dias.
+                calDeficit = Math.round((parseFloat(targetData.target) * 7700) / 30);
+            }
+
+            plans.push({
+                month: i + 1,
+                title: faseNomes[i],
+                focus: isEmagrecimento ? "Queima Extrema" : "Construção Limpa",
+                exercises: exList,
+                expected: metaText,
+                deficitInfo: calDeficit > 0 ? (isEmagrecimento ? `Déficit Diário: -${calDeficit} kcal` : `Superávit: +${calDeficit} kcal`) : "Calorias Normais (TDEE)"
+            });
+        }
+        return plans;
+    }
+
+    function buildDashboard() {
+        document.getElementById('dash-name').innerText = userData.name.split(" ")[0];
+        document.getElementById('dash-current-weight').innerText = `${userData.weight} kg`;
+        document.getElementById('dash-goal-weight').innerText = `${userData.targetWeight} kg`;
+
+        // 1. Metabólico
+        dietDayReset();
+        const metabolism = calculateMetabolism(userData.weight, userData.height, userData.age, userData.gender);
+        if (!dietState.target) dietState.target = userData.goal === 'emagrecimento' ? Math.max(1200, metabolism.tdee - 400) : metabolism.tdee + 250;
+        userData.bmr = metabolism.bmr;
+        userData.tdee = metabolism.tdee;
+        
+        document.getElementById('dash-bmr').innerText = userData.bmr;
+        document.getElementById('dash-tdee').innerText = userData.tdee;
+
+        // 2. IMC e Gordura
+        const bmi = parseFloat(calculateBMI(userData.weight, userData.height));
+        const bmiInfo = getBMILabel(bmi);
+        document.getElementById('dash-bmi').innerText = bmi;
+        document.getElementById('dash-bmi-label').innerText = bmiInfo.label;
+        document.getElementById('dash-bmi-label').className = `text-[9px] font-bold mt-1 ${bmiInfo.color}`;
+        
+        let bodyFat = userData.gender === 'M' ? ((1.20 * bmi) + (0.23 * userData.age) - 16.2) : ((1.20 * bmi) + (0.23 * userData.age) - 5.4);
+        document.getElementById('dash-bf').innerText = `${Math.max(5, bodyFat).toFixed(1)}%`;
+
+        // 3. Progresso
+        updateProgressUI();
+        
+        // 4. Medidas
+        updateMeasurementsUI();
+        updateStreakUI();
+        drawWeightChart();
+        renderDesafio();
+
+        // 5. Timeline Dinâmica
+        const container = document.getElementById('timeline-container');
+        container.innerHTML = ''; 
+        const plans = generate12Months();
+
+        plans.forEach((plan, index) => {
+            const isPast = index < currentMonthIndex;
+            const isCurrent = index === currentMonthIndex;
+            const isFuture = index > currentMonthIndex;
+
+            let iconBg = isPast ? 'bg-emerald-400 border-emerald-100' : (isCurrent ? 'gradient-bg border-rose-100' : 'bg-slate-200 border-slate-100');
+            let icon = isPast ? 'fa-check' : (isCurrent ? 'fa-bolt' : 'fa-lock');
+            let cardOpacity = isFuture ? 'opacity-60 grayscale-[0.2]' : 'opacity-100';
+            
+            let badge = isCurrent ? `<span class="bg-rose-100 text-rose-600 text-[8px] font-black px-2 py-0.5 rounded ml-2 shadow-sm">MÊS ATUAL</span>` : (isPast ? `<span class="bg-emerald-100 text-emerald-600 text-[8px] font-black px-2 py-0.5 rounded ml-2">FEITO</span>` : '');
+
+            let exercisesHtml = plan.exercises.map(ex => `
+                <li onclick="showExerciseEx(this.innerText)" class="flex items-start text-[11px] text-slate-600 mb-2 leading-tight cursor-pointer active:opacity-70" title="Ver execucao">
+                    <i class="fas fa-play text-rose-400 mr-2 mt-0.5 text-[8px]"></i> <span>${ex}</span>
+                </li>
+            `).join('');
+
+            const itemHtml = `
+                <div class="relative z-10 flex items-start ${cardOpacity} transition-all duration-300">
+                    <div class="flex-shrink-0 w-10 h-10 rounded-full ${iconBg} shadow-sm flex items-center justify-center text-white border-4 z-10 relative">
+                        <i class="fas ${icon} text-sm"></i>
+                        ${isCurrent ? '<div class="absolute inset-0 rounded-full border-2 border-rose-400 animate-ping opacity-30"></div>' : ''}
+                    </div>
+                    
+                    <div class="ml-4 bg-white rounded-3xl shadow-sm border border-slate-100 p-4 pt-5 flex-1 w-full mb-2 relative overflow-hidden">
+                        ${isCurrent ? '<div class="absolute top-0 left-0 w-full h-1 gradient-bg"></div>' : ''}
+                        <div class="flex items-center mb-1">
+                            <h3 class="text-xs font-black text-slate-800 uppercase tracking-wide">Mês ${plan.month} · ${monthLabel(plan.month)}: ${plan.title}</h3>
+                            ${badge}
+                        </div>
+                        <p class="text-[9px] text-indigo-500 font-bold mb-4 uppercase tracking-widest">${plan.focus}</p>
+                        
+                        <div class="bg-slate-50/50 rounded-xl p-3 mb-4 border border-slate-100">
+                            <ul class="list-none m-0 p-0">${exercisesHtml}</ul>
+                        </div>
+                        
+                        <div class="flex justify-between items-center text-[10px]">
+                            <div class="flex items-center font-bold bg-slate-100 text-slate-600 px-2.5 py-1.5 rounded-lg">
+                                <i class="fas fa-utensils mr-1.5 text-slate-400"></i> ${plan.deficitInfo}
+                            </div>
+                            <div class="flex items-center font-black ${isPast ? 'text-emerald-500' : 'text-rose-500'}">
+                                ${plan.expected}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', itemHtml);
+        });
+    }
+
+    function updateProgressUI() {
+        const totalDiff = Math.abs(userData.startWeight - userData.targetWeight);
+        const currentDiff = Math.abs(userData.weight - userData.targetWeight);
+        const progressBar = document.getElementById('dash-progress-bar');
+        
+        let progressPercent = 0;
+        if (totalDiff > 0) {
+            const progressAmount = totalDiff - currentDiff; 
+            progressPercent = Math.max(0, Math.min(100, Math.round((progressAmount / totalDiff) * 100)));
+        } else {
+            progressPercent = 100;
+        }
+
+        setTimeout(() => { progressBar.style.width = `${progressPercent}%`; }, 300);
+        
+        if (currentDiff <= 0.2) {
+            document.getElementById('dash-weight-left').innerText = "Meta Atingida! 🎉";
+            document.getElementById('dash-weight-left').className = "text-sm font-black text-emerald-500 mt-0.5";
+            progressBar.className = "bg-emerald-500 h-full rounded-full transition-all duration-1000";
+        } else {
+            document.getElementById('dash-weight-left').innerText = `Falta ${currentDiff.toFixed(1)} kg`;
+            document.getElementById('dash-weight-left').className = "text-sm font-black text-slate-800 mt-0.5";
+        }
+    }
+
+    function updateMeasurementsUI() {
+        const section = document.getElementById('measurements-section');
+        const container = document.getElementById('dashboard-measurements');
+        const m = userData.measurements;
+        const sm = userData.startMeasurements;
+        
+        if (!sm.armR && !sm.belly && !sm.thighR && !sm.calfR) {
+            section.classList.add('hidden');
+            return;
+        }
+        section.classList.remove('hidden');
+        
+        const createGridItem = (label, current, start) => {
+            const diff = current - start;
+            let diffHtml = `<span class="text-[9px] text-slate-300">-</span>`;
+            
+            if (start > 0 && diff !== 0) {
+                let isGood = userData.goal === 'emagrecimento' ? (diff < 0) : (diff > 0);
+                const color = isGood ? 'text-emerald-500' : 'text-rose-500';
+                const sign = diff > 0 ? '+' : '';
+                diffHtml = `<span class="text-[10px] ${color} font-black">${sign}${diff.toFixed(1)}</span>`;
+            } else if (start > 0) {
+                diffHtml = `<span class="text-[9px] text-slate-400 font-black">=</span>`;
+            }
+            
+            return `
+                <div class="bg-white rounded-2xl p-2 border border-slate-100 flex flex-col items-center justify-center text-center shadow-sm">
+                    <p class="text-[8px] text-slate-400 font-bold uppercase truncate w-full mb-0.5">${label}</p>
+                    <p class="text-[13px] font-black text-slate-800 leading-none mb-1">${current > 0 ? current : '--'}</p>
+                    ${diffHtml}
+                </div>
+            `;
+        };
+
+        container.innerHTML = `
+            ${createGridItem('B. Dir', m.armR, sm.armR)}
+            ${createGridItem('B. Esq', m.armL, sm.armL)}
+            ${createGridItem('Barriga', m.belly, sm.belly)}
+            <div class="bg-slate-50 rounded-2xl flex items-center justify-center border border-slate-100"><i class="fas fa-ruler-combined text-slate-300"></i></div>
+            
+            ${createGridItem('C. Dir', m.thighR, sm.thighR)}
+            ${createGridItem('C. Esq', m.thighL, sm.thighL)}
+            ${createGridItem('P. Dir', m.calfR, sm.calfR)}
+            ${createGridItem('P. Esq', m.calfL, sm.calfL)}
+        `;
+    }
+
+    const modal = document.getElementById('modal-checkin');
+    const modalContent = document.getElementById('modal-content');
+
+    function showCheckinModal() {
+        document.getElementById('checkin-old-weight').innerText = userData.weight;
+        document.getElementById('checkin-weight').value = userData.weight;
+        
+        const safeFill = (id, val) => document.getElementById(id).value = val > 0 ? val : '';
+        safeFill('checkin-belly', userData.measurements.belly);
+        safeFill('checkin-arm-r', userData.measurements.armR);
+        safeFill('checkin-arm-l', userData.measurements.armL);
+        safeFill('checkin-thigh-r', userData.measurements.thighR);
+        safeFill('checkin-thigh-l', userData.measurements.thighL);
+        safeFill('checkin-calf-r', userData.measurements.calfR);
+        safeFill('checkin-calf-l', userData.measurements.calfL);
+
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        
+        // Trigger reflow for transition
+        void modal.offsetWidth;
+        
+        modal.classList.remove('opacity-0');
+        modalContent.classList.remove('translate-y-full');
+    }
+
+    function closeCheckinModal() {
+        modal.classList.add('opacity-0');
+        modalContent.classList.add('translate-y-full');
+        
+        setTimeout(() => {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }, 300);
+    }
+
+    function saveCheckin() {
+        const newWeight = parseFloat(document.getElementById('checkin-weight').value.replace(',', '.'));
+        if(!newWeight || newWeight < 30) {
+            showToast("Insira um peso atual válido.");
+            return;
+        }
+
+        const getVal = (id, fallback) => parseFloat(document.getElementById(id).value.replace(',', '.')) || fallback;
+        
+        userData.weight = newWeight;
+        userData.measurements = { 
+            belly: getVal('checkin-belly', userData.measurements.belly),
+            armR: getVal('checkin-arm-r', userData.measurements.armR),
+            armL: getVal('checkin-arm-l', userData.measurements.armL),
+            thighR: getVal('checkin-thigh-r', userData.measurements.thighR),
+            thighL: getVal('checkin-thigh-l', userData.measurements.thighL),
+            calfR: getVal('checkin-calf-r', userData.measurements.calfR),
+            calfL: getVal('checkin-calf-l', userData.measurements.calfL)
+        };
+        checkins.push({ d: new Date().toISOString().slice(0,10), w: newWeight, m: { ...userData.measurements } });
+        setupSave();
+        
+        const variou = Math.abs(newWeight - parseFloat(document.getElementById('checkin-old-weight').innerText || newWeight)) >= 0.05;
+        if (variou && currentMonthIndex < 11) {
+            currentMonthIndex++;
+        }
+
+        closeCheckinModal();
+        
+        setTimeout(() => {
+            showToast("Evolução salva! Motor recalibrando próximos meses...");
+            buildDashboard(); 
+            if(document.getElementById('view-diet').classList.contains('active')) buildDietView();
+        }, 350);
+    }
+
+    // ==========================================
+    // EXERCÍCIOS VISUAIS (MODAL)
+    // ==========================================
+    const exModal = document.getElementById('modal-exercise');
+    const exModalContent = document.getElementById('modal-exercise-content');
+
+    function showExercise(exerciseRaw) {
+        const cleanName = exerciseRaw.split('(')[0].replace(/(AQUECIMENTO:|FINISHER:)/g, '').trim();
+        document.getElementById('exercise-title').innerText = cleanName;
+        
+        const encodedName = encodeURIComponent(cleanName);
+        // Sistema gera uma imagem visual explicativa baseada no nome usando um serviço confiável
+        document.getElementById('exercise-img').src = `https://dummyimage.com/600x400/f8fafc/f43f5e.png&text=${encodedName}`;
+
+        exModal.classList.remove('hidden');
+        exModal.classList.add('flex');
+        void exModal.offsetWidth;
+        exModal.classList.remove('opacity-0');
+        exModalContent.classList.remove('scale-95');
+    }
+
+    function closeExerciseModal() {
+        exModal.classList.add('opacity-0');
+        exModalContent.classList.add('scale-95');
+        setTimeout(() => {
+            exModal.classList.add('hidden');
+            exModal.classList.remove('flex');
+        }, 300);
+    }
+
+    // ==========================================
+    // DIETA E NUTRIÇÃO
+    // ==========================================
+    function buildDietView() {
+        document.getElementById('diet-target').innerText = dietState.target;
+        document.getElementById('diet-consumed').innerText = dietState.consumed;
+        
+        let remaining = dietState.target - dietState.consumed;
+        let pBar = document.getElementById('diet-progress-bar');
+        let rText = document.getElementById('diet-remaining');
+        let sText = document.getElementById('diet-status-text');
+
+        if (remaining >= 0) {
+            rText.innerText = `${remaining} kcal`;
+            rText.className = "text-lg font-black text-white";
+            sText.innerText = "Restam";
+            let pct = Math.min(100, (dietState.consumed / dietState.target) * 100);
+            pBar.style.width = `${pct}%`;
+            pBar.className = "bg-white h-full rounded-full transition-all duration-500";
+        } else {
+            rText.innerText = `${Math.abs(remaining)} kcal`;
+            rText.className = "text-lg font-black text-rose-300";
+            sText.innerText = "Excedeu";
+            pBar.style.width = `100%`;
+            pBar.className = "bg-rose-500 h-full rounded-full transition-all duration-500";
+        }
+
+        renderFoodLog();
+        renderDietSuggestion();
+    }
+
+    function renderFoodLog() {
+        const logContainer = document.getElementById('food-log');
+        const emptyMsg = document.getElementById('empty-diet-msg');
+
+        if (dietState.logs.length === 0) {
+            logContainer.innerHTML = '';
+            logContainer.appendChild(emptyMsg);
+            emptyMsg.style.display = 'block';
+            return;
+        }
+
+        emptyMsg.style.display = 'none';
+        logContainer.innerHTML = dietState.logs.map((log, i) => `
+            <div class="flex justify-between items-center bg-white p-3 rounded-xl border border-slate-100 shadow-sm animate-[fadeIn_0.3s_ease-out] mb-2">
+                <div class="flex items-center">
+                    <div class="w-8 h-8 rounded-full bg-emerald-50 text-emerald-500 flex items-center justify-center mr-3">
+                        <i class="fas fa-check text-xs"></i>
+                    </div>
+                    <span class="font-bold text-slate-700 text-xs">${log.name}</span>
+                </div>
+                <div class="flex items-center">
+                    <span class="font-black text-slate-800 text-sm mr-3">${log.cal} <span class="text-[9px] text-slate-400 font-medium">kcal</span></span>
+                    <button onclick="removeFood(${i})" class="text-rose-400 hover:text-rose-600 active:scale-90"><i class="fas fa-trash-alt"></i></button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function renderDietSuggestion() {
+        const list = document.getElementById('diet-suggestion-list');
+        const isEmagrecimento = userData.goal === 'emagrecimento';
+        
+        let suggestions = isEmagrecimento ? [
+            { t: "Café da Manhã", d: "2 Ovos mexidos + 1 fatia de pão integral + Café preto" },
+            { t: "Almoço", d: "100g Frango/Peixe + 3 col. Arroz + Salada à vontade" },
+            { t: "Pré-Treino", d: "1 Banana + 1 col. Aveia (energia rápida)" },
+            { t: "Jantar", d: "Omelete de 2 ovos com espinafre (baixo carbo)" }
+        ] : [
+            { t: "Café da Manhã", d: "3 Ovos + 2 fatias de pão + Fruta com Aveia" },
+            { t: "Almoço", d: "150g Carne magra + 5 col. Arroz + 1 concha Feijão" },
+            { t: "Pré-Treino", d: "Batata doce + Whey Protein ou Frango" },
+            { t: "Jantar", d: "Repetir o almoço em menor porção + Salada livre" }
+        ];
+
+        list.innerHTML = suggestions.map(s => `
+            <div class="flex items-start mb-3">
+                <i class="fas fa-check-circle text-emerald-400 mt-0.5 mr-2"></i>
+                <div>
+                    <p class="text-[11px] font-bold text-slate-700">${s.t}</p>
+                    <p class="text-[10px] text-slate-500">${s.d}</p>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    const modalFood = document.getElementById('modal-food');
+    const modalFoodContent = document.getElementById('modal-food-content');
+
+    function renderQuickFood(filtro) {
+        const quickList = document.getElementById('quick-food-list');
+        const f = (filtro || '').toLowerCase();
+        const lista = basicFoods.filter(x => !f || x.name.toLowerCase().indexOf(f) >= 0).slice(0, 40);
+        quickList.innerHTML = lista.map(x => `
+            <button onclick="addFood('${x.name.replace(/'/g, "")}', ${x.cal})" class="bg-white border border-slate-200 p-2 rounded-xl text-left hover:border-emerald-400 active:scale-95 transition-all flex justify-between items-center">
+                <span class="text-[10px] font-bold text-slate-700 truncate mr-2">${x.name}</span>
+                <span class="text-[9px] font-black text-emerald-500 bg-emerald-50 px-1.5 py-0.5 rounded">${x.cal}</span>
+            </button>
+        `).join('') || '<p class="text-xs text-slate-400 col-span-2 text-center">Nada encontrado. Use Personalizada.</p>';
+    }
+    function showFoodModal() {
+        renderQuickFood('');
+        document.getElementById('food-search').value = '';
+        document.getElementById('food-search').oninput = function () { renderQuickFood(this.value); };
+
+        modalFood.classList.remove('hidden');
+        modalFood.classList.add('flex');
+        void modalFood.offsetWidth;
+        modalFood.classList.remove('opacity-0');
+        modalFoodContent.classList.remove('translate-y-full');
+    }
+
+    function closeFoodModal() {
+        modalFood.classList.add('opacity-0');
+        modalFoodContent.classList.add('translate-y-full');
+        setTimeout(() => {
+            modalFood.classList.add('hidden');
+            modalFood.classList.remove('flex');
+        }, 300);
+    }
+
+    function addFood(name, cal) {
+        dietState.logs.push({ name, cal });
+        dietStreak();
+        dietState.consumed += cal;
+        closeFoodModal();
+        buildDietView();
+        setupSave();
+        showToast(`+${cal} kcal registrado!`);
+    }
+
+    function addCustomFood() {
+        const name = document.getElementById('food-name').value;
+        const cal = parseInt(document.getElementById('food-cal').value);
+        if(!name || !cal) {
+            showToast("Preencha nome e calorias da refeição!");
+            return;
+        }
+        document.getElementById('food-name').value = '';
+        document.getElementById('food-cal').value = '';
+        addFood(name, cal);
+    }
+
+    function removeFood(index) {
+        let item = dietState.logs[index];
+        dietState.consumed -= item.cal;
+        dietState.logs.splice(index, 1);
+        buildDietView();
+        setupSave();
+    }
+
+
+    // ==========================================
+    // SPARK SAÚDE v2 — PERSISTENCIA + IA COACH (acrescimo, logica original intacta)
+    // ==========================================
+    let checkins = [];
+    let iaHistory = [];
+    const SETUP_LS_KEY = 'setuppro-state-v1';
+    function setupSave() {
+        try { localStorage.setItem(SETUP_LS_KEY, JSON.stringify({ userData: userData, month: currentMonthIndex, diet: dietState, checkins: checkins, ia: iaHistory.slice(-10), dd: dietDays, desaf: desafio })); } catch (e) {}
+        try { nuvemPush(); } catch (e) {}
+    }
+    function setupLoad() {
+        try {
+            const s = JSON.parse(localStorage.getItem(SETUP_LS_KEY) || 'null');
+            if (!s || !s.userData || !s.userData.age) return false;
+            userData = s.userData; if (!userData.created) userData.created = new Date().toISOString().slice(0, 10); currentMonthIndex = s.month || 0;
+            dietState = s.diet || dietState; checkins = s.checkins || []; iaHistory = s.ia || []; dietDays = s.dd || []; desafio = s.desaf || null;
+            return true;
+        } catch (e) { return false; }
+    }
+    function setupClear() { try { localStorage.removeItem(SETUP_LS_KEY); } catch (e) {} }
+
+    // Motor de analise 100% local (on-device): usa perfil + check-ins + dieta.
+    function analisarCorpo(st) {
+        const u = st.user, isEma = u.goal === 'emagrecimento';
+        const peso = u.weight, alvo = u.targetWeight;
+        const bmi = parseFloat(calculateBMI(peso, u.height)) || 0;
+        const met = calculateMetabolism(peso, u.height, u.age, u.gender);
+        let bf = u.gender === 'M' ? ((1.20 * bmi) + (0.23 * u.age) - 16.2) : ((1.20 * bmi) + (0.23 * u.age) - 5.4);
+        bf = Math.max(5, bf);
+        const total = Math.abs(u.startWeight - alvo);
+        const falta = Math.abs(peso - alvo);
+        const prog = total > 0 ? Math.max(0, Math.min(100, Math.round(((total - falta) / total) * 100))) : 100;
+
+        // Ritmo real pelos check-ins (kg/semana)
+        let ritmo = null, diasBase = 0;
+        const ch = st.checkins || [];
+        if (ch.length >= 1) {
+            const first = ch[0], last = ch[ch.length - 1];
+            const d0 = new Date(first.d + 'T12:00:00'), d1 = new Date(last.d + 'T12:00:00');
+            diasBase = Math.max(1, Math.round((d1 - d0) / 86400000));
+            const span = Math.max(7, diasBase);
+            ritmo = ((first.w - last.w) / span) * 7; // kg/semana (+ = perdendo)
+            if (!isEma) ritmo = -ritmo; // para hipertrofia, positivo = ganhando
+        } else if (u.startWeight && u.startWeight !== peso) {
+            ritmo = (u.startWeight - peso) / 4;
+            if (!isEma) ritmo = -ritmo;
+            diasBase = 28;
+        }
+
+        const alertas = [];
+        if (ch.length === 0) alertas.push({ t: 'Sem check-ins ainda', d: 'Registre seu peso todo mes no botao de check-in. A IA fica 3x mais precisa com historico real.' });
+        if (ch.length >= 2) {
+            const a = ch[ch.length - 2], b = ch[ch.length - 1];
+            const dd = Math.round((new Date(b.d + 'T12:00:00') - new Date(a.d + 'T12:00:00')) / 86400000);
+            if (Math.abs(a.w - b.w) < 0.3 && dd >= 14) alertas.push({ t: 'Platô detectado', d: 'Peso estagnado entre os 2 últimos check-ins (' + dd + ' dias). Troque o finisher do mês, ajuste 150-200 kcal e priorize sono. O plano dos próximos meses já foi recalibrado.' });
+        }
+        if (ritmo != null && isEma && ritmo > peso * 0.01) alertas.push({ t: 'Ritmo acima do seguro', d: 'Perda acima de 1% do peso/semana aumenta risco de massa magra e efeito sanfona. Suba ~200 kcal/dia e mantenha proteina em 1.6-2.2g/kg.' });
+        if (ritmo != null && isEma && ritmo < 0.15 && prog < 100) alertas.push({ t: 'Abaixo do projetado', d: 'Ritmo menor que 0.15kg/sem. Revise: dieta registrada todos os dias? Treino 3-5x/sem? Sono 7h+? Pequenos ajustes destravam.' });
+        if (ritmo != null && !isEma && ritmo < 0.1 && prog < 100) alertas.push({ t: 'Ganho lento', d: 'Ganho abaixo de 0.1kg/sem. Some +200-300 kcal/dia com proteina em 1.6-2.2g/kg e progressao de carga no treino.' });
+        if (bmi >= 30) alertas.push({ t: 'Aten\xe7\xe3o profissional', d: 'IMC na faixa de obesidade: este app organiza sua rotina, mas procure medico/nutricionista para acompanhamento. Nao use deficits agressivos por conta propria.' });
+        if (u.tdee && st.diet && st.diet.target > 0 && st.diet.consumed > st.diet.target * 1.15) alertas.push({ t: 'Dieta acima da meta', d: 'Consumo 15%+ acima da meta de hoje. Jantar leve (proteina + salada) ainda salva o dia.' });
+
+        const sm0 = u.startMeasurements || {}, sm1 = u.measurements || {};
+        if (sm0.belly && sm1.belly) {
+            const dBelly = sm1.belly - sm0.belly;
+            const pesoEstavel = Math.abs(peso - u.startWeight) < 1.0;
+            if (dBelly <= -2) alertas.push({ good: true, t: pesoEstavel ? 'Recomposicao corporal!' : 'Cintura diminuindo', d: 'Barriga ' + dBelly.toFixed(1).replace('.', ',') + 'cm desde o inicio' + (pesoEstavel ? ' com peso estavel: voce esta trocando gordura por musculo. A balanca esconde essa vitoria!' : '. Otimo sinal: gordura visceral caindo.') });
+            else if (dBelly >= 2 && isEma) alertas.push({ t: 'Cintura subindo', d: 'Barriga +' + dBelly.toFixed(1).replace('.', ',') + 'cm. Revise porcoes a noite e alcool; vale medir de novo com a fita na mesma posicao.' });
+        }
+        // Score 0-100
+        let score = 40 + Math.round(prog * 0.35) + Math.min(15, ch.length * 5);
+        if (st.diet && st.diet.logs && st.diet.logs.length) score += 5;
+        if (falta <= 0.2) score = 100;
+        score = Math.max(5, Math.min(100, score));
+        const nivel = score >= 85 ? 'Excelente' : score >= 65 ? 'Bom ritmo' : score >= 45 ? 'Em constru\xe7\xe3o' : 'Recome\xe7ando base';
+
+        // Previsao de chegada
+        let previsao = 'Registre check-ins mensais para projetar a chegada.';
+        if (ritmo != null && ritmo > 0.05 && falta > 0.2) {
+            const sem = falta / ritmo;
+            if (sem > 0 && sem < 200) {
+                const dt = new Date(); dt.setDate(dt.getDate() + Math.round(sem * 7));
+                previsao = 'No ritmo atual (' + ritmo.toFixed(2).replace('.', ',') + 'kg/sem), meta em ~' + Math.round(sem) + ' semanas (' + dt.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' }) + ').';
+            }
+        } else if (falta <= 0.2) { previsao = 'Meta atingida. Foque em manuten\xe7\xe3o: TDEE ~' + met.tdee + ' kcal/dia.'; }
+
+        const agua = Math.round(peso * 35);
+        const niveltxt = u.level === 1 ? 'iniciante' : u.level === 2 ? 'intermedi\xe1rio' : 'avan\xe7ado';
+        const blocos = [
+            { t: 'Situacao atual', d: 'Peso ' + peso + 'kg (faltam ' + falta.toFixed(1).replace('.', ',') + 'kg), IMC ' + bmi + ', gordura est. ' + bf.toFixed(1).replace('.', ',') + '%. TMB ' + met.bmr + ' kcal, TDEE ~' + met.tdee + ' kcal/dia. Progresso total: ' + prog + '% da jornada.' },
+            { t: 'Ritmo e previsao', d: previsao },
+            { t: 'Ajuste de treino (' + niveltxt + ')', d: isEma
+                ? 'Mantenha 3-5 sessoes/sem: aquecimento + base do mes (4 series) + finisher HIIT. Trave cada sessao em ' + u.time + 'min e suba 1 repeticao por exercicio a cada 2 semanas.'
+                : 'Foco em construcao limpa: 4 sessoes/sem com cadencia lenta (3-4s na descida), descanso 60-90s entre series e progressao de carga semanal. Superavit de ~+' + Math.round((parseFloat('1') * 7700) / 30) + ' kcal/dia.' },
+            { t: 'Ajuste de dieta', d: isEma
+                ? 'Alvo ~' + Math.max(1200, met.tdee - 400) + ' kcal/dia com proteina 1.6-2.2g/kg (' + Math.round(peso * 1.8) + 'g/dia). Agua: ~' + agua + 'ml/dia.'
+                : 'Alvo ~' + (met.tdee + 250) + ' kcal/dia com proteina 1.6-2.2g/kg (' + Math.round(peso * 1.8) + 'g/dia). Agua: ~' + agua + 'ml/dia.' },
+            { t: 'Recuperacao', d: 'Durma 7-9h (GH e recuperacao muscular), 1-2 dias leves/semana e alongamento pos-treino. Dor aguda ou tontura: pare e procure profissional.' }
+        ];
+        return { score: score, nivel: nivel, prog: prog, bmi: bmi, bf: Math.round(bf * 10) / 10, previsao: previsao, alertas: alertas, blocos: blocos };
+    }
+
+    function estadoAtual() { return { user: userData, month: currentMonthIndex, checkins: checkins, diet: dietState }; }
+    let ultimaAnalise = null;
+    function showIA() {
+        if (!userData || !userData.age) { showToast('Monte seu programa primeiro.'); return; }
+        const a = analisarCorpo(estadoAtual());
+        ultimaAnalise = a;
+        document.getElementById('ia-score').innerText = a.score;
+        document.getElementById('ia-nivel').innerText = a.nivel + ' · ' + a.prog + '% da meta';
+        document.getElementById('ia-data').innerText = new Date().toLocaleDateString('pt-BR') + ' · ' + (checkins.length) + ' check-in(s)';
+        let h = '';
+        a.alertas.forEach(function (al) {
+            h += al.good ? '<div class="ia-bloco" style="border-color:#bbf7d0;background:#f0fdf4"><h4>\u2705 ' + al.t + '</h4><p>' + al.d + '</p></div>' : '<div class="ia-bloco" style="border-color:#fecdd3;background:#fff1f2"><h4>\u26a0\ufe0f ' + al.t + '</h4><p>' + al.d + '</p></div>';
+        });
+        a.blocos.forEach(function (b) {
+            h += '<div class="ia-bloco"><h4>' + b.t + '</h4><p>' + b.d + '</p></div>';
+        });
+        document.getElementById('ia-blocos').innerHTML = h;
+        iaHistory.push({ d: new Date().toISOString().slice(0, 10), score: a.score, nivel: a.nivel, prog: a.prog });
+        setupSave(); renderIaHistory();
+        switchView('view-ia');
+    }
+    function renderIaHistory() {
+        const box = document.getElementById('ia-history');
+        const mini = document.getElementById('ia-history-mini');
+        if (!box) return;
+        if (!iaHistory.length) {
+            box.innerHTML = '<p class="ia-hist">Nenhuma an\xe1lise ainda. Toque em Nova an\xe1lise.</p>';
+            if (mini) mini.innerHTML = '';
+            return;
+        }
+        const items = iaHistory.slice(-5).reverse().map(function (r) {
+            return '<div class="ia-hist"><b>' + r.d.split('-').reverse().join('/') + '</b> · score ' + r.score + ' (' + r.nivel + ') · ' + r.prog + '% da meta</div>';
+        }).join('');
+        box.innerHTML = items;
+        if (mini) mini.innerHTML = '<p class="text-[10px] text-slate-400 mt-2">\u00daltima: score ' + iaHistory[iaHistory.length - 1].score + ' · ' + iaHistory[iaHistory.length - 1].prog + '% da meta</p>';
+    }
+    function iaResumoTexto() {
+        if (!ultimaAnalise) return '';
+        const a = ultimaAnalise;
+        let t = '\uD83E\uDD16 SPARK SAÚDE — an\xe1lise de ' + userData.name.split(' ')[0] + ' (' + new Date().toLocaleDateString('pt-BR') + ')\nScore ' + a.score + ' (' + a.nivel + ') · ' + a.prog + '% da meta · IMC ' + a.bmi + '\n' + a.previsao + '\n';
+        a.alertas.forEach(function (al) { t += '\u26a0\ufe0f ' + al.t + ': ' + al.d + '\n'; });
+        return t + 'academiasaude: Evolu\xe7\xe3o Corporal PRO';
+    }
+    function shareIaWhats() {
+        const t = iaResumoTexto() || 'Montei meu plano no Spark Saúde!';
+        window.open('https://wa.me/?text=' + encodeURIComponent(t), '_blank');
+    }
+    function copyIa() {
+        const t = iaResumoTexto();
+        if (!t) { showToast('Gere uma an\xe1lise primeiro.'); return; }
+        const done = function () { showToast('An\xe1lise copiada!'); };
+        try {
+            if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(t).then(done).catch(function () { fallbackCopy(t); done(); }); }
+            else { fallbackCopy(t); done(); }
+        } catch (e) { showToast('N\xe3o foi poss\xedvel copiar.'); }
+    }
+    function fallbackCopy(t) {
+        try {
+            const ta = document.createElement('textarea'); ta.value = t;
+            document.body.appendChild(ta); ta.select();
+            document.execCommand('copy'); document.body.removeChild(ta);
+        } catch (e) {}
+    }
+
+
+    // ==========================================
+    // v3 — SOCIAL (conta/perfil/chat) + IA ONLINE + EXECUCAO
+    // ==========================================
+    const SETUP_API = '/saude-api';
+    function setupToken() { try { return localStorage.getItem('setuppro-token') || ''; } catch (e) { return ''; } }
+    async function sapi(path, body) {
+        const t = setupToken();
+        const r = await fetch(SETUP_API + path, {
+            method: body === undefined ? 'GET' : 'POST',
+            headers: Object.assign({ 'Content-Type': 'application/json' }, t ? { Authorization: 'Bearer ' + t } : {}),
+            body: body === undefined ? undefined : JSON.stringify(body)
+        });
+        let j = null; try { j = await r.json(); } catch (e) {}
+        return { ok: r.ok, status: r.status, data: j };
+    }
+    function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+
+    // ---- CONTA ----
+    let contaTab = 'login';
+    async function showConta() { switchView('view-conta'); renderConta(); }
+    function setContaTab(t) { contaTab = t; renderConta(); }
+    async function renderConta() {
+        const box = document.getElementById('conta-box');
+        const t = setupToken();
+        if (!t) {
+            const isL = contaTab === 'login';
+            box.innerHTML =
+                '<div class="bg-white rounded-3xl p-5 shadow-sm border border-slate-100">' +
+                '<div class="flex space-x-2 mb-4">' +
+                '<button onclick="setContaTab(\'login\')" class="flex-1 py-2.5 rounded-xl text-xs font-black ' + (isL ? 'gradient-bg text-white' : 'bg-slate-100 text-slate-500') + '">Entrar</button>' +
+                '<button onclick="setContaTab(\'reg\')" class="flex-1 py-2.5 rounded-xl text-xs font-black ' + (!isL ? 'gradient-bg text-white' : 'bg-slate-100 text-slate-500') + '">Criar conta</button></div>' +
+                (isL ? '' : '<label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Nome</label><input id="c-nome" maxlength="60" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl font-bold mb-3">' +
+                '<label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Apelido (unico, p/ chat)</label><input id="c-apelido" maxlength="20" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl font-bold mb-3">') +
+                '<label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">E-mail</label><input id="c-email" type="email" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl font-bold mb-3">' +
+                '<label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Senha (6+)</label><input id="c-senha" type="password" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl font-bold mb-4">' +
+                '<button onclick="' + (isL ? 'doLogin()' : 'doRegister()') + '" class="w-full gradient-bg text-white font-black py-4 rounded-2xl active:scale-95">' + (isL ? 'Entrar' : 'Criar conta gratis') + '</button>' +
+                '<p class="text-[10px] text-slate-400 mt-3 text-center">Conta da comunidade: chat, ranking e IA online. Seus treinos continuam neste aparelho.</p></div>';
+            return;
+        }
+        const r = await sapi('/me');
+        if (!r.ok) { try { localStorage.removeItem('setuppro-token'); } catch (e) {} renderConta(); refreshContaUI(); return; }
+        const p = r.data.perfil;
+        box.innerHTML =
+            '<div class="bg-white rounded-3xl p-5 shadow-sm border border-slate-100 text-center">' +
+            (p.foto ? '<img src="' + p.foto + '" class="w-20 h-20 rounded-full object-cover mx-auto border-2 border-rose-200">' : '<div class="w-20 h-20 rounded-full bg-slate-100 mx-auto flex items-center justify-center text-slate-400"><i class="fas fa-user text-2xl"></i></div>') +
+            '<h3 class="font-black text-slate-900 mt-2">' + (p.plano === "pro" ? "👑 " : "") + esc(p.apelido) + '</h3>' +
+            (p.plano === "pro" ? '<span class="inline-block bg-amber-100 text-amber-700 text-[10px] font-black px-2 py-0.5 rounded-full mt-1">PRO</span>' : '') + +
+            '<p class="text-xs text-slate-500">' + esc(p.nome) + (p.cidade ? ' · ' + esc(p.cidade) : '') + '</p>' +
+            (p.bio ? '<p class="text-xs text-slate-600 mt-1 italic">"' + esc(p.bio) + '"</p>' : '') +
+            '<div class="flex space-x-2 mt-4">' +
+            '<button onclick="showPerfil()" class="flex-1 bg-slate-900 text-white text-xs font-black py-3 rounded-2xl active:scale-95">Editar perfil</button>' +
+            (p.admin ? '<button onclick="location.href=\'/setup/admin/\'" class="flex-1 bg-violet-600 text-white text-xs font-black py-3 rounded-2xl active:scale-95">Painel Admin</button>' : '') +
+            '<button onclick="showSocial()" class="flex-1 bg-indigo-500 text-white text-xs font-black py-3 rounded-2xl active:scale-95">Comunidade</button></div>' +
+            '<div id="conta-plano" class="mt-3 bg-slate-50 border border-slate-200 rounded-2xl p-3 text-xs text-slate-600">Verificando plano...</div>' +
+            '<div class="flex mt-2"><input id="redeem-code" placeholder="Codigo de acesso" class="flex-1 px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold mr-2"><button onclick="resgatarCodigo()" class="bg-indigo-500 text-white text-xs font-black px-3 rounded-xl active:scale-95">Ativar</button></div>' +
+            '<button onclick="doLogout()" class="mt-2 text-xs text-slate-400 underline">Sair da conta</button></div>';
+        loadPlanoBox();
+        refreshContaUI(p);
+    }
+    async function doRegister() {
+        const v = function (id) { return (document.getElementById(id).value || '').trim(); };
+        if (v('c-nome').length < 2 || v('c-apelido').length < 3) { showToast('Nome (2+) e apelido (3+).'); return; }
+        const r = await sapi('/register', { nome: v('c-nome'), apelido: v('c-apelido'), email: v('c-email'), senha: v('c-senha') });
+        if (!r.ok) { showToast((r.data && r.data.error) || 'Falha no cadastro.'); return; }
+        try { localStorage.setItem('setuppro-token', r.data.token); } catch (e) {}
+        showToast('Conta criada! Bem-vindo a comunidade.');
+        posAuth('social');
+    }
+    async function doLogin() {
+        const v = function (id) { return (document.getElementById(id).value || '').trim(); };
+        const r = await sapi('/login', { email: v('c-email'), senha: v('c-senha') });
+        if (!r.ok) { showToast('E-mail ou senha invalidos.'); return; }
+        try { localStorage.setItem('setuppro-token', r.data.token); } catch (e) {}
+        showToast('Login feito!');
+        posAuth('dash');
+    }
+    async function doLogout() {
+        try { await sapi('/logout', {}); } catch (e) {}
+        try { localStorage.removeItem('setuppro-token'); } catch (e) {}
+        stopChat(); refreshContaUI(null); renderConta();
+        showToast('Voce saiu.');
+    }
+    async function refreshContaUI(p) {
+        const box = document.getElementById('header-avatar');
+        if (!box) return;
+        try { window.__isAdmin = !!(p && p.admin); } catch (e) {}
+        if (!p && setupToken()) { try { const r = await sapi('/me'); if (r.ok) p = r.data.perfil; } catch (e) {} }
+        if (p && p.foto) box.innerHTML = '<img src="' + p.foto + '" class="w-full h-full object-cover">';
+        else box.innerHTML = '<i class="fas fa-user text-white text-sm"></i>';
+    }
+
+    // ---- PERFIL ----
+    let perfilFotoData = '';
+    async function showPerfil() {
+        if (!setupToken()) { showConta(); return; }
+        const r = await sapi('/me');
+        if (!r.ok) { showConta(); return; }
+        const p = r.data.perfil;
+        document.getElementById('perfil-apelido').value = p.apelido || '';
+        document.getElementById('perfil-bio').value = p.bio || '';
+        document.getElementById('perfil-cidade').value = p.cidade || '';
+        document.getElementById('perfil-objetivo').value = p.objetivo || 'emagrecimento';
+        perfilFotoData = '';
+        paintPerfilFoto(p.foto);
+        switchView('view-perfil');
+    }
+    function paintPerfilFoto(url) {
+        const img = document.getElementById('perfil-foto'), vazio = document.getElementById('perfil-foto-vazio');
+        if (url) { img.src = url; img.classList.remove('hidden'); vazio.classList.add('hidden'); }
+        else { img.classList.add('hidden'); vazio.classList.remove('hidden'); }
+    }
+    async function savePerfil() {
+        const r = await sapi('/perfil', {
+            apelido: document.getElementById('perfil-apelido').value.trim(),
+            bio: document.getElementById('perfil-bio').value.trim(),
+            cidade: document.getElementById('perfil-cidade').value.trim(),
+            objetivo: document.getElementById('perfil-objetivo').value,
+            foto: perfilFotoData || undefined
+        });
+        if (!r.ok) { showToast((r.data && r.data.error) || 'Falha ao salvar.'); return; }
+        perfilFotoData = '';
+        showToast('Perfil salvo!');
+        refreshContaUI(r.data.perfil); showConta();
+    }
+    function openDiet() { dietDayReset(); buildDietView(); switchView('view-diet'); }
+
+    // ---- CHAT ----
+    let chatTimer = null, chatTab = 'chat';
+    function stopChat() { if (chatTimer) { clearInterval(chatTimer); chatTimer = null; } }
+    async function showSocial() {
+        if (!setupToken()) { showConta(); setTimeout(function () { showToast('Entre na conta para conversar.'); }, 300); return; }
+        switchView('view-social'); socialTab('chat'); startChat(); setTimeout(verInstalar, 500);
+    }
+    function startChat() { stopChat(); loadChat(); chatTimer = setInterval(loadChat, 2000); }
+    async function socialTab(t) {
+        chatTab = t;
+        const bc = document.getElementById('tab-chat'), bo = document.getElementById('tab-online');
+        bc.className = 'flex-1 text-xs font-black py-2.5 rounded-xl ' + (t === 'chat' ? 'bg-white text-indigo-600' : 'bg-white/20 text-white');
+        bo.className = 'flex-1 text-xs font-black py-2.5 rounded-xl ' + (t === 'online' ? 'bg-white text-indigo-600' : 'bg-white/20 text-white');
+        document.getElementById('chat-list').classList.toggle('hidden', t !== 'chat');
+        document.getElementById('chat-bar').classList.toggle('hidden', t !== 'chat');
+        document.getElementById('online-list').classList.toggle('hidden', t !== 'online');
+        if (t === 'chat') loadChat();
+    }
+    let chatSig = '', chatSigAntes = '', chatPending = false;
+    function chatHTML(items) {
+        return items.map(function (m) {
+            const foto = m.foto ? '<img src="' + m.foto + '" class="w-7 h-7 rounded-full object-cover mr-2 shrink-0">' : '<div class="w-7 h-7 rounded-full bg-slate-200 mr-2 shrink-0 flex items-center justify-center text-slate-400 text-[10px]"><i class="fas fa-user"></i></div>';
+            return renderChatMsg(m, foto);
+        }).join('');
+    }
+    function verNovas() { chatSig = ''; loadChat(); }
+    async function loadChat() {
+        const r = await sapi('/chat?since=0');
+        if (!r.ok) return;
+        const items = (r.data.items || []).slice(-30);
+        const sig = items.map(function (m) { return m.id + (m.apagada ? 'x' : ''); }).join(',');
+        const box = document.getElementById('chat-list');
+        let tocando = false;
+        try {
+            const auds = box.querySelectorAll('audio');
+            for (let i = 0; i < auds.length; i++) { if (!auds[i].paused && !auds[i].ended) { tocando = true; break; } }
+        } catch (e) {}
+        if (sig !== chatSig && !tocando) {
+            chatSigAntes = chatSig; chatSig = sig; chatPending = false;
+            try { document.getElementById('chat-new').classList.add('hidden'); } catch (e) {}
+            const pertoFim = (box.scrollHeight - box.scrollTop - box.clientHeight) < 160;
+            box.innerHTML = chatHTML(items);
+            if (pertoFim || sig.split(',').length > (chatSigAntes || '').split(',').length) box.scrollTop = box.scrollHeight;
+        } else if (sig !== chatSig && tocando) {
+            chatPending = true;
+            try { document.getElementById('chat-new').classList.remove('hidden'); } catch (e) {}
+        }
+        const on = r.data.online || [];
+        document.getElementById('online-n').innerText = on.length;
+        document.getElementById('online-list').innerHTML = on.length ? on.map(function (o) {
+            return '<div class="flex items-center py-2 border-b border-slate-100"><span class="w-2.5 h-2.5 rounded-full bg-emerald-400 mr-2"></span><b class="text-xs text-slate-800">' + esc(o.apelido) + '</b></div>';
+        }).join('') : '<p class="text-xs text-slate-400">Ninguem online agora. Volte ja!</p>';
+    }
+    async function sendChat() {
+        const inp = document.getElementById('chat-input');
+        const texto = (inp.value || '').trim();
+        if (!texto) return;
+        inp.value = '';
+        try {
+            const box = document.getElementById('chat-list');
+            const tmp = document.createElement('div');
+            tmp.setAttribute('data-temp', '1');
+            tmp.innerHTML = '<div class="flex items-start bg-white rounded-2xl border border-slate-100 p-2.5 shadow-sm opacity-70"><div><p class="text-xs text-slate-700">' + esc(texto) + '</p></div></div>';
+            box.appendChild(tmp); box.scrollTop = box.scrollHeight;
+        } catch (e) {}
+        const r = await sapi('/chat', { texto: texto });
+        if (!r.ok) {
+            try { const q = document.querySelector('#chat-list [data-temp]'); if (q) q.remove(); } catch (e) {}
+            showToast((r.data && r.data.error) || 'Falha ao enviar.'); inp.value = texto; return;
+        }
+        chatSig = ''; loadChat();
+    }
+
+    // ---- IA ONLINE (servidor Ollama) ----
+    async function askCoach() {
+        const q = (document.getElementById('coach-q').value || '').trim();
+        if (q.length < 3) { showToast('Escreva sua duvida.'); return; }
+        if (!setupToken()) { showToast('Entre na conta para usar a IA online.'); showConta(); return; }
+        const box = document.getElementById('coach-a');
+        box.innerHTML = '<p class="text-xs text-slate-400">Coach pensando...</p>';
+        const r = await sapi('/ia', { tipo: 'pergunta', pergunta: q });
+        if (!r.ok) { box.innerHTML = '<p class="text-xs text-rose-500">' + esc((r.data && r.data.error) || 'IA ocupada.') + ((r.data && r.data.upgrade) ? ' <a href="/setup/pro/" class="font-black underline">Virar PRO</a>' : '') + '</p>'; return; }
+        box.innerHTML = '<div class="ia-bloco"><h4>Coach IA online</h4><p>' + esc(r.data.texto) + '</p></div>';
+    }
+    async function deepAnalysis() {
+        if (!setupToken()) { showToast('Entre na conta para usar a IA online.'); showConta(); return; }
+        if (!userData || !userData.age) { showToast('Monte seu programa primeiro.'); return; }
+        const box = document.getElementById('coach-a');
+        box.innerHTML = '<p class="text-xs text-slate-400">Analise profunda em andamento (pode levar ~1 min)...</p>';
+        const e = estadoAtual();
+        const r = await sapi('/ia', {
+            tipo: 'analise',
+            dados: { nome: e.user.name, objetivo: e.user.goal, peso: e.user.weight, meta: e.user.targetWeight, bmi: ultimaAnalise ? ultimaAnalise.bmi : '?', tdee: e.user.tdee, checkins: e.checkins.length, resumo: ultimaAnalise ? ultimaAnalise.previsao : '' }
+        });
+        if (!r.ok) { box.innerHTML = '<p class="text-xs text-rose-500">' + esc((r.data && r.data.error) || 'IA ocupada.') + '</p>'; return; }
+        box.innerHTML = '<div class="ia-bloco" style="border-color:#c4b5fd;background:#f5f3ff"><h4>Analise profunda (IA do servidor)</h4><p>' + esc(r.data.texto) + '</p></div>';
+        iaHistory.push({ d: new Date().toISOString().slice(0, 10), score: ultimaAnalise ? ultimaAnalise.score : 0, nivel: 'IA online', prog: ultimaAnalise ? ultimaAnalise.prog : 0 });
+        setupSave(); renderIaHistory();
+    }
+
+    // ---- EXECUCAO DE EXERCICIOS (banco local + video) ----
+    const EX_BANK = {
+        'burpee': { m: 'Corpo todo', p: ['Agache e apoie as maos no chao', 'Jogue os pes para tras (prancha)', 'Volte, salte com palmas acima'], e: 'Nao empine o quadril na prancha' },
+        'prancha': { m: 'Core', p: ['Antebracos no chao, corpo reto', 'Contraia abdomen e gluteos', 'Respire sem soltar o quadril'], e: 'Quadril caido ou empinado' },
+        'agachamento': { m: 'Pernas e gluteos', p: ['Pes na largura dos ombros', 'Desca como se fosse sentar', 'Suba sem travar o joelho'], e: 'Joelho passando da ponta do pe' },
+        'flexao': { m: 'Peito e bracos', p: ['Maos sob os ombros, corpo reto', 'Desca o peito ate quase o chao', 'Empurre de volta'], e: 'Quadril caido; adapte no joelho' },
+        'avanco': { m: 'Pernas', p: ['Um passo a frente, desca o quadril', 'Joelho da frente a 90 graus', 'Volte e alterne'], e: 'Tronco inclinado para frente' },
+        'afundo': { m: 'Pernas e gluteos', p: ['Passo a frente ou atras', 'Desca ate 90 graus', 'Forca no calcanhar para subir'], e: 'Joelho valgo (para dentro)' },
+        'abdominal': { m: 'Abdomen', p: ['Movimento lento e controlado', 'Expire na subida', 'Nao puxe o pescoco'], e: 'Fazer rapido usando embalo' },
+        'panturrilha': { m: 'Panturrilhas', p: ['Suba na ponta dos pes', 'Segure 1s em cima', 'Desca devagar'], e: 'Quicar sem amplitude' },
+        'remada': { m: 'Costas', p: ['Tronco inclinado, coluna reta', 'Puxe o peso ate a barriga', 'Aperte as escapulas'], e: 'Corcunda e pescoco tenso' },
+        'polichinelo': { m: 'Cardio geral', p: ['Salte abrindo bracos e pernas', 'Volte fechando tudo', 'Ritmo constante 1 min'], e: 'Aterrissar duro no calcanhar' },
+        'mountain': { m: 'Core e cardio', p: ['Posicao de prancha alta', 'Alterne joelhos ao peito rapido', 'Quadril baixo e estavel'], e: 'Quadril subindo' },
+        'skater': { m: 'Pernas e equilibrio', p: ['Salte lateral de uma perna a outra', 'Aterrisse suave flexionando', 'Use os bracos'], e: 'Aterrissar com perna reta' },
+        'sprawl': { m: 'Corpo todo', p: ['Agache rapido, maos no chao', 'Estenda para prancha', 'Volte e levante'], e: 'Fazer sem controle do core' },
+        'ponte': { m: 'Gluteos', p: ['Deite, pes no chao', 'Eleve o quadril apertando gluteos', 'Desca sem encostar'], e: 'Arquear a lombar' },
+        'mergulho': { m: 'Triceps', p: ['Maos no banco atras', 'Desca o corpo flexionando cotovelos', 'Suba estendendo'], e: 'Ombros encolhidos' },
+        'hiit': { m: 'Cardio maximo', p: ['30s no maximo que der', 'Movimento simples e seguro', 'Pare se faltar ar de verdade'], e: 'Comecar rapido demais e parar' }
+    };
+    function exKey(name) {
+        const n = (name || '').toLowerCase();
+        const keys = Object.keys(EX_BANK);
+        for (let i = 0; i < keys.length; i++) { if (n.indexOf(keys[i]) >= 0 || keys[i].indexOf(n.split(' ')[0]) >= 0) return keys[i]; }
+        return null;
+    }
+    function showExerciseEx(raw) {
+        const clean = (raw || '').split('(')[0].replace(/(AQUECIMENTO:|FINISHER:)/g, '').trim() || 'Exercicio';
+        document.getElementById('exercise-title').innerText = clean;
+        const k = exKey(clean), info = k ? EX_BANK[k] : null;
+        const q = encodeURIComponent(clean + ' execucao correta');
+        const exImg = document.getElementById('exercise-img');
+        if (info && info.gif) { exImg.src = info.gif; exImg.style.display = ''; }
+        else exImg.style.display = 'none';
+        document.getElementById('exercise-extra').innerHTML =
+            (info ? '<p class="text-[10px] font-black text-rose-500 uppercase mb-1">Foco: ' + info.m + '</p>' +
+            info.p.map(function (p, i) { return '<p class="text-xs text-slate-700 mb-1"><b>' + (i + 1) + '.</b> ' + p + '</p>'; }).join('') +
+            '<p class="text-[11px] text-amber-600 bg-amber-50 border border-amber-200 rounded-xl p-2 mt-2">Erro comum: ' + info.e + '</p>'
+            : '<p class="text-xs text-slate-600">Execute devagar, 3 series, pare se sentir dor aguda.</p>') +
+            '<a href="https://www.youtube.com/results?search_query=' + q + '" target="_blank" class="mt-3 w-full bg-rose-500 text-white font-black py-3.5 rounded-2xl active:scale-95 flex justify-center items-center text-sm"><i class="fab fa-youtube mr-2"></i> Ver execucao em video</a>';
+        const m = document.getElementById('modal-exercise');
+        m.classList.remove('hidden'); m.classList.add('flex');
+        void m.offsetWidth;
+        m.classList.remove('opacity-0');
+        document.getElementById('modal-exercise-content').classList.remove('scale-95');
+    }
+    // Wiring global (foto + enter do chat + avatar)
+    document.addEventListener('DOMContentLoaded', function () {
+        const pf = document.getElementById('perfil-file');
+        if (pf) pf.addEventListener('change', function () {
+            const f = pf.files && pf.files[0]; if (!f) return;
+            if (f.size > 5 * 1024 * 1024) { showToast('Foto ate 5MB.'); return; }
+            const img = new Image();
+            img.onload = function () {
+                try {
+                    const cv = document.createElement('canvas');
+                    const S = 256; let w = img.width, h = img.height;
+                    const sc = Math.max(S / w, S / h); w *= sc; h *= sc;
+                    cv.width = S; cv.height = S;
+                    cv.getContext('2d').drawImage(img, (S - w) / 2, (S - h) / 2, w, h);
+                    perfilFotoData = cv.toDataURL('image/jpeg', 0.82);
+                    paintPerfilFoto(perfilFotoData);
+                } catch (e) { showToast('Foto invalida.'); }
+                try { URL.revokeObjectURL(img.src); } catch (e) {}
+            };
+            img.src = URL.createObjectURL(f);
+        });
+        const ci = document.getElementById('chat-input');
+        if (ci) ci.addEventListener('keydown', function (e) { if (e.key === 'Enter') sendChat(); });
+        const cim = document.getElementById('chat-img');
+        if (cim) cim.addEventListener('change', uploadChatImage);
+        const caf = document.getElementById('chat-audio-file');
+        if (caf) caf.addEventListener('change', uploadChatAudioFile);
+        refreshContaUI(null);
+    });
+
+
+    // ==========================================
+    // v4 — GRAFICO, STREAK, DATAS, PUSH LOCAL
+    // ==========================================
+    let dietDays = [];
+    function dietStreak() {
+        const hoje = new Date().toISOString().slice(0, 10);
+        if (dietDays.indexOf(hoje) < 0) { dietDays.push(hoje); setupSave(); }
+        updateStreakUI();
+    }
+    function streakCount() {
+        let n = 0;
+        const d = new Date();
+        if (dietDays.indexOf(d.toISOString().slice(0, 10)) < 0) d.setDate(d.getDate() - 1);
+        while (dietDays.indexOf(d.toISOString().slice(0, 10)) >= 0) { n++; d.setDate(d.getDate() - 1); }
+        return n;
+    }
+    function updateStreakUI() {
+        const el = document.getElementById('streak-pill');
+        if (!el) return;
+        const n = streakCount();
+        el.innerText = n >= 2 ? ('🔥 ' + n + ' dias registrando dieta') : '';
+    }
+    function drawWeightChart() {
+        const card = document.getElementById('weight-card');
+        const cv = document.getElementById('weight-chart');
+        if (!card || !cv) return;
+        const pts = [];
+        if (userData && userData.startWeight) pts.push({ d: userData.created || '', w: userData.startWeight });
+        (checkins || []).forEach(function (c) { pts.push({ d: c.d, w: c.w }); });
+        if (pts.length < 2) { card.style.display = 'none'; return; }
+        card.style.display = '';
+        try {
+            const ctx = cv.getContext('2d'), W = cv.width, H = cv.height;
+            ctx.clearRect(0, 0, W, H);
+            const ws = pts.map(function (p) { return p.w; });
+            let mn = Math.min.apply(0, ws), mx = Math.max.apply(0, ws);
+            if (mx - mn < 2) { mx += 1; mn -= 1; }
+            const X = function (i) { return 34 + (i / (pts.length - 1)) * (W - 48); };
+            const Y = function (w) { return 14 + (1 - (w - mn) / (mx - mn)) * (H - 44); };
+            ctx.strokeStyle = '#e2e8f0'; ctx.fillStyle = '#94a3b8'; ctx.font = '11px sans-serif';
+            for (let g = 0; g <= 3; g++) {
+                const wv = mn + (mx - mn) * g / 3, y = Y(wv);
+                ctx.beginPath(); ctx.moveTo(34, y); ctx.lineTo(W - 14, y); ctx.stroke();
+                ctx.fillText(wv.toFixed(1), 2, y + 4);
+            }
+            ctx.strokeStyle = '#f43f5e'; ctx.lineWidth = 3; ctx.lineJoin = 'round'; ctx.beginPath();
+            pts.forEach(function (p, i) { if (i === 0) ctx.moveTo(X(i), Y(p.w)); else ctx.lineTo(X(i), Y(p.w)); });
+            ctx.stroke();
+            pts.forEach(function (p, i) {
+                ctx.fillStyle = '#f43f5e'; ctx.beginPath(); ctx.arc(X(i), Y(p.w), 4, 0, 7); ctx.fill();
+                if (pts.length <= 8) { ctx.fillStyle = '#64748b'; ctx.fillText((p.d || '').slice(5), X(i) - 12, H - 6); }
+            });
+            const leg = document.getElementById('weight-chart-legenda');
+            if (leg) leg.innerText = pts[0].w.toFixed(1).replace('.', ',') + 'kg → ' + pts[pts.length - 1].w.toFixed(1).replace('.', ',') + 'kg em ' + pts.length + ' registros';
+        } catch (e) { card.style.display = 'none'; }
+    }
+    function monthLabel(i) {
+        const base = (userData && userData.created) || new Date().toISOString().slice(0, 10);
+        const d = new Date(base + 'T12:00:00');
+        d.setMonth(d.getMonth() + (i - 1));
+        const M = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
+        return M[d.getMonth()] + '/' + String(d.getFullYear()).slice(2);
+    }
+    function enableReminders() {
+        if (!('Notification' in window)) { showToast('Este navegador nao tem notificacoes.'); return; }
+        try {
+            Notification.requestPermission().then(function (p) {
+                showToast(p === 'granted' ? 'Lembrete ativado! Avisamos se faltar check-in.' : 'Permissao negada no navegador.');
+            });
+        } catch (e) { showToast('Nao foi possivel ativar.'); }
+    }
+    function checkReminders() {
+        if (!('Notification' in window) || Notification.permission !== 'granted') return;
+        if (!userData || !userData.age) return;
+        let last = userData.created || '';
+        if (checkins && checkins.length) last = checkins[checkins.length - 1].d;
+        if (!last) return;
+        const dias = Math.round((Date.now() - new Date(last + 'T12:00:00').getTime()) / 86400000);
+        if (dias >= 30) {
+            try { new Notification('Spark Saúde', { body: 'Faz ' + dias + ' dias sem check-in. Bora atualizar sua evolucao?' }); } catch (e) {}
+        }
+    }
+
+
+    // ==========================================
+    // v5 — NUVEM (programa acompanha a conta entre aparelhos)
+    // ==========================================
+    let nuvemPushT = null;
+    function nuvemBlob() {
+        return { userData: userData, month: currentMonthIndex, diet: dietState, checkins: checkins, ia: iaHistory.slice(-10), dd: dietDays };
+    }
+    function nuvemPush() {
+        if (!setupToken()) return;
+        if (!userData || !userData.age) return;
+        if (nuvemPushT) clearTimeout(nuvemPushT);
+        nuvemPushT = setTimeout(function () {
+            sapi('/nuvem', { blob: nuvemBlob() }).catch(function () {});
+        }, 3000);
+    }
+    async function nuvemPull() {
+        if (!setupToken()) return null;
+        try {
+            const r = await sapi('/nuvem');
+            if (r.ok && r.data && r.data.blob && r.data.blob.userData && r.data.blob.userData.age) return r.data.blob;
+        } catch (e) {}
+        return null;
+    }
+    function nuvemApply(b) {
+        userData = b.userData; currentMonthIndex = b.month || 0;
+        dietState = b.diet || dietState; checkins = b.checkins || [];
+        iaHistory = b.ia || []; dietDays = b.dd || [];
+        setupSaveSilent(); buildDashboard(); switchView('view-dashboard'); renderIaHistory();
+    }
+    function setupSaveSilent() {
+        try { localStorage.setItem(SETUP_LS_KEY, JSON.stringify({ userData: userData, month: currentMonthIndex, diet: dietState, checkins: checkins, ia: iaHistory.slice(-10), dd: dietDays, desaf: desafio })); } catch (e) {}
+    }
+    async function posAuth(destino) {
+        renderConta(); refreshContaUI(null);
+        const temLocal = !!(userData && userData.age);
+        const nuvem = await nuvemPull();
+        if (!temLocal && nuvem) {
+            nuvemApply(nuvem);
+            showToast('Programa restaurado da nuvem!');
+            return;
+        }
+        if (temLocal) { try { await sapi('/nuvem', { blob: nuvemBlob() }); } catch (e) {} }
+        if (destino === 'dash' && temLocal) { buildDashboard(); switchView('view-dashboard'); }
+        else showSocial();
+    }
+
+
+    // ==========================================
+    // v6 — DESAFIO 7 DIAS SEM DESCULPA
+    // ==========================================
+    let desafio = null;
+    function startDesafio() {
+        const hoje = new Date().toISOString().slice(0, 10);
+        desafio = { inicio: hoje, dias: [false, false, false, false, false, false, false] };
+        setupSave(); renderDesafio();
+        showToast('Desafio iniciado! Dia 1 hoje.');
+    }
+    function toggleDesafio(i) {
+        if (!desafio) return;
+        desafio.dias[i] = !desafio.dias[i];
+        setupSave(); renderDesafio();
+        const n = desafio.dias.filter(Boolean).length;
+        if (n === 7) showToast('7/7! Lenda! Compartilhe!');
+    }
+    function resetDesafio() {
+        setupConfirm('Reiniciar desafio?', 'Zera os 7 dias e comeca hoje.', function () {
+            desafio = null; setupSave(); renderDesafio();
+        });
+    }
+    function renderDesafio() {
+        const box = document.getElementById('desafio-body');
+        if (!box) return;
+        if (!desafio) {
+            box.innerHTML = '<button onclick="startDesafio()" class="w-full bg-white text-rose-600 font-black py-3.5 rounded-2xl text-sm active:scale-95">Quero participar</button>';
+            return;
+        }
+        const n = desafio.dias.filter(Boolean).length;
+        const pct = Math.round(n / 7 * 100);
+        let h = '<div class="h-2.5 bg-white/30 rounded-full overflow-hidden mb-3"><div class="bg-white h-full rounded-full" style="width:' + pct + '%"></div></div>';
+        h += '<p class="text-xs font-black mb-2">' + n + '/7 dias · desde ' + String(desafio.inicio).split('-').reverse().join('/') + '</p>';
+        h += '<div class="grid grid-cols-7 gap-1.5 mb-3">';
+        const D = ['D1', 'D2', 'D3', 'D4', 'D5', 'D6', 'D7'];
+        for (let i = 0; i < 7; i++) {
+            h += '<button onclick="toggleDesafio(' + i + ')" class="rounded-xl py-2.5 text-[10px] font-black ' + (desafio.dias[i] ? 'bg-white text-emerald-600' : 'bg-white/20 text-white') + '">' + (desafio.dias[i] ? '✓ ' : '') + D[i] + '</button>';
+        }
+        h += '</div><div class="flex space-x-2">';
+        h += '<button onclick="shareDesafio()" class="flex-1 bg-white text-rose-600 font-black py-3 rounded-2xl text-xs active:scale-95">Compartilhar</button>';
+        h += '<button onclick="resetDesafio()" class="px-4 bg-white/20 text-white font-black py-3 rounded-2xl text-xs active:scale-95">Reiniciar</button></div>';
+        box.innerHTML = h;
+    }
+    function shareDesafio() {
+        if (!desafio) return;
+        const n = desafio.dias.filter(Boolean).length;
+        const t = 'Estou no Desafio 7 Dias Sem Desculpa do Spark Saúde: ' + n + '/7! Monta o teu gratis: https://sparkbr.online/setup/';
+        window.open('https://wa.me/?text=' + encodeURIComponent(t), '_blank');
+    }
+
+
+    // ==========================================
+    // v7 — CHECKOUT PRO + PLANO + RELATORIO
+    // ==========================================
+    let pendingPlano = '';
+    function openCheckout(plano) {
+        if (!plano) { checkoutLista(); return; }
+        if (!setupToken()) { pendingPlano = plano; showConta(); setTimeout(function () { showToast('Entre para assinar o PRO.'); }, 300); return; }
+        checkoutLoad(plano);
+    }
+    async function checkoutLoad(plano) {
+        const m = document.getElementById('modal-pro');
+        m.classList.remove('hidden'); m.classList.add('flex');
+        const box = document.getElementById('pro-body');
+        box.innerHTML = '<p class="text-sm text-slate-500">Carregando...</p>';
+        const r = await sapi('/pro/status');
+        if (!r.ok) { box.innerHTML = '<p class="text-sm text-rose-500">Entre na conta primeiro.</p>'; return; }
+        const info = (r.data.produtos || {})[plano];
+        if (!info) { box.innerHTML = '<p class="text-sm text-rose-500">Plano invalido.</p>'; return; }
+        document.getElementById('pro-titulo').innerText = info.titulo;
+        const dias = r.data.plano === 'pro' ? '' : '';
+        box.innerHTML =
+            '<p class="text-3xl font-black text-slate-900">R$ ' + String(info.valor.toFixed(2)).replace('.', ',') + '</p>' +
+            '<p class="text-xs text-slate-500 mb-3">' + info.dias + ' dias de PRO, sem renovacao automatica. Garantia 7 dias.</p>' +
+            '<button onclick="gerarPix(\'' + plano + '\')" class="w-full gradient-bg text-white font-black py-4 rounded-2xl active:scale-95 mb-2">Gerar Pix</button>' +
+            '<div id="pix-area"></div>' +
+            '<a href="/setup/pro/" class="block text-center text-xs text-slate-400 underline mt-2">Ver oferta completa</a>';
+    }
+    async function gerarPix(plano) {
+        const box = document.getElementById('pix-area');
+        box.innerHTML = '<p class="text-sm text-slate-500">Gerando...</p>';
+        const r = await sapi('/pro/ativar', { plano: plano });
+        if (!r.ok) { box.innerHTML = '<p class="text-sm text-rose-500">Falha. Tente de novo.</p>'; return; }
+        const d = r.data;
+        const msg = encodeURIComponent('Paguei o ' + d.titulo + ' (pedido ' + d.pedido + '). Segue comprovante!');
+        box.innerHTML =
+            '<div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 mt-2">' +
+            '<p class="text-[10px] font-black text-slate-400 uppercase">Chave Pix (copie)</p>' +
+            '<p class="font-black text-slate-900 break-all">' + esc(d.pix_chave) + '</p>' +
+            '<p class="text-xs text-slate-500 mt-1">Valor: <b>R$ ' + String(d.valor.toFixed(2)).replace('.', ',') + '</b> · Pedido: ' + esc(d.pedido) + '</p>' +
+            '<div class="flex space-x-2 mt-3">' +
+            '<button onclick="copyPix(\'' + esc(d.pix_chave) + '\')" class="flex-1 bg-slate-900 text-white text-xs font-black py-3 rounded-xl active:scale-95">Copiar chave</button>' +
+            '<a href="https://wa.me/' + esc(d.whatsapp) + '?text=' + msg + '" target="_blank" class="flex-1 bg-emerald-500 text-white text-xs font-black py-3 rounded-xl text-center active:scale-95">Enviar comprovante</a></div>' +
+            '<button onclick="verificarPro()" class="w-full mt-2 bg-indigo-500 text-white text-xs font-black py-3 rounded-xl active:scale-95">Ja paguei — verificar</button></div>';
+    }
+    function copyPix(chave) {
+        try {
+            if (navigator.clipboard) navigator.clipboard.writeText(chave).then(function () { showToast('Chave copiada!'); });
+            else showToast('Copie a chave acima.');
+        } catch (e) { showToast('Copie a chave acima.'); }
+    }
+    async function verificarPro() {
+        const r = await sapi('/pro/status');
+        if (r.ok && r.data.plano === 'pro') {
+            showToast('PRO ativo! Bem-vindo ao clube.');
+            closePro(); renderConta(); refreshContaUI(null);
+        } else showToast('Ainda nao identificamos. Envie o comprovante no WhatsApp.');
+    }
+    function closePro() {
+        const m = document.getElementById('modal-pro');
+        m.classList.add('hidden'); m.classList.remove('flex');
+    }
+    async function loadPlanoBox() {
+        const box = document.getElementById('conta-plano');
+        if (!box) return;
+        try {
+            const r = await sapi('/pro/status');
+            if (!r.ok) { box.innerHTML = 'Entre para ver seu plano.'; return; }
+            if (r.data.plano === 'pro') {
+                const dt = new Date((r.data.pro_ate || 0) * 1000).toLocaleDateString('pt-BR');
+                box.innerHTML = '👑 <b>PRO ativo ate ' + dt + '</b> · IA sem limite + relatorio semanal.';
+            } else {
+                box.innerHTML = '<b>Plano gratis</b> (1 IA/dia). <a href="/setup/pro/" class="font-black text-rose-600 underline">Virar PRO</a> · <button onclick="openCheckout(\'mensal\')" class="underline">Ja paguei</button>';
+            }
+        } catch (e) { box.innerHTML = 'Plano indisponivel offline.'; }
+    }
+    async function weeklyReport() {
+        if (!setupToken()) { showToast('Entre na conta.'); showConta(); return; }
+        if (!userData || !userData.age) { showToast('Monte seu programa primeiro.'); return; }
+        const box = document.getElementById('coach-a');
+        box.innerHTML = '<p class="text-xs text-slate-400">Gerando relatorio semanal (pode levar ~1 min)...</p>';
+        const e = estadoAtual();
+        const r = await sapi('/ia', { tipo: 'relatorio', dados: {
+            nome: e.user.name, objetivo: e.user.goal, peso: e.user.weight, meta: e.user.targetWeight,
+            bmi: ultimaAnalise ? ultimaAnalise.bmi : '?', checkins: e.checkins.length,
+            dietdias: (dietDays || []).length, streak: streakCount() } });
+        if (!r.ok) { box.innerHTML = '<p class="text-xs text-rose-500">' + esc((r.data && r.data.error) || 'Falha.') + ((r.data && r.data.upgrade) ? ' <a href="/setup/pro/" class="font-black underline">Virar PRO</a>' : '') + '</p>'; return; }
+        box.innerHTML = '<div class="ia-bloco" style="border-color:#c4b5fd;background:#f5f3ff"><h4>Relatorio semanal (IA do servidor)</h4><p>' + esc(r.data.texto) + '</p></div>';
+    }
+    // hash #mensal/#anual abre checkout
+    (function () {
+        const h = (location.hash || '').replace('#', '');
+        if (/^[a-z0-9-]{2,20}$/.test(h)) {
+            setTimeout(function () { openCheckout(h); }, 1200);
+        }
+    })();
+
+
+    // ==========================================
+    // v8 — CHAT MIDIA + CHECKOUT LISTA + RESGATE
+    // ==========================================
+    const STICKERS = ['😀','😂','😍','👏','💪','🔥','🎉','❤️','🙏','👍','👎','😅','😎','🤝','💯','⚡','🏋️','🥗','😴','💤','🎯','🚀','🌟','👋'];
+        function chatMidiaUrl(v) {
+        if (!v) return '';
+        v = String(v);
+        if (v.indexOf('midia:') === 0) v = v.slice(6);
+        v = v.trim();
+        if (v.indexOf('/setup/uploads/') !== 0) return '';
+        if (/["<>]/.test(v) || v.indexOf('..') >= 0) return '';
+        if (/[^a-zA-Z0-9_\-./]/.test(v)) return '';
+        return v;
+    }
+    function horaChat(ts) {
+        try {
+            const d = new Date(((ts || 0) * 1000));
+            const p = function (x) { return (x < 10 ? '0' : '') + x; };
+            return p(d.getHours()) + ':' + p(d.getMinutes()) + ':' + p(d.getSeconds());
+        } catch (e) { return ''; }
+    }
+    function horaDiv(ts, claro) {
+        const h = horaChat(ts);
+        if (!h) return '';
+        const cor = claro ? 'rgba(255,255,255,.75)' : '#94a3b8';
+        return '<div style="text-align:right;line-height:1;margin-top:4px"><span style="font-size:9px;color:' + cor + '">' + h + '</span></div>';
+    }
+    function semFoto(el) {
+        try {
+            const d = document.createElement('div');
+            d.className = 'w-7 h-7 rounded-full bg-slate-200 mr-2 shrink-0 flex items-center justify-center text-slate-400 text-[10px]';
+            d.innerHTML = '<i class="fas fa-user"></i>';
+            el.replaceWith(d);
+        } catch (e) { try { el.style.display = 'none'; } catch (e2) {} }
+    }
+    function renderChatMsg(m, foto) {
+        const av = m.foto ? '<img src="' + esc(m.foto) + '" class="w-7 h-7 rounded-full object-cover mr-2 shrink-0" loading="lazy" onerror="semFoto(this)">' : '<div class="w-7 h-7 rounded-full bg-slate-200 mr-2 shrink-0 flex items-center justify-center text-slate-400 text-[10px]"><i class="fas fa-user"></i></div>';
+        const crown = m.pro ? '👑 ' : '';
+        const del = (!m.ia && !m.apagada && (m.minha || window.__isAdmin)) ? '<button onclick="delChat(' + parseInt(m.id || 0, 10) + ')" class="text-[10px] text-slate-300 ml-2" title="Apagar">🗑️</button>' : '';
+        if (m.ia) return '<div class="flex justify-center"><div class="gradient-bg text-white rounded-2xl px-4 py-3 text-xs max-w-[90%] shadow"><b>Coach IA</b><br>' + esc(m.texto) + horaDiv(m.ts, true) + '</div></div>';
+        if (m.apagada) return '<div class="flex items-start opacity-60">' + av + '<div class="bg-slate-100 rounded-2xl p-2.5"><p class="text-[11px] text-slate-400 italic">mensagem apagada</p></div></div>';
+        if (m.tipo === 'sticker') return '<div class="flex items-start">' + av + '<div><p class="text-[10px] font-black text-indigo-500">' + crown + esc(m.apelido) + del + '</p><p style="font-size:44px;line-height:1.2">' + esc(m.texto) + '</p>' + horaDiv(m.ts) + '</div></div>';
+        if (m.tipo === 'imagem') {
+            const u = chatMidiaUrl(m.midia);
+            if (!u) return '<div class="flex items-start bg-white rounded-2xl border border-slate-100 p-2.5 shadow-sm">' + av + '<div><p class="text-[10px] font-black text-indigo-500">' + crown + esc(m.apelido) + del + '</p><p class="text-[11px] text-slate-400 italic">imagem indispon\u00edvel (reenvie a foto)</p>' + (m.texto ? '<p class="text-xs text-slate-700 mt-1">' + esc(m.texto) + '</p>' : '') + horaDiv(m.ts) + '</div></div>';
+            return '<div class="flex items-start bg-white rounded-2xl border border-slate-100 p-2.5 shadow-sm">' + av + '<div><p class="text-[10px] font-black text-indigo-500">' + crown + esc(m.apelido) + del + '</p><img src="' + esc(u) + '" class="rounded-xl mt-1 max-w-full" style="max-height:220px;min-height:60px;background:#f1f5f9" loading="lazy" onerror="this.outerHTML=\'<p class=\\\'text-[11px] text-slate-400 italic\\\'>imagem indispon\u00edvel</p>\'">' + (m.texto ? '<p class="text-xs text-slate-700 mt-1">' + esc(m.texto) + '</p>' : '') + horaDiv(m.ts) + '</div></div>';
+        }
+        if (m.tipo === 'audio') {
+            const a = chatMidiaUrl(m.midia);
+            if (!a) return '<div class="flex items-start bg-white rounded-2xl border border-slate-100 p-2.5 shadow-sm">' + av + '<div><p class="text-[10px] font-black text-indigo-500">' + crown + esc(m.apelido) + del + '</p><p class="text-[11px] text-slate-400 italic">\u00e1udio indispon\u00edvel (reenvie)</p></div></div>';
+            return '<div class="flex items-start bg-white rounded-2xl border border-slate-100 p-2.5 shadow-sm">' + av + '<div class="flex-1"><p class="text-[10px] font-black text-indigo-500">' + crown + esc(m.apelido) + del + '</p><audio src="' + esc(a) + '" controls preload="metadata" style="width:100%;max-width:220px"></audio>' + horaDiv(m.ts) + '</div></div>';
+        }
+        return '<div class="flex items-start bg-white rounded-2xl border border-slate-100 p-2.5 shadow-sm">' + av + '<div><p class="text-[10px] font-black text-indigo-500">' + crown + esc(m.apelido) + del + '</p><p class="text-xs text-slate-700">' + esc(m.texto) + '</p>' + horaDiv(m.ts) + '</div></div>';
+    }
+        async function delChat(id) {
+        setupConfirm('Apagar mensagem?', 'Ela some para todo mundo.', async function () {
+            const r = await sapi('/chat/apagar', { id: parseInt(id, 10) });
+            if (r.ok) { showToast('Mensagem apagada.'); chatSig = ''; loadChat(); } else showToast((r.data && r.data.error) || 'Nao foi possivel apagar.');
+        });
+    }
+    function toggleStickers() {
+        const p = document.getElementById('sticker-panel');
+        if (p.classList.contains('hidden')) {
+            p.innerHTML = STICKERS.map(function (s) { return '<button onclick="sendSticker(\'' + s + '\')" style="font-size:30px" class="active:scale-90">' + s + '</button>'; }).join('');
+            p.classList.remove('hidden'); p.classList.add('grid');
+        } else { p.classList.add('hidden'); p.classList.remove('grid'); }
+    }
+    async function sendSticker(s) {
+        const r = await sapi('/chat', { tipo: 'sticker', texto: s });
+        if (r.ok) { toggleStickers(); chatSig = ''; loadChat(); }
+    }
+    function fileToB64(file) {
+        return new Promise(function (res, rej) {
+            const fr = new FileReader();
+            fr.onload = function () { res(fr.result); };
+            fr.onerror = rej;
+            fr.readAsDataURL(file);
+        });
+    }
+    function imgParaJpeg(file) {
+        return new Promise(function (res, rej) {
+            const url = URL.createObjectURL(file);
+            const img = new Image();
+            img.onload = function () {
+                try {
+                    let w = img.width, h = img.height;
+                    const MAX = 1280;
+                    if (w > MAX || h > MAX) { const s = MAX / Math.max(w, h); w = Math.round(w * s); h = Math.round(h * s); }
+                    const cv = document.createElement('canvas');
+                    cv.width = w; cv.height = h;
+                    cv.getContext('2d').drawImage(img, 0, 0, w, h);
+                    URL.revokeObjectURL(url);
+                    res(cv.toDataURL('image/jpeg', 0.82));
+                } catch (e) { URL.revokeObjectURL(url); rej(e); }
+            };
+            img.onerror = function () { URL.revokeObjectURL(url); rej(new Error('img')); };
+            img.src = url;
+        });
+    }
+        async function uploadChatImage() {
+        const inp = document.getElementById('chat-img');
+        const f = inp.files && inp.files[0];
+        inp.value = '';
+        if (!f) return;
+        if (f.size > 15 * 1024 * 1024) { showToast('Foto muito grande (max 15MB).'); return; }
+        showToast('Enviando foto...');
+        try {
+            const b64 = await imgParaJpeg(f);
+            const r = await sapi('/chat/midia', { kind: 'imagem', data: b64 });
+            if (!r.ok || !r.data || !r.data.url) { showToast((r.data && r.data.error) || 'Falha no envio.'); return; }
+            const r2 = await sapi('/chat', { tipo: 'imagem', midia: r.data.url, texto: '' });
+            if (r2.ok) { showToast('Foto enviada!'); chatSig = ''; loadChat(); }
+            else showToast((r2.data && r2.data.error) || 'Falha ao publicar foto.');
+        } catch (e) { showToast('Nao consegui ler essa foto. Tente outra.'); }
+    }
+        async function uploadChatAudioFile() {
+        const inp = document.getElementById('chat-audio-file');
+        const f = inp.files && inp.files[0];
+        inp.value = '';
+        if (!f) return;
+        if (f.size > 2 * 1024 * 1024) { showToast('Audio muito longo (max ~90s / 2MB).'); return; }
+        showToast('Enviando audio...');
+        try {
+            const b64 = await fileToB64(f);
+            const r = await sapi('/chat/midia', { kind: 'audio', data: b64 });
+            if (!r.ok || !r.data || !r.data.url) { showToast((r.data && r.data.error) || 'Audio nao aceito (mp3/m4a/ogg/webm).'); return; }
+            const r2 = await sapi('/chat', { tipo: 'audio', midia: r.data.url, texto: '' });
+            if (r2.ok) { showToast('Audio enviado!'); chatSig = ''; loadChat(); }
+            else showToast((r2.data && r2.data.error) || 'Falha ao publicar audio.');
+        } catch (e) { showToast('Falha no envio.'); }
+    }
+    let recStream = null, recObj = null, recChunks = [], recT = null, recSec = 0;
+    function micErro(e) {
+        const n = (e && e.name) || '';
+        if (n === 'NotAllowedError') return 'Microfone bloqueado. No ANDROID: cadeado ao lado do endereco > Permissoes > Microfone > Permitir. No PC: cadeado e liberar. Depois tente de novo, ou use o 📎 e escolha o gravador.';
+        if (n === 'NotFoundError') return 'Nenhum microfone encontrado. Use o 📎 para mandar audio pronto.';
+        if (n === 'NotReadableError') return 'Microfone em uso por outro app (ligacao, gravador). Feche e tente de novo, ou use o 📎.';
+        if (n === 'OverconstrainedError') return 'Este navegador nao liberou o microfone. Use o 📎 para mandar audio pronto.';
+        if (n === 'SecurityError') return 'Microfone exige conexao segura (https). Confira o endereco do site.';
+        return 'Microfone indisponivel aqui. Use o 📎 para mandar audio pronto.';
+    }
+    let recHoldTimer = null, recHoldDown = false, recHoldMode = false, recDownT = 0, recSuppressClick = false;
+    function pickMime() {
+        const cands = ['audio/webm;codecs=opus', 'audio/webm', 'audio/mp4', 'audio/ogg;codecs=opus', ''];
+        try {
+            if (typeof MediaRecorder !== 'undefined' && MediaRecorder.isTypeSupported) {
+                for (let i = 0; i < cands.length; i++) { if (!cands[i] || MediaRecorder.isTypeSupported(cands[i])) return cands[i] || undefined; }
+            }
+        } catch (e) {}
+        return undefined;
+    }
+    function micAjuda() {
+        const msg = 'O navegador bloqueou o microfone.\n\nNo ANDROID (Chrome): toque no cadeado ao lado do endereco > Permissoes > Microfone > Permitir. Depois tente de novo.\n\nNo PC: clique no cadeado ao lado do endereco e libere o microfone.\n\nSem microfone? Toque no 📎 e escolha o gravador do celular.';
+        setupConfirm('Microfone bloqueado', msg, function () { pedirMic(); }, 'Tentar de novo');
+    }
+    async function pedirMic() {
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) { showToast('Este navegador nao grava audio. Use o 📎 e escolha o gravador.'); return; }
+        try {
+            const s = await navigator.mediaDevices.getUserMedia({ audio: true });
+            s.getTracks().forEach(function (tr) { tr.stop(); });
+            showToast('Microfone liberado! Toque no 🎤 ou segure e solte para enviar.');
+        } catch (e) { micAjuda(); }
+    }
+    function recDown(ev) {
+        if (ev) { try { ev.preventDefault(); } catch (e) {} }
+        if (recObj || recHoldTimer) return;
+        recHoldDown = true; recDownT = Date.now();
+        recHoldTimer = setTimeout(function () {
+            recHoldTimer = null;
+            if (!recHoldDown || recObj) return;
+            recHoldMode = true;
+            toggleRec();
+        }, 280);
+    }
+    function recUp() {
+        recHoldDown = false;
+        if (recHoldTimer) { clearTimeout(recHoldTimer); recHoldTimer = null; return; }
+        if (recHoldMode && recObj) {
+            const dur = (Date.now() - recDownT) / 1000;
+            recHoldMode = false;
+            if (dur < 1) { stopRec(false); showToast('Muito curto. Segure para gravar, solte para enviar.'); }
+            else { recSuppressClick = true; stopRec(true); }
+        } else recHoldMode = false;
+    }
+    function recLeave() {
+        recHoldDown = false;
+        if (recHoldTimer) { clearTimeout(recHoldTimer); recHoldTimer = null; }
+        if (recHoldMode && recObj) recHoldMode = false;
+    }
+    async function toggleRec() {
+        if (recSuppressClick) { recSuppressClick = false; return; }
+        if (recObj) { stopRec(true); return; }
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) { showToast('Este navegador nao grava audio. Use o 📎 para mandar audio pronto.'); return; }
+        try {
+            recStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        } catch (e) {
+            recHoldMode = false;
+            if ((e && e.name) === 'NotAllowedError') { micAjuda(); return; }
+            showToast(micErro(e)); return;
+        }
+        try {
+            const mm = pickMime();
+            const mopts = { audioBitsPerSecond: 64000 };
+            if (mm) mopts.mimeType = mm;
+            try { recObj = new MediaRecorder(recStream, mopts); }
+            catch (e0) { recObj = mm ? new MediaRecorder(recStream, { mimeType: mm }) : new MediaRecorder(recStream); }
+        } catch (e) {
+            try { recObj = new MediaRecorder(recStream); }
+            catch (e2) {
+                recHoldMode = false;
+                showToast('Este aparelho nao grava aqui. Toque no 📎 e escolha o gravador.');
+                recStream.getTracks().forEach(function (t) { t.stop(); }); recStream = null; return;
+            }
+        }
+        recChunks = []; recSec = 0;
+        recObj.ondataavailable = function (e) { if (e.data.size) recChunks.push(e.data); };
+        recObj.onstop = async function () {
+            recStream.getTracks().forEach(function (t) { t.stop(); });
+            const blob = new Blob(recChunks, { type: recObj.mimeType || 'audio/webm' });
+            recObj = null; recStream = null;
+            document.getElementById('rec-ind').classList.add('hidden');
+            if (blob.size > 2 * 1024 * 1024) { showToast('Audio muito longo (max ~90s).'); return; }
+            showToast('Enviando audio...');
+            const b64 = await fileToB64(blob);
+            const r = await sapi('/chat/midia', { kind: 'audio', data: b64 });
+            if (!r.ok || !r.data || !r.data.url) { showToast((r.data && r.data.error) || 'Falha no envio.'); try { document.getElementById('rec-btn').innerText = '🎤'; } catch (e) {} return; }
+            const r2 = await sapi('/chat', { tipo: 'audio', midia: r.data.url, texto: '' });
+            try { document.getElementById('rec-btn').innerText = '🎤'; } catch (e) {}
+            if (r2.ok) { showToast('Audio enviado!'); chatSig = ''; loadChat(); } else showToast((r2.data && r2.data.error) || 'Falha ao publicar audio.');
+        };
+        recObj.start();
+        document.getElementById('rec-ind').classList.remove('hidden');
+        document.getElementById('rec-btn').innerText = '⏹';
+        recT = setInterval(function () {
+            recSec++;
+            document.getElementById('rec-t').innerText = recSec + 's';
+            if (recSec >= 90) stopRec(true);
+        }, 1000);
+    }
+    let deferredPrompt = null;
+    try {
+        window.addEventListener('beforeinstallprompt', function (e) {
+            e.preventDefault(); deferredPrompt = e; verInstalar();
+        });
+        window.addEventListener('appinstalled', function () { deferredPrompt = null; verInstalar(); });
+    } catch (e) {}
+    function jaInstalado() {
+        try {
+            if (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) return true;
+            if (window.navigator && window.navigator.standalone) return true;
+        } catch (e) {}
+        return false;
+    }
+    function verInstalar() {
+        try {
+            const b = document.getElementById('install-btn');
+            if (!b) return;
+            if (jaInstalado()) { b.classList.add('hidden'); return; }
+            const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent || '');
+            if (deferredPrompt || isIOS) b.classList.remove('hidden');
+        } catch (e) {}
+    }
+    async function instalarApp() {
+        const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent || '');
+        if (deferredPrompt) {
+            try { deferredPrompt.prompt(); await deferredPrompt.userChoice; } catch (e) {}
+            deferredPrompt = null; verInstalar(); return;
+        }
+        if (isIOS) { showToast('No iPhone: Compartilhar > Adicionar a Tela de Inicio.'); return; }
+        showToast('Use o menu \u22ee do Chrome > Instalar app.');
+    }
+    function stopRec(enviar) {
+        if (recT) { clearInterval(recT); recT = null; }
+        document.getElementById('rec-btn').innerText = '🎤';
+        if (!recObj) return;
+        if (!enviar) {
+            const o = recObj; recObj = null;
+            o.onstop = function () { recStream.getTracks().forEach(function (t) { t.stop(); }); recStream = null; };
+            try { o.stop(); } catch (e) {}
+            document.getElementById('rec-ind').classList.add('hidden');
+            return;
+        }
+        try { try { recObj.requestData(); } catch (e2) {} recObj.stop(); } catch (e) {}
+    }
+    async function resgatarCodigo() {
+        const code = (document.getElementById('redeem-code').value || '').trim().toUpperCase();
+        if (!code) { showToast('Digite o codigo.'); return; }
+        const r = await sapi('/codigo/resgatar', { codigo: code });
+        if (!r.ok) { showToast((r.data && r.data.error) || 'Falha.'); return; }
+        showToast('PRO ativo por ' + r.data.dias + ' dias! Ate ' + r.data.ate);
+        renderConta(); refreshContaUI(null);
+    }
+    async function checkoutLista() {
+        const m = document.getElementById('modal-pro');
+        m.classList.remove('hidden'); m.classList.add('flex');
+        document.getElementById('pro-titulo').innerText = 'Escolha seu plano';
+        const box = document.getElementById('pro-body');
+        box.innerHTML = '<p class="text-sm text-slate-500">Carregando...</p>';
+        try {
+            const r = await fetch('/saude-api/pro/planos');
+            const j = await r.json();
+            const planos = (j.planos || []).filter(function (p) { return p.dias >= 30; });
+            if (!planos.length) throw 0;
+            box.innerHTML = planos.map(function (p) {
+                return '<button onclick="checkoutLoad(\'' + p.id + '\')" class="w-full text-left bg-slate-50 border border-slate-200 rounded-2xl p-4 mb-2 active:scale-95">' +
+                    '<b>' + esc(p.titulo) + '</b><br><span class="text-xl font-black">R$ ' + p.valor.toFixed(2).replace('.', ',') + '</span> <span class="text-xs text-slate-500">/ ' + p.dias + ' dias</span></button>';
+            }).join('') + '<a href="/setup/pro/" class="block text-center text-xs text-slate-400 underline mt-1">Ver oferta completa</a>';
+        } catch (e) { box.innerHTML = '<p class="text-sm text-rose-500">Falha. Tente de novo.</p>'; }
+    }
+
+    function resetApp() {
+        setupConfirm("Recomeçar?", "Apaga perfil, check-ins e dieta DESTE aparelho. Sua conta da comunidade continua.", function () {
+            currentMonthIndex = 0;
+            checkins = []; iaHistory = []; setupClear();
+            dietState = { target: 0, consumed: 0, logs: [], date: '' };
+            switchView('view-setup');
+        });
+    }
+    function setupConfirm(titulo, msg, onYes, yesLabel) {
+        document.getElementById('confirm-title').innerText = titulo;
+        document.getElementById('confirm-msg').innerText = msg;
+        const m = document.getElementById('modal-confirm');
+        m.classList.remove('hidden'); m.classList.add('flex');
+        document.getElementById('confirm-yes').innerText = yesLabel || 'Confirmar';
+        document.getElementById('confirm-yes').onclick = function () { closeConfirm(); onYes(); };
+    }
+    function closeConfirm() {
+        const m = document.getElementById('modal-confirm');
+        m.classList.add('hidden'); m.classList.remove('flex');
+    }
+    // RESTAURACAO AUTOMATICA + OFFLINE
+    window.addEventListener('load', function () {
+        try { if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(function () {}); } catch (e) {}
+        try { checkReminders(); } catch (e) {}
+        if (setupLoad()) { buildDashboard(); switchView('view-dashboard'); renderIaHistory(); setTimeout(function () { showToast('Bem-vindo de volta! Progresso restaurado.'); }, 600); }
+    });
+</script>
+</body>
+</html>

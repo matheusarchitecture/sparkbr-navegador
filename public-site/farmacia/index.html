@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <script defer src="/navegador/bridge/spark-bridge.js?v=2.1.0"></script>
+<meta charset="utf-8">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0f172a">
+<link rel="manifest" href="/farmacia/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/saude/icon-192.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/farmacia/sw.js").catch(function(){});});}</script>
+<title>Spark Farmácia — Remédios e Farmácias | Spark Apps</title>
+<meta name="description" content="Spark Farmácia: busca de remédios com tarja e receita, 50 farmácias na região de Ribeirão Preto e lembrete no Spark Dose. sparkbr.online">
+<style>
+body{font-family:system-ui;margin:0;background:#0f172a;color:#fff}
+.wrap{max-width:560px;margin:0 auto;padding:20px 14px 60px}
+h1{font-size:20px;margin:6px 0}
+.sub{color:#94a3b8;font-size:13px;margin-bottom:10px}
+.bar{display:flex;gap:6px;margin:10px 0}
+.bar input{flex:1;border:1px solid #334155;background:#111c33;color:#fff;border-radius:10px;padding:11px;font-size:14px}
+.card{background:#fff;color:#0f172a;border-radius:14px;padding:12px;margin:8px 0}
+.card b{font-size:14px}
+.card .meta{font-size:11px;color:#475569;margin-top:3px}
+.tag{display:inline-block;font-size:10px;font-weight:800;border-radius:8px;padding:2px 8px;margin-right:4px}
+.livre{background:#dcfce7;color:#166534}
+.vermelha{background:#fee2e2;color:#991b1b}
+.preta{background:#0f172a;color:#fff}
+.btns{display:flex;gap:6px;margin-top:8px}
+.btn{flex:1;text-align:center;font-size:12px;font-weight:800;border-radius:10px;padding:9px;text-decoration:none}
+.dose{background:#0284c7;color:#fff}
+.zap{background:#25D366;color:#fff}
+.map{background:#e2e8f0;color:#0f172a}
+.secao{font-size:13px;font-weight:800;color:#38bdf8;margin:16px 0 4px}
+.aviso{font-size:11px;color:#94a3b8;margin-top:14px}
+.foot{color:#64748b;font-size:11px;text-align:center;margin-top:16px}
+.foot a{color:#38bdf8;text-decoration:none}
+</style>
+
+
+<link rel="stylesheet" href="/assets/brand.css?v=20261013">
+<link rel="stylesheet" href="/assets/app-shell.css?v=20261013b">
+<script defer data-spark-rebrand src="/assets/app-shell.js?v=20261013b"></script>
+</head>
+<body data-spark-page="farmacia" data-spark-layout="simple">
+<div class="wrap">
+<div style="font-size:13px;color:#38bdf8;font-weight:800">⚡ SPARK APPS</div>
+<h1>🏪 Spark Farmácia</h1>
+<div class="sub">Remédios com tarja e receita + farmácias perto de você. Lembrete no <a style="color:#38bdf8" href="https://sparkbr.online/dose/">Spark Dose</a>.</div>
+<div class="bar"><input id="q" placeholder="Buscar remédio (ex: paracetamol)..." oninput="busca()"></div>
+<div id="rems"></div>
+<div class="secao">📍 Farmácias — Ribeirão Preto e região (confira unidade e horário no mapa)</div>
+<div id="farms"></div>
+<div class="aviso">Informação educativa geral — confirme bula, tarja e receita com o farmacêutico. Preço e estoque variam por unidade. Em emergência: SAMU 192 / UPA.</div>
+<div class="foot">Tudo em <a href="https://sparkbr.online/">sparkbr.online</a> · <a href="https://sparkbr.online/dose/">Spark Dose</a></div>
+</div>
+<script>
+const REMS=[
+["Paracetamol 500mg","Paracetamol","comprimido","isenta","não","Dor e febre."],
+["Paracetamol 750mg","Paracetamol","comprimido","isenta","não","Dor e febre."],
+["Dipirona 500mg/ml gotas","Dipirona","gotas","isenta","não","Dor e febre."],
+["Dipirona 500mg","Dipirona","comprimido","isenta","não","Dor e febre."],
+["Ibuprofeno 400mg","Ibuprofeno","cápsula","isenta","não","Dor e inflamação. Com água e alimento."],
+["Loratadina 10mg","Loratadina","comprimido","isenta","não","Alergia."],
+["Cetirizina 10mg","Cetirizina","comprimido","isenta","não","Alergia."],
+["Omeprazol 20mg","Omeprazol","cápsula","isenta","não","Azia. Jejum, confirme uso contínuo com médico."],
+["Soro fisiológico 0,9%","Cloreto de sódio","frasco","isenta","não","Limpeza nasal e curativos."],
+["Álcool 70%","Álcool etílico","frasco","isenta","não","Antissepsia."],
+["Amoxicilina 500mg","Amoxicilina","cápsula","vermelha","sim","Antibiótico. Só com receita."],
+["Azitromicina 500mg","Azitromicina","comprimido","vermelha","sim","Antibiótico. Só com receita."],
+["Losartana 50mg","Losartana potássica","comprimido","vermelha","sim","Pressão. Uso contínuo, só com receita."],
+["Enalapril 10mg","Enalapril","comprimido","vermelha","sim","Pressão. Só com receita."],
+["Metformina 850mg","Metformina","comprimido","vermelha","sim","Diabetes. Só com receita."],
+["Sinvastatina 20mg","Sinvastatina","comprimido","vermelha","sim","Colesterol. Só com receita."],
+["Nimesulida 100mg","Nimesulida","comprimido","vermelha","sim","Inflamação. Só com receita."],
+["Dexametasona 4mg","Dexametasona","comprimido","vermelha","sim","Corticoide. Só com receita."],
+["Fluoxetina 20mg","Fluoxetina","cápsula","vermelha","sim","Receita de controle especial (branca 2 vias)."],
+["Clonazepam 2mg","Clonazepam","comprimido","preta","sim","Receita azul (B). Controle especial."],["Termômetro Digital","Uso geral","unidade","isenta","não","Febre. Higienize antes e depois."],["Protetor Solar FPS30 200ml","Uso geral","frasco","isenta","não","Sol diário, reaplique."],["Vitamina C 1g 10cps","Ácido ascórbico","comprimido","isenta","não","Imunidade. Com água."],["Band-aid 40un","Curativo","caixa","isenta","não","Cortes pequenos."],["Shampoo Neutro 400ml","Uso geral","frasco","isenta","não","Higiene."],["Creme Dental 90g","Flúor","bisnaga","isenta","não","Escovação 3x/dia."]
+];
+const FARMS=[["Droga Raia","Ribeirão Preto"],["Drogasil","Ribeirão Preto"],["Drogaria São Paulo","Ribeirão Preto"],["Pague Menos","Ribeirão Preto"],["Drogal","Ribeirão Preto"],["Drogaria Total","Ribeirão Preto"],["Santa Marta","Ribeirão Preto"],["Ultrafarma","Ribeirão Preto"],["Farma Conde","Ribeirão Preto"],["Droga Raia","Sertãozinho"],["Drogasil","Sertãozinho"],["Drogaria São Paulo","Sertãozinho"],["Pague Menos","Sertãozinho"],["Drogal","Sertãozinho"],["Drogaria Total","Sertãozinho"],["Santa Marta","Sertãozinho"],["Droga Raia","Cravinhos"],["Drogasil","Cravinhos"],["Drogaria São Paulo","Cravinhos"],["Pague Menos","Cravinhos"],["Drogal","Cravinhos"],["Drogaria Total","Cravinhos"],["Santa Marta","Cravinhos"],["Droga Raia","Serrana"],["Drogasil","Serrana"],["Drogaria São Paulo","Serrana"],["Pague Menos","Serrana"],["Drogal","Serrana"],["Drogaria Total","Serrana"],["Santa Marta","Serrana"],["Droga Raia","Jaboticabal"],["Drogasil","Jaboticabal"],["Drogaria São Paulo","Jaboticabal"],["Pague Menos","Jaboticabal"],["Drogal","Jaboticabal"],["Drogaria Total","Jaboticabal"],["Santa Marta","Jaboticabal"],["Droga Raia","Batatais"],["Drogasil","Batatais"],["Drogaria São Paulo","Batatais"],["Pague Menos","Batatais"],["Drogal","Batatais"],["Drogaria Total","Batatais"],["Santa Marta","Batatais"],["Droga Raia","Bonfim Paulista"],["Drogasil","Bonfim Paulista"]]
+function tag(t){return t==="preta"?'<span class="tag preta">TARJA PRETA</span>':t==="vermelha"?'<span class="tag vermelha">TARJA VERMELHA</span>':'<span class="tag livre">ISENTO</span>';}
+async function buscaGov(q, base){
+  try{
+    const r=await fetch('/dosefiel-api/catalogo/publico?q='+encodeURIComponent(q)).then(x=>x.json());
+    const arr=(r&&r.results)||[];
+    if(!arr.length)return base;
+    try{
+      const rp=await fetch('/dosefiel-api/catalogo/publico?q='+encodeURIComponent(q)+'&tipo=pet').then(x=>x.json());
+      const pa=(rp&&rp.results)||[];
+      if(pa.length){base+='<div class="meta">🐾 Pet ('+pa.length+') — use veterinário, nunca medique sozinho:</div>'+pa.slice(0,8).map(g=>'<div class="card"><b>'+g.nome+'</b> <span class="tag livre">PET '+(g.receita||'')+'</span><div class="meta">'+(g.principio||'')+' · '+(g.uso||'')+(g.humano_eq?('<br>Humano: '+g.humano_eq):'')+(g.aviso?('<br>⚠️ '+g.aviso):'')+'</div></div>').join('');}
+    }catch(e){}
+    return base+'<div class="meta">Catálogo oficial ('+arr.length+'):</div>'+arr.slice(0,12).map(g=>{
+      const bula=g.bula?(' <a href="'+g.bula+'" target="_blank" rel="noopener">bula</a>'):'';
+      const fab=g.fabricante?('<br>'+g.fabricante):'';
+      return '<div class="card"><b>'+g.nome+'</b> <span class="tag livre">'+(g.origem||'GovBR')+'</span><div class="meta">'+(g.principio||'')+(g.registro?(' · reg '+g.registro):'')+fab+bula+'</div></div>';
+    }).join('');
+  }catch(e){return base;}
+}
+function busca(){
+  const q=(document.getElementById('q').value||'').toLowerCase();
+  const list=REMS.filter(r=>!q||r[0].toLowerCase().includes(q)||r[1].toLowerCase().includes(q)).slice(0,20);
+  var html=list.map(r=>{
+    const zap="https://wa.me/?text="+encodeURIComponent("Preciso: "+r[0]+" ("+r[2]+")");
+    return '<div class="card"><b>'+r[0]+'</b><div class="meta">'+tag(r[3])+' · receita: '+r[4]+' · '+r[2]+'<br>'+r[5]+'</div><div class="btns"><a class="btn dose" href="https://sparkbr.online/dose/">💊 Lembrete</a><a class="btn zap" href="'+zap+'">📲 Pedir</a></div></div>';
+  }).join('');
+  const box=document.getElementById('rems');
+  if(!html){box.innerHTML='<div class="meta">Buscando no catálogo oficial...</div>';}
+  else{box.innerHTML=html;}
+  buscaGov(document.getElementById('q').value||'', html||'<div class="meta">Nada no local — catálogo oficial:</div>').then(function(full){box.innerHTML=full;});
+}
+function maps(nome,cid){return "https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(nome+" "+cid+" farmacia");}
+function fnorm(s){try{return (s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');}catch(e){return (s||'').toLowerCase();}}
+let FGEO={};
+async function carregaFarmGeo(){try{const r=await fetch('/spark-api/estabelecimentos?tipo=farmacia').then(x=>x.json());const l=r.locais||r||[];l.forEach(e=>{try{FGEO[fnorm(e.nome)+'|'+fnorm(e.cidade)]=e;}catch(_){}});}catch(e){} renderFarms();}
+function renderFarms(){document.getElementById('farms').innerHTML=FARMS.map(f=>{const g=FGEO[fnorm(f[0])+'|'+fnorm(f[1])];let btns='<a class="btn map" href="'+maps(f[0],f[1])+'">📍 Ver no mapa</a>';if(g&&g.lat&&g.lng)btns+=' <a class="btn map" href="https://www.google.com/maps/dir/?api=1&destination='+g.lat+','+g.lng+'">rota 🧭</a>';return '<div class="card"><b>'+f[0]+'</b><div class="meta">'+f[1]+(g&&g.bairro?' · '+g.bairro:'')+' · confira unidade e horário no mapa</div><div class="btns">'+btns+'</div></div>';}).join('');}
+carregaFarmGeo();
+busca();
+</script>
+<button onclick="location.href='https://sparkbr.online/'" title="Voltar p/ área principal Spark" style="position:fixed;bottom:142px;right:10px;z-index:9000;background:#f59e0b;color:#fff;border:none;border-radius:50%;width:44px;height:44px;font-size:20px;font-weight:800;box-shadow:0 2px 8px rgba(0,0,0,.25)">⚡</button>
+<script src="/navegador/bridge/spark-family.js?v=2.1.0"></script>
+</body>
+</html>

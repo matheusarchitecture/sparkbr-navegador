@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-label="SparkBR">
+<defs><linearGradient id="bg" x1=".1" y1="1" x2=".9" y2="0"><stop stop-color="#0b2e24"/><stop offset="1" stop-color="#2a6249"/></linearGradient><linearGradient id="spark" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffe99c"/><stop offset=".48" stop-color="#f8c54c"/><stop offset="1" stop-color="#d99324"/></linearGradient><filter id="sh" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="15"/></filter></defs>
+<rect x="0" y="0" width="512" height="512" rx="130" fill="url(#bg)"/>
+<circle cx="268" cy="245" r="160" fill="#69b987" opacity=".12"/><circle cx="268" cy="245" r="172" fill="none" stroke="#e6f4db" stroke-width="2" stroke-dasharray="8 15" opacity=".24"/>
+<path d="M258 72 303 204 437 251 303 295 258 431 214 295 77 251 214 204Z" fill="#f9ca59" opacity=".5" filter="url(#sh)"/>
+<path d="M256 87 296 216 425 256 296 296 256 425 216 296 87 256 216 216Z" fill="url(#spark)"/>
+<path d="M256 139 287 233 375 256 287 280 256 372 224 280 137 256 224 233Z" fill="#ffebaf" opacity=".38"/>
+<circle cx="407" cy="117" r="11" fill="#fff3cb"/><circle cx="126" cy="377" r="8" fill="#fdc550"/>
+</svg>

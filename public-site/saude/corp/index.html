@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Spark Saúde Corporate — Painel da Academia</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,Arial,sans-serif;background:#0b0f0e;color:#e8f5e9}
+header{padding:28px 16px;text-align:center;background:linear-gradient(135deg,#0d3b26,#0a0f0e)}
+header h1{margin:0;font-size:26px}header p{opacity:.85;margin:8px 0 0}
+.wrap{max-width:960px;margin:0 auto;padding:16px}
+.card{background:#111816;border:1px solid #1f3329;border-radius:14px;padding:16px;margin:12px 0}
+.pitch{border-color:#2ecc71;background:linear-gradient(180deg,#0f2418,#111816)}
+.pitch .price{font-size:34px;font-weight:800;color:#2ecc71;margin:6px 0}
+.btn{display:inline-block;background:#2ecc71;color:#04120a;border:0;border-radius:10px;padding:12px 18px;font-weight:700;cursor:pointer;text-decoration:none}
+.btn.sec{background:#1f3329;color:#e8f5e9;border:1px solid #2ecc71}
+input{width:100%;padding:12px;border-radius:10px;border:1px solid #2a4438;background:#0b0f0e;color:#fff;margin:6px 0}
+label{font-size:13px;opacity:.8}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:12px 0}
+.widget{background:#0d1512;border:1px solid #1f3329;border-radius:12px;padding:14px;text-align:center}
+.widget b{display:block;font-size:28px;color:#2ecc71}
+.widget span{font-size:13px;opacity:.8}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{padding:10px;border-bottom:1px solid #1f3329;text-align:left}
+th{color:#2ecc71;font-size:12px;text-transform:uppercase}
+.msg{padding:10px;border-radius:10px;margin:8px 0;display:none}
+.msg.err{display:block;background:#3b1212;border:1px solid #e74c3c}
+.msg.ok{display:block;background:#0f2f1c;border:1px solid #2ecc71}
+small{opacity:.7}
+footer{padding:24px;text-align:center;opacity:.7;font-size:13px}
+</style>
+
+<link rel="stylesheet" href="/assets/brand.css?v=20261013">
+<link rel="stylesheet" href="/assets/app-shell.css?v=20261013b">
+<script defer data-spark-rebrand src="/assets/app-shell.js?v=20261013b"></script>
+</head>
+<body data-spark-page="saude-corp" data-spark-layout="auxiliary">
+<header>
+<h1>Spark Saúde Corporate</h1>
+<p>Painel da academia — alunos, ativos 7d, trials e pagos. Sem tocar no app.</p>
+</header>
+<div class="wrap">
+
+<div class="card pitch">
+<h2 style="margin:0">Spark Saúde para academias — R$499/mês</h2>
+<div class="price">R$499/mês / academia</div>
+<p style="margin:6px 0">1 painel por academia: vincule alunos por <b>empresa</b>, veja ativos 7d (dieta + hábitos), streak de treino, trials vs pagos e exporte CSV. Sem expor e-mail/senha dos alunos.</p>
+<ul>
+<li>Alunos vinculados por nome da academia</li>
+<li>Widgets: alunos • ativos 7d • trials • pagos • churn</li>
+<li>Tabela sem PII sensível + CSV</li>
+<li>Login com admin já existente do app</li>
+</ul>
+<a class="btn" href="https://wa.me/5516981231719?text=Quero%20Setup%20PRO%20Corporate%20R%24499%2Fm%C3%AAs" target="_blank" rel="noopener">Falar no WhatsApp</a>
+<small style="display:block;margin-top:8px">Pitch embutido • Pagamento manual via WhatsApp • Sem Pix/afiliados alterados</small>
+</div>
+
+<div class="card" id="login-card">
+<h3 style="margin-top:0">1) Login admin</h3>
+<p><small>Use o mesmo e-mail + senha de admin do app Spark Saúde (/setup/admin/). Nada novo foi criado.</small></p>
+<label>E-mail admin</label>
+<input id="email" type="email" autocomplete="username" placeholder="admin@academia.com">
+<label>Senha</label>
+<input id="senha" type="password" autocomplete="current-password" placeholder="••••••••">
+<button class="btn" id="btn-login">Entrar</button>
+<div class="msg" id="login-msg"></div>
+<div id="admin-ok" style="display:none"><small id="admin-who"></small></div>
+</div>
+
+<div class="card" id="corp-card" style="display:none">
+<h3 style="margin-top:0">2) Academia</h3>
+<label>Nome da empresa / academia (igual ao vínculo do aluno)</label>
+<input id="empresa" placeholder="Ex: Academia TESTE">
+<div style="display:flex;gap:8px;flex-wrap:wrap">
+<button class="btn" id="btn-buscar">Buscar</button>
+<button class="btn sec" id="btn-csv">Exportar CSV</button>
+<button class="btn sec" id="btn-sair">Sair</button>
+</div>
+<div class="msg" id="corp-msg"></div>
+<div class="grid">
+<div class="widget"><b id="w-alunos">–</b><span>alunos vinculados</span></div>
+<div class="widget"><b id="w-ativos">–</b><span>ativos 7d (dieta/hábitos)</span></div>
+<div class="widget"><b id="w-trials">–</b><span>trials</span></div>
+<div class="widget"><b id="w-pagos">–</b><span>pagos</span></div>
+<div class="widget"><b id="w-churn">–</b><span>churn (total-ativos)</span></div>
+</div>
+<h3>Tabela alunos <small>(sem e-mail/senha)</small></h3>
+<table>
+<thead><tr><th>apelido</th><th>plano</th><th>ativo 7d</th><th>streak</th></tr></thead>
+<tbody id="tbody"><tr><td colspan="4"><small>Nenhum dado. Busque uma empresa.</small></td></tr></tbody>
+</table>
+<small id="meta"></small>
+</div>
+
+</div>
+<footer>Spark Saúde Corporate • /setup/corp/ • backend /saude-api/corp/* (admin only)</footer>
+<script>
+(function(){
+var token = localStorage.getItem('corp_token') || '';
+var lastAlunos = [];
+var lastEmpresa = '';
+function $(id){return document.getElementById(id);}
+function msg(el,txt,ok){var m=$(el);if(!txt){m.style.display='none';m.textContent='';return;}m.textContent=txt;m.className='msg '+(ok?'ok':'err');m.style.display='block';}
+function api(path,opts){
+opts=opts||{};
+opts.headers=opts.headers||{};
+if(token)opts.headers['Authorization']='Bearer '+token;
+return fetch(path,opts).then(function(r){return r.json().then(function(j){return {status:r.status,body:j};});});
+}
+function showLogin(){ $('login-card').style.display='block'; }
+function showCorp(adminNome){
+$('corp-card').style.display='block';
+$('admin-ok').style.display='block';
+$('admin-who').textContent='Logado como admin. Token salvo neste navegador.';
+}
+$('btn-login').onclick=function(){
+msg('login-msg','',true);
+var e=$('email').value.trim(), s=$('senha').value;
+if(!e||!s){msg('login-msg','Informe e-mail e senha.',false);return;}
+fetch('/saude-api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:e,senha:s})})
+.then(function(r){return r.json().then(function(j){return {st:r.status,j:j};});})
+.then(function(r){
+if(!r.j.ok){msg('login-msg','Login falhou: '+(r.j.error||r.st),false);return;}
+if(!r.j.perfil||!r.j.perfil.admin){msg('login-msg','Conta não é admin. Acesso corporate só para admin.',false);return;}
+token=r.j.token;
+try{localStorage.setItem('corp_token',token);}catch(e){}
+msg('login-msg','Admin OK.',true);
+showCorp();
+})
+.catch(function(){msg('login-msg','Erro rede.',false);});
+};
+$('btn-sair').onclick=function(){token='';try{localStorage.removeItem('corp_token');}catch(e){}$('corp-card').style.display='none';$('login-card').style.display='block';};
+$('btn-buscar').onclick=function(){
+msg('corp-msg','',true);
+var emp=$('empresa').value.trim();
+if(emp.length<2){msg('corp-msg','Informe a empresa (min 2 letras).',false);return;}
+lastEmpresa=emp;
+var q='?empresa='+encodeURIComponent(emp);
+api('/saude-api/corp/resumo'+q).then(function(r){
+if(r.status===403){msg('corp-msg','403 admin only. Faça login admin.',false);return;}
+if(r.status===401){msg('corp-msg','401 login expirado. Entre de novo.',false);return;}
+if(!r.body.ok){msg('corp-msg','Erro resumo: '+(r.body.error||r.status),false);return;}
+$('w-alunos').textContent=r.body.alunos;
+$('w-ativos').textContent=r.body.ativos_7d;
+$('w-trials').textContent=r.body.trials;
+$('w-pagos').textContent=r.body.pagos;
+$('w-churn').textContent=r.body.churn;
+$('meta').textContent='Empresa: '+r.body.empresa+' • total '+r.body.total;
+});
+api('/saude-api/corp/alunos'+q).then(function(r){
+if(!r.body.ok){msg('corp-msg','Erro alunos: '+(r.body.error||r.status),false);return;}
+lastAlunos=r.body.alunos||[];
+var tb=$('tbody');tb.innerHTML='';
+if(!lastAlunos.length){tb.innerHTML='<tr><td colspan="4"><small>Nenhum aluno vinculado a esta empresa.</small></td></tr>';return;}
+lastAlunos.forEach(function(a){
+var tr=document.createElement('tr');
+var td1=document.createElement('td');td1.textContent=a.apelido||'';
+var td2=document.createElement('td');td2.textContent=a.plano||'';
+var td3=document.createElement('td');td3.textContent=a.ativo_7d?'sim':'não';
+var td4=document.createElement('td');td4.textContent=(a.streak==null?'0':a.streak);
+tr.appendChild(td1);tr.appendChild(td2);tr.appendChild(td3);tr.appendChild(td4);
+tb.appendChild(tr);
+});
+msg('corp-msg','OK: '+lastAlunos.length+' aluno(s).',true);
+});
+};
+$('btn-csv').onclick=function(){
+if(!lastAlunos.length){msg('corp-msg','Nada para exportar. Busque primeiro.',false);return;}
+var rows=[['apelido','plano','ativo_7d','streak']];
+lastAlunos.forEach(function(a){rows.push([(a.apelido||'').replace(/;/g,','),(a.plano||''),(a.ativo_7d?'1':'0'),String(a.streak==null?0:a.streak)]);});
+var csv=rows.map(function(r){return r.join(';');}).join('\n');
+var blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
+var a=document.createElement('a');
+a.href=URL.createObjectURL(blob);
+a.download='corp-'+(lastEmpresa||'empresa').replace(/[^a-z0-9-_]+/gi,'-')+'.csv';
+document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},500);
+};
+// auto: se já tem token, tenta validar via /me
+if(token){
+api('/saude-api/me').then(function(r){
+if(r.body&&r.body.ok&&r.body.perfil&&r.body.perfil.admin){showCorp();}
+else{try{localStorage.removeItem('corp_token');}catch(e){}token='';}
+});
+}
+})();
+</script>
+</body>
+</html>

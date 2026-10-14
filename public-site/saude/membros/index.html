@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Área Membros V2 — Spark Saúde</title>
+<meta name="description" content="Área de membros SPARK SAÚDE V2: entre com e-mail+senha ou Google, veja seu plano e abra app, dieta, hábitos, IA e comunidade.">
+<link rel="canonical" href="https://sparkbr.online/saude/membros/">
+<style>
+:root{--bg:#070b08;--green:#22c55e;--txt:#e8f5e9;--mut:#9fb3a3;--line:#1e2d22}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(900px 450px at 50% -10%,#12351f 0%,var(--bg) 55%) fixed,var(--bg);color:var(--txt);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+.wrap{max-width:560px;margin:0 auto;padding:14px}
+.top{position:sticky;top:0;z-index:20;background:#070b08cc;backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.topin{max-width:560px;margin:0 auto;padding:10px 14px;display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.logo{font-weight:900}.logo b{color:var(--green)}
+.btn{display:inline-block;background:var(--green);color:#06130a;border:0;border-radius:12px;padding:14px 18px;font-weight:900;font-size:16px;text-decoration:none;text-align:center;width:100%;cursor:pointer}
+.btn2{display:inline-block;background:#0f1a11;color:var(--green);border:1px solid var(--green);border-radius:10px;padding:11px 14px;font-weight:800;text-decoration:none;margin:6px 6px 0 0;font-size:14px;cursor:pointer}
+.card{background:#ffffff08;border:1px solid #ffffff1f;border-radius:16px;padding:16px;margin:12px 0}
+.card h2{margin:4px 0 8px;color:var(--green);font-size:18px}
+.mut{color:var(--mut);font-size:13px;line-height:1.55}
+input{width:100%;padding:13px;border-radius:10px;border:1px solid var(--line);background:#0f1510;color:var(--txt);margin:6px 0;font-size:16px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}@media(max-width:420px){.grid{grid-template-columns:1fr}}
+.link{background:#0f1a11;border:1px solid var(--line);border-radius:12px;padding:14px;text-align:center;text-decoration:none;color:var(--txt);font-weight:800;display:block}.link small{display:block;color:var(--mut);font-weight:400;font-size:12px}
+.badge{display:inline-block;background:var(--green);color:#06130a;font-weight:900;border-radius:999px;padding:4px 12px;font-size:12px}
+footer{color:var(--mut);font-size:12px;text-align:center;padding:18px}
+#msg{min-height:20px;font-size:13px;color:var(--mut)}
+</style>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+
+<link rel="stylesheet" href="/assets/brand.css?v=20261013">
+<link rel="stylesheet" href="/assets/app-shell.css?v=20261013b">
+<script defer data-spark-rebrand src="/assets/app-shell.js?v=20261013b"></script>
+</head>
+<body data-spark-page="saude-membros" data-spark-layout="auxiliary">
+<div class="top"><div class="topin"><div class="logo">👤 MEMBROS <b>V2</b></div><div><a class="btn2" href="/saude/landing/">🏷️ Landing</a><a class="btn2" href="/saude/">📱 App</a><a class="btn2" href="/saude/pro/">💎 PRO</a></div></div></div>
+<div class="wrap">
+<div class="card" id="loginCard"><h2>👋 Entrar (mesma conta do app)</h2>
+<p class="mut">Use o mesmo e-mail+senha do /saude/ ou o Google. O token fica salvo como no app (<code>setuppro-token</code>).</p>
+<input id="email" type="email" placeholder="seu@email.com" autocomplete="email">
+<input id="senha" type="password" placeholder="senha (6+)" autocomplete="current-password">
+<button class="btn" onclick="doLogin()">Entrar</button>
+<div style="margin-top:10px" id="gBtn"></div>
+<p id="msg"></p>
+<p class="mut">Novo aqui? <a style="color:#22c55e" href="/saude/">Criar conta grátis (7d PRO)</a> · Esqueceu? use o app → Entrar → Recuperar.</p></div>
+<div class="card" id="painelCard" style="display:none"><h2>✅ Olá, <span id="mNome">aluno</span> <span class="badge" id="mPlano">plano</span></h2>
+<p class="mut" id="mInfo">Carregando plano via /me…</p>
+<div class="grid">
+<a class="link" href="/saude/#app">📱 App<small>abrir programa</small></a>
+<a class="link" href="/saude/#dieta">🍲 Dieta<small>foto-IA + histórico</small></a>
+<a class="link" href="/saude/#habitos">💧 Hábitos<small>água + sono + treino</small></a>
+<a class="link" href="/saude/#ia">🤖 IA Coach<small>perguntas + relatório</small></a>
+<a class="link" href="/saude/#comunidade">👥 Comunidade<small>chat + ranking</small></a>
+<a class="link" href="/saude/pro/">💎 Ser PRO<small>v2_mensal/trimestral/anual</small></a>
+</div>
+<div style="margin-top:10px"><button class="btn2" onclick="instalarPWA()">📲 Instalar PWA</button><button class="btn2" onclick="doLogout()">🚪 Sair</button><a class="btn2" href="/saude/landing/">🏷️ Ver landing</a></div>
+<p class="mut" id="pwaMsg">Android: Chrome → ⋮ → Instalar. iPhone: Safari → Compartilhar → Adicionar à Tela de Início (iOS 16.4+ p/ push).</p></div>
+<div class="card"><h2>💎 Sem PRO ainda?</h2><p class="mut">V2 Mensal R$49,90 · Trimestral R$129,90 · Anual R$349,90 (&lt;R$1/dia). Trial 7d + garantia 7d. Pix QR no app + Whats 5516981231719.</p><a class="btn" href="/saude/pro/?utm_source=membros-v2">Ver planos V2</a></div>
+</div>
+<footer>Spark Saúde V2 Membros · <a style="color:#22c55e" href="/saude/">app</a> · <a style="color:#22c55e" href="/saude/landing/">landing</a> · <a style="color:#22c55e" href="/saude/pro/">pro</a></footer>
+<script>
+var API="/saude-api",TK="setuppro-token",deferredPrompt=null;
+function msg(t){try{document.getElementById("msg").innerText=t||""}catch(e){}}
+function tok(){try{return localStorage.getItem(TK)||""}catch(e){return ""}}
+async function api(p,b,t){try{var h={"Content-Type":"application/json"};if(t)h["Authorization"]="Bearer "+t;var r=await fetch(API+p,{method:b===undefined?"GET":"POST",headers:h,body:b===undefined?undefined:JSON.stringify(b)});var j=null;try{j=await r.json()}catch(e){}return{status:r.status,ok:r.ok&&j&&j.ok,data:j}}catch(e){return{status:0,ok:false,data:null}}}
+async function doLogin(){var e=document.getElementById("email").value.trim().toLowerCase(),s=document.getElementById("senha").value;if(!e||s.length<6){msg("Preencha e-mail e senha (6+).");return}msg("Entrando…");var r=await api("/login",{email:e,senha:s});if(!r.ok){msg("Falhou: "+((r.data&&r.data.error)||r.status));return}try{localStorage.setItem(TK,r.data.token)}catch(e){}msg("OK! Carregando plano…");await loadMe();}
+async function loadMe(){var t=tok();if(!t){showLogin();return}var r=await api("/me",undefined,t);if(!r.ok){showLogin();msg("Sessão expirada, entre de novo.");return}var p=(r.data&&r.data.perfil)||{};document.getElementById("loginCard").style.display="none";document.getElementById("painelCard").style.display="block";document.getElementById("mNome").innerText=p.nome||"aluno";var plano=(p.plano||"gratis"),pro=(p.pro_ate||0),trial=(p.trial_ate||0);document.getElementById("mPlano").innerText=plano;var txt="Plano: "+plano;try{if(pro&&pro>Date.now()/1000){var d=new Date(pro*1000);txt+=" · PRO até "+d.toLocaleDateString("pt-BR")}else{txt+=" · grátis (1 IA/dia)"}if(p.email)txt+=" · "+p.email;}catch(e){}document.getElementById("mInfo").innerText=txt;}
+function showLogin(){document.getElementById("loginCard").style.display="block";document.getElementById("painelCard").style.display="none";}
+async function doLogout(){var t=tok();try{if(t)await api("/logout",{},t)}catch(e){}try{localStorage.removeItem(TK)}catch(e){}showLogin();msg("Saiu. Até breve!");}
+async function initGoogle(){try{var r=await fetch(API+"/google-client-id").then(function(x){return x.json()});var cid=(r&&r.client_id)||"";if(!cid)return;if(!window.google||!google.accounts)return setTimeout(initGoogle,800);google.accounts.id.initialize({client_id:cid,callback:async function(resp){msg("Google OK, entrando…");var g=await api("/google-login",{id_token:resp.credential});if(!g.ok){msg("Google falhou: "+((g.data&&g.data.error)||""));return}try{localStorage.setItem(TK,g.data.token)}catch(e){}await loadMe();}});google.accounts.id.renderButton(document.getElementById("gBtn"),{theme:"outline",size:"large",width:320});}catch(e){}}
+window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();deferredPrompt=e;try{document.getElementById("pwaMsg").innerText="📲 Pronto para instalar! Toque em Instalar PWA."}catch(_){}});
+async function instalarPWA(){try{if(deferredPrompt){deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;return}document.getElementById("pwaMsg").innerText="Android: Chrome → ⋮ → Instalar app. iPhone: Safari → Compartilhar → Tela de Início."}catch(e){}}
+(function(){try{var q=location.search||"";if(q&&(q.indexOf("ref=")>=0||q.indexOf("utm_")>=0)){document.querySelectorAll('a[href^="/saude/"]').forEach(function(a){try{var h=a.getAttribute("href");if(!h||h.indexOf("?")>=0)return;if(h.indexOf("#")>=0){var p=h.split("#");a.setAttribute("href",p[0]+q+"#"+p[1])}else{a.setAttribute("href",h+q)}}catch(e){}})}}catch(e){}})();
+loadMe();setTimeout(initGoogle,600);
+</script>
+</body>
+</html>

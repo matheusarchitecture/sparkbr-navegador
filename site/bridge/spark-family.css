@@ -1,0 +1,66 @@
+/* SparkBR family panel — scoped styles to avoid changing app-specific layouts. */
+.spark-family-trigger{appearance:none!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:7px!important;border:1px solid #c8e8d9!important;border-radius:999px!important;padding:10px 14px!important;background:#eaf8f0!important;color:#11543c!important;font:750 12px/1.2 system-ui,-apple-system,"Segoe UI",sans-serif!important;cursor:pointer!important;box-shadow:0 4px 14px #123b2412!important;white-space:nowrap!important}
+.spark-family-trigger:hover{background:#d8f3e4!important;transform:translateY(-1px)}
+.spark-family-trigger-floating{position:fixed!important;right:18px!important;bottom:18px!important;z-index:9998!important}
+.spark-family-overlay[hidden]{display:none!important}
+.spark-family-overlay{position:fixed!important;inset:0!important;z-index:99999!important;display:grid!important;place-items:center!important;padding:16px!important;background:rgba(8,20,18,.62)!important;backdrop-filter:blur(7px)!important;font-family:system-ui,-apple-system,"Segoe UI",sans-serif!important;color:#172b24!important}
+.spark-family-panel{box-sizing:border-box!important;width:min(560px,100%)!important;max-height:min(88vh,820px)!important;overflow:auto!important;border:1px solid #dbe8df!important;border-radius:24px!important;background:#fbfdfb!important;box-shadow:0 24px 90px #061a1270!important;padding:0!important;margin:0!important}
+.spark-family-panel *{box-sizing:border-box}
+.spark-family-head{display:flex!important;align-items:flex-start!important;justify-content:space-between!important;gap:18px!important;padding:24px 24px 18px!important;border-bottom:1px solid #e4ece6!important;background:linear-gradient(135deg,#f2fbf5,#fff)!important}
+.spark-family-eyebrow{display:block!important;font-size:10px!important;letter-spacing:.15em!important;font-weight:850!important;color:#27805b!important}
+.spark-family-head h2{margin:6px 0 0!important;font-size:25px!important;line-height:1.15!important;letter-spacing:-.045em!important;color:#18382b!important}
+.spark-family-close{appearance:none!important;flex:0 0 auto!important;width:36px!important;height:36px!important;border:1px solid #dce8df!important;border-radius:50%!important;background:#fff!important;color:#315343!important;font-size:25px!important;line-height:1!important;cursor:pointer!important}
+.spark-family-content{padding:20px 24px 24px!important}
+.spark-family-content p{margin:0 0 12px!important}
+.spark-family-intro{font-size:13px!important;line-height:1.6!important;color:#62756a!important}
+.spark-family-modes{display:grid!important;grid-template-columns:1fr 1fr!important;gap:8px!important;margin:14px 0!important}
+.spark-family-mode{border:1px solid #dce9e0!important;border-radius:12px!important;background:#fff!important;padding:11px!important;color:#4a6657!important;font-size:12px!important;font-weight:750!important;cursor:pointer!important}
+.spark-family-mode[aria-pressed="true"]{border-color:#65bd8c!important;background:#e9f8ef!important;color:#125c3b!important}
+.spark-family-form{display:grid!important;gap:11px!important}
+.spark-family-form label{display:grid!important;gap:6px!important;color:#496354!important;font-size:11px!important;font-weight:750!important}
+.spark-family-form input,.spark-family-join input,.spark-family-add input,.spark-family-select{width:100%!important;min-height:43px!important;border:1px solid #d8e5dc!important;border-radius:12px!important;background:#fff!important;padding:10px 12px!important;color:#1b3528!important;font:500 13px/1.35 system-ui,-apple-system,"Segoe UI",sans-serif!important;outline:none!important}
+.spark-family-form input:focus,.spark-family-join input:focus,.spark-family-add input:focus,.spark-family-select:focus{border-color:#4aaf7b!important;box-shadow:0 0 0 3px #49b47b20!important}
+.spark-family-primary,.spark-family-secondary,.spark-family-copy,.spark-family-logout{appearance:none!important;border:0!important;border-radius:12px!important;min-height:43px!important;padding:11px 14px!important;font:800 12px/1.2 system-ui,-apple-system,"Segoe UI",sans-serif!important;cursor:pointer!important}
+.spark-family-primary{background:#16794f!important;color:#fff!important;box-shadow:0 6px 16px #16794f20!important}
+.spark-family-secondary{background:#e9f5ed!important;border:1px solid #d4e9dc!important;color:#17613e!important}
+.spark-family-copy{background:#fff!important;border:1px solid #d4e9dc!important;color:#17613e!important;margin-top:8px!important}
+.spark-family-logout{background:#fff!important;border:1px solid #f0d7d7!important;color:#9b3535!important;margin-top:16px!important;width:100%!important}
+.spark-family-primary:disabled,.spark-family-secondary:disabled,.spark-family-copy:disabled{opacity:.55!important;cursor:wait!important}
+.spark-family-live{min-height:0!important;margin:10px 0 0!important;font-size:12px!important;line-height:1.5!important;color:#24734d!important}
+.spark-family-live:empty{display:none!important}
+.spark-family-live.is-error{color:#a83232!important}
+.spark-family-profile{display:flex!important;align-items:center!important;gap:12px!important;padding:14px!important;border:1px solid #dcece1!important;border-radius:16px!important;background:#f1faf4!important;margin-bottom:14px!important}
+.spark-family-avatar{display:grid!important;place-items:center!important;width:44px!important;height:44px!important;border-radius:14px!important;background:#d7f2e2!important;color:#17613e!important;font-size:23px!important}
+.spark-family-profile strong,.spark-family-profile small,.spark-family-familyname{display:block!important}
+.spark-family-profile strong{font-size:14px!important;color:#18382b!important}
+.spark-family-profile small{font-size:11px!important;color:#6c8074!important;margin-top:2px!important;overflow-wrap:anywhere!important}
+.spark-family-familyname{font-size:11px!important;font-weight:750!important;color:#27805b!important;margin-top:5px!important}
+.spark-family-row{display:grid!important;gap:8px!important}
+.spark-family-invite-result{display:flex!important;align-items:center!important;gap:10px!important;flex-wrap:wrap!important;padding:0!important;color:#236b48!important}
+.spark-family-invite-result strong{font-size:18px!important;letter-spacing:.12em!important}
+.spark-family-invite-result small{font-size:11px!important;color:#687b70!important}
+.spark-family-join{display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;gap:8px!important;margin-top:12px!important}
+.spark-family-divider{height:1px!important;background:#e3ece5!important;margin:20px 0!important}
+.spark-family-section-head{display:flex!important;justify-content:space-between!important;align-items:end!important;gap:12px!important;margin-bottom:10px!important}
+.spark-family-section-head h3{font-size:15px!important;margin:0!important;color:#18382b!important;letter-spacing:-.025em!important}
+.spark-family-section-head small{font-size:10px!important;color:#6b8073!important;text-align:right!important}
+.spark-family-select{margin-bottom:10px!important}
+.spark-family-records{display:grid!important;gap:8px!important;max-height:230px!important;overflow:auto!important;margin:0 0 12px!important}
+.spark-family-record{display:flex!important;align-items:flex-start!important;justify-content:space-between!important;gap:10px!important;border:1px solid #e0e9e2!important;border-radius:13px!important;background:#fff!important;padding:11px 12px!important}
+.spark-family-record-text{min-width:0!important;display:grid!important;gap:4px!important}
+.spark-family-record-text strong{font-size:12px!important;line-height:1.4!important;overflow-wrap:anywhere!important;color:#254333!important}
+.spark-family-record-text small{font-size:10px!important;line-height:1.45!important;overflow-wrap:anywhere!important;color:#728277!important}
+.spark-family-record-text .spark-family-record-meta{color:#39805c!important}
+.spark-family-delete{appearance:none!important;flex:0 0 auto!important;border:1px solid #f0dddd!important;border-radius:50%!important;width:28px!important;height:28px!important;background:#fff7f7!important;color:#9b3535!important;font-size:20px!important;line-height:1!important;cursor:pointer!important}
+.spark-family-add{display:grid!important;gap:8px!important;padding:12px!important;border:1px dashed #cbded0!important;border-radius:15px!important;background:#f5fbf6!important}
+.spark-family-empty,.spark-family-loading{font-size:12px!important;line-height:1.5!important;color:#718176!important;padding:14px!important;border-radius:12px!important;background:#f4f8f5!important;text-align:center!important}
+.spark-family-private{padding:14px!important;border:1px solid #e8e2c9!important;border-radius:14px!important;background:#fffbed!important;color:#6b5b2b!important}
+.spark-family-private strong{display:block!important;font-size:12px!important;margin-bottom:6px!important}
+.spark-family-private p{font-size:11px!important;line-height:1.6!important;margin:0!important}
+@media(max-width:520px){.spark-family-trigger-floating{right:12px!important;bottom:12px!important}.spark-family-overlay{padding:7px!important;align-items:end!important}.spark-family-panel{max-height:94vh!important;border-radius:20px!important}.spark-family-head{padding:19px 18px 14px!important}.spark-family-head h2{font-size:22px!important}.spark-family-content{padding:16px 18px 20px!important}.spark-family-join{grid-template-columns:1fr!important}.spark-family-join button{width:100%!important}}
+
+.spark-family-account-link{display:block!important;margin-top:14px!important;color:#24734d!important;font:750 11px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif!important;text-decoration:none!important;text-align:center!important}
+.spark-family-account-link:hover{text-decoration:underline!important}
+
+.spark-family-switch-label{display:grid!important;gap:6px!important;margin:0 0 12px!important;color:#496354!important;font-size:11px!important;font-weight:750!important}
+.spark-family-switch-label .spark-family-select{margin-bottom:0!important}

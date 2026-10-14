@@ -1,0 +1,10 @@
+# Exemplo para incluir no bloco server HTTPS EXISTENTE de sparkbr.online.
+# Mantenha intactos os locations dos 23 aplicativos. Atenção à ordem das rotas.
+location /navegador/ {
+    proxy_pass http://127.0.0.1:3080/navegador/;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_connect_timeout 10s;
+    proxy_read_timeout 35s;
+}

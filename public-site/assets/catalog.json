@@ -1,0 +1,163 @@
+[
+  {
+    "id": 1,
+    "nome": "Spark Mercado",
+    "url": "https://sparkbr.online/spark/",
+    "categoria": "Compras inteligentes",
+    "descricao": "Organize a lista de compras, compare mercados e cuide da despensa com apoio da IA."
+  },
+  {
+    "id": 2,
+    "nome": "SparkMat Obra",
+    "url": "https://sparkbr.online/sparkmat/",
+    "categoria": "Casa e obra",
+    "descricao": "Planeje materiais, etapas da obra e custos de compra."
+  },
+  {
+    "id": 3,
+    "nome": "SparkPet",
+    "url": "https://sparkbr.online/sparkpet/",
+    "categoria": "Cuidado animal",
+    "descricao": "Organize a rotina, as compras e os serviços para seus pets."
+  },
+  {
+    "id": 4,
+    "nome": "Spark Saúde",
+    "url": "https://sparkbr.online/saude/",
+    "categoria": "Saúde e bem-estar",
+    "descricao": "Registre treinos, alimentação e evolução pessoal com apoio de ferramentas inteligentes."
+  },
+  {
+    "id": 5,
+    "nome": "Spark Água",
+    "url": "https://sparkbr.online/agua/",
+    "categoria": "Hábitos diários",
+    "descricao": "Acompanhe sua meta de hidratação e os copos de água ao longo do dia."
+  },
+  {
+    "id": 6,
+    "nome": "Spark Posto",
+    "url": "https://sparkbr.online/posto/",
+    "categoria": "Mobilidade",
+    "descricao": "Compare preços de combustível e acompanhe seus gastos com o carro."
+  },
+  {
+    "id": 7,
+    "nome": "Família Spark",
+    "url": "https://sparkbr.online/familia/",
+    "categoria": "Rotina em família",
+    "descricao": "Reúna pessoas, pets, metas, hábitos e atalhos para os apps da família."
+  },
+  {
+    "id": 8,
+    "nome": "Spark Financeiro",
+    "url": "https://sparkbr.online/financeiro/",
+    "categoria": "Planejamento",
+    "descricao": "Organize gastos e acompanhe planos de economia para seus objetivos."
+  },
+  {
+    "id": 9,
+    "nome": "Spark Farmácia",
+    "url": "https://sparkbr.online/farmacia/",
+    "categoria": "Saúde e cuidado",
+    "descricao": "Consulte informações sobre medicamentos e farmácias da região."
+  },
+  {
+    "id": 10,
+    "nome": "Spark Dose",
+    "url": "https://sparkbr.online/dose/",
+    "categoria": "Cuidado contínuo",
+    "descricao": "Organize horários, estoque e lembretes de medicação."
+  },
+  {
+    "id": 11,
+    "nome": "AstroMatch",
+    "url": "https://sparkbr.online/astromatch/",
+    "categoria": "Encontros",
+    "descricao": "Descubra afinidades astrológicas e converse com novas pessoas em um app de encontros para maiores de 18 anos."
+  },
+  {
+    "id": 12,
+    "nome": "Contas da Casa",
+    "url": "https://sparkbr.online/contas/",
+    "categoria": "Casa em dia",
+    "descricao": "Organize boletos, vencimentos e registros de contas pagas."
+  },
+  {
+    "id": 13,
+    "nome": "Cardápio da Semana",
+    "url": "https://sparkbr.online/cardapio/",
+    "categoria": "Mesa posta",
+    "descricao": "Planeje as refeições da semana e envie os itens para a lista do Mercado."
+  },
+  {
+    "id": 14,
+    "nome": "Agenda da Família",
+    "url": "https://sparkbr.online/agenda/",
+    "categoria": "Tempo junto",
+    "descricao": "Reúna compromissos da escola, consultas, obra e responsabilidades em um calendário."
+  },
+  {
+    "id": 15,
+    "nome": "Cofrinho & Dívidas",
+    "url": "https://sparkbr.online/cofrinho/",
+    "categoria": "Guardar junto",
+    "descricao": "Acompanhe metas de economia, aportes e a organização das dívidas."
+  },
+  {
+    "id": 16,
+    "nome": "Faxina da Casa",
+    "url": "https://sparkbr.online/faxina/",
+    "categoria": "Casa brilhando",
+    "descricao": "Divida a limpeza por cômodo, dia e responsável."
+  },
+  {
+    "id": 17,
+    "nome": "Escola & Crianças",
+    "url": "https://sparkbr.online/escola/",
+    "categoria": "Filhos",
+    "descricao": "Organize lições, materiais, mochila e compromissos dos filhos."
+  },
+  {
+    "id": 18,
+    "nome": "Carteirinha & Exames",
+    "url": "https://sparkbr.online/carteirinha/",
+    "categoria": "Prevenção",
+    "descricao": "Reúna receitas, exames e vacinas por pessoa, com alertas de renovação."
+  },
+  {
+    "id": 19,
+    "nome": "Luz, Água & Gás",
+    "url": "https://sparkbr.online/energia/",
+    "categoria": "Conta leve",
+    "descricao": "Registre leituras, acompanhe metas de consumo e organize o controle do botijão."
+  },
+  {
+    "id": 20,
+    "nome": "Bico & Renda Extra",
+    "url": "https://sparkbr.online/bico/",
+    "categoria": "Ganhar mais",
+    "descricao": "Registre ganhos de freelas, turnos e vendas e acompanhe a meta do mês."
+  },
+  {
+    "id": 21,
+    "nome": "Cantinho do Sono",
+    "url": "https://sparkbr.online/sono/",
+    "categoria": "Descanso",
+    "descricao": "Registre noites de sono e acompanhe a rotina de descanso da família."
+  },
+  {
+    "id": 22,
+    "nome": "Mural de Elogios",
+    "url": "https://sparkbr.online/mural/",
+    "categoria": "Comunidade",
+    "descricao": "Celebre e compartilhe as conquistas da família."
+  },
+  {
+    "id": 23,
+    "nome": "Canal de Ideias",
+    "url": "https://sparkbr.online/ideias/",
+    "categoria": "Voz da família",
+    "descricao": "Envie sugestões, vote e acompanhe o andamento de novas ideias para os apps."
+  }
+]

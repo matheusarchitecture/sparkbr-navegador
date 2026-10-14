@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0f172a">
+<link rel="manifest" href="/manual/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/saude/icon-192.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/manual/sw.js").catch(function(){});});}</script>
+<title>Manual Spark — passo a passo completo | Spark Apps</title>
+<style>
+body{font-family:system-ui;margin:0;background:#0f172a;color:#fff}
+.wrap{max-width:640px;margin:0 auto;padding:20px 14px 80px}
+h1{font-size:22px;margin:6px 0}
+.sub{color:#94a3b8;font-size:13px;margin-bottom:10px}
+.card{background:#fff;color:#0f172a;border-radius:14px;padding:14px;margin:10px 0}
+.card b.t{font-size:15px}
+.meta{font-size:12px;color:#475569;margin-top:4px;line-height:1.55}
+.meta li{margin:3px 0}
+.secao{font-size:14px;font-weight:800;color:#38bdf8;margin:22px 0 4px}
+.n{font-size:12px;font-weight:800;color:#f59e0b}
+a{color:#0284c7}
+.topo{position:sticky;top:0;background:#0f172a;padding:8px 0;z-index:10}
+.topo a{color:#38bdf8;font-size:12px;margin-right:10px;text-decoration:none}
+.voltar{position:fixed;bottom:142px;right:10px;z-index:9000;background:#f59e0b;color:#fff;border:none;border-radius:50%;width:44px;height:44px;font-size:20px;font-weight:800;box-shadow:0 2px 8px rgba(0,0,0,.25);cursor:pointer}
+</style>
+
+<link rel="stylesheet" href="/assets/brand.css?v=20261013">
+<link rel="stylesheet" href="/assets/app-shell.css?v=20261013b">
+<script defer data-spark-rebrand src="/assets/app-shell.js?v=20261013b"></script>
+</head>
+<body data-spark-page="manual" data-spark-layout="auxiliary">
+<div class="wrap">
+<div style="font-size:13px;color:#38bdf8;font-weight:800">⚡ SPARK APPS + IA</div>
+<h1>📖 Manual completo — passo a passo</h1>
+<div class="sub">Do cadastro ao dia a dia, tela por tela. Uma conta vale em todos os apps. Grátis e ilimitado.</div>
+<div class="topo"><a href="#conta">Conta</a><a href="#mercado">Mercado</a><a href="#obra">Obra</a><a href="#pet">Pet</a><a href="#saude">Saúde</a><a href="#agua">Água</a><a href="#dose">Dose</a><a href="#farmacia">Farmácia</a><a href="#fin">Financeiro</a><a href="#carro">Carro</a><a href="#posto">Posto</a><a href="#familia">Família</a><a href="#casa">Casa</a><a href="#zap">WhatsApp</a><a href="#direitos">Direitos</a></div>
+
+<div class="secao" id="conta"><span class="n">1 · </span>👤 Conta única (vale pra tudo)</div>
+<div class="card"><b class="t">Criar e entrar</b><div class="meta"><ol>
+<li>Abra <a href="https://sparkbr.online/spark/">Mercado</a> e toque em <b>👤 Entrar</b>.</li>
+<li><b>Criar conta:</b> nome + e-mail + senha (mínimo 6) → já entra logado.</li>
+<li><b>Entrar:</b> e-mail + senha. Ou <b>Google</b> (cai na mesma conta do e-mail).</li>
+<li>Logado, o botão vira <b>teu nome</b> — lista, gastos, saúde e tudo sincroniza na nuvem.</li>
+<li>Esqueceu? <b>Esqueci a senha</b> gera nova na hora.</li></ol></div></div>
+
+<div class="secao" id="mercado"><span class="n">2 · </span>🛒 Mercado</div>
+<div class="card"><b class="t">Lista por voz, texto e foto</b><div class="meta"><ol>
+<li>Digite ("2kg de arroz e leite") ou segure o <b>🎤</b> e fale — a IA separa os itens sozinha.</li>
+<li>Toque no preço pra travar o valor pago, no nome pra renomear, ✅ pra ticar.</li>
+<li>O <b>comparador</b> diz onde fica mais barato e quanto economiza.</li>
+<li><b>Finalizar compra</b> registra no Financeiro e manda pra despensa/validades.</li>
+<li><b>🧾 Foto da notinha</b> ou <b>XML da NFP-SP</b>: lê os preços reais e corrige a lista.</li>
+<li>Abriu algo? Botão <b>Abri</b> move pra geladeira e conta o prazo. Consumiu? <b>Consumido</b>.</li>
+<li>Aba <b>IA/Voz</b>: painel, foto da despensa, QR NFC-e, WhatsApp e PDF da lista.</li></ol></div></div>
+
+<div class="secao" id="obra"><span class="n">3 · </span>🧱 Obra (SparkMat)</div>
+<div class="card"><b class="t">Materiais com NBR e custo total</b><div class="meta"><ol>
+<li>Descreva a fase da obra — o agente monta a lista com quantidades.</li>
+<li>Ranking por <b>custo total</b> (preço + frete + deslocamento).</li>
+<li>Foto do material: a visão lê rótulo e confere.</li></ol></div></div>
+
+<div class="secao" id="pet"><span class="n">4 · </span>🐾 Pet</div>
+<div class="card"><b class="t">Ração, banho e pet shops</b><div class="meta"><ol>
+<li>Lista por voz igual ao Mercado. Ranking com 🏆 e pet shops perto de você.</li>
+<li>Foto da notinha também vale aqui.</li></ol></div></div>
+
+<div class="secao" id="saude"><span class="n">5 · </span>💪 Saúde</div>
+<div class="card"><b class="t">Dieta, treino e evolução</b><div class="meta"><ol>
+<li>Monte o perfil (peso, meta) — vira <b>PRO permanente</b>, grátis.</li>
+<li>Registre refeições (o que vem do Mercado entra sozinho) e treinos.</li>
+<li>IA Coach sugere cardápio pela meta da família (~6.700 kcal/dia).</li></ol></div></div>
+
+<div class="secao" id="agua"><span class="n">6 · </span>💧 Água</div>
+<div class="card"><b class="t">Hidratação com meta e lembretes</b><div class="meta"><ol>
+<li>Informe peso e rotina — meta diária calculada.</li>
+<li>Toque a cada copo; o app lembra nos horários.</li></ol></div></div>
+
+<div class="secao" id="dose"><span class="n">7 · </span>💊 Dose</div>
+<div class="card"><b class="t">Remédio na hora certa</b><div class="meta"><ol>
+<li>Cadastre cada pessoa/pet da família com os remédios e horários.</li>
+<li>Lembrete + estoque (avisa antes de acabar).</li></ol></div></div>
+
+<div class="secao" id="farmacia"><span class="n">8 · </span>🏪 Farmácia</div>
+<div class="card"><b class="t">Remédios com tarja + farmácias perto</b><div class="meta"><ol>
+<li>Busque por nome ou sintoma (base Anvisa, tarja e receita).</li>
+<li>💊 Lembrete joga pro Dose · 📲 Pedir chama no WhatsApp da farmácia.</li></ol></div></div>
+
+<div class="secao" id="fin"><span class="n">9 · </span>💰 Financeiro</div>
+<div class="card"><b class="t">Plano + gastos automáticos</b><div class="meta"><ol>
+<li>Diga o valor e o prazo — sai o plano (aporte mensal + projeção CDI).</li>
+<li>Compras finalizadas e gastos lançados entram sozinhos em <b>Meus gastos</b>.</li>
+<li>➕ Lançar gasto: combustível, mercado, farmácia ou outros.</li></ol></div></div>
+
+<div class="secao" id="carro"><span class="n">10 · </span>🚗 Carro (na aba do Financeiro)</div>
+<div class="card"><b class="t">Garagem + Mecânico IA</b><div class="meta"><ol>
+<li>Salve o <b>KM atual</b> (piloto: Stilo 2004 1.8 8V).</li>
+<li>Em cada manutenção (óleo, água, correia, TBI, velas, bateria) toque <b>Registrar</b> — a próxima é calculada e o <b>WhatsApp lembra</b> antes de vencer.</li>
+<li><b>Mecânico IA:</b> descreva o sintoma (ex: tec-tec frio) e receba diagnóstico + o que dá pra fazer em casa + custo em RP.</li>
+<li><b>Flex:</b> regra dos 70% com a média real — e o alerta: <b>Stilo é só gasolina</b>.</li></ol></div></div>
+
+<div class="secao" id="posto"><span class="n">11 · </span>⛽ Posto</div>
+<div class="card"><b class="t">Barato, perto e sem fraude</b><div class="meta"><ol>
+<li><b>Informe o preço</b> na bomba — vira média pra todos e gasto teu.</li>
+<li><b>Compensa ir mais longe?</b> Bota os 2 preços + km: ele calcula o deslocamento real (Stilo 9,2 km/L).</li>
+<li><b>Teste da proveta:</b> move o slider na fase da água e recebe o laudo (conforme/batizado).</li>
+<li>Gasolina abaixo de <b>R$ 5,90</b> = alerta de metanol automático.</li></ol></div></div>
+
+<div class="secao" id="familia"><span class="n">12 · </span>👨‍👩‍👦 Família</div>
+<div class="card"><b class="t">Pessoas e pets sem limite</b><div class="meta"><ol>
+<li><b>Adicionar:</b> nome + pessoa/pet + detalhe + necessidades (remédios, alergias). Sem limite.</li>
+<li><b>Editar/Excluir</b> em cada cartão. Vale na conta toda: treinos, metas, Dose e Saúde.</li>
+<li>Metas com gráfico e prêmios · gastos do mês · treinos do dia · <b>Pergunte à IA</b> (roteia pro app certo).</li></ol></div></div>
+
+
+<div class="secao" id="casa"><span class="n">13 · </span>🏠 Casa completa (12 novos)</div>
+<div class="card"><b class="t">A casa inteira no bolso, 1 minuto por dia cada</b><div class="meta"><ol>
+<li><b>🧾 Contas da Casa (/contas/):</b> foto do boleto, aviso de vencimento, botão Paguei que lança no Financeiro.</li>
+<li><b>🍽 Cardápio da Semana (/cardapio/):</b> 7 jantas com o estoque, busca de comidas e envio pra lista do Mercado.</li>
+<li><b>📅 Agenda da Família (/agenda/):</b> um calendário só, Hoje da casa e quem leva.</li>
+<li><b>🐷 Cofrinho & Dívidas (/cofrinho/):</b> metas com barra, aportes diários e ordem de ataque às dívidas.</li>
+<li><b>🧹 Faxina da Casa (/faxina/):</b> rodízio por cômodo, foco do dia e responsável.</li>
+<li><b>🎒 Escola & Crianças (/escola/):</b> lição, material de amanhã e mochila pronta por filho.</li>
+<li><b>🏥 Carteirinha & Exames (/carteirinha/):</b> receitas com alerta de renovação + ponte pro Dose.</li>
+<li><b>🔌 Luz, Água & Gás (/energia/):</b> leitura mensal, meta e botijão com dias restantes.</li>
+<li><b>💪 Bico & Renda Extra (/bico/):</b> cada ganho soma pra meta do mês em 10 segundos.</li>
+<li><b>🌙 Cantinho do Sono (/sono/):</b> 1 toque por noite + dica de descanso.</li>
+<li><b>🏆 Mural de Elogios (/mural/):</b> publique a vitória, aplauda e compartilhe no Zap.</li>
+<li><b>💡 Canal de Ideias (/ideias/):</b> mande, vote e acompanhe: recebida → lançada com seu nome.</li>
+<li>Na página principal a <b>busca e o 🎤 entendem tudo</b>: digite ou fale boleto, janta, faxina, ideia...</li>
+</ol></div></div>
+
+<div class="secao" id="zap"><span class="n">14 · </span>🤖 WhatsApp</div>
+<div class="card"><b class="t">O bot responde — só pra família</b><div class="meta"><ol>
+<li>Mande a lista ("2kg de arroz"), "troquei o oleo 220000", "etanol ou gasolina", "remedio paracetamol".</li>
+<li><b>Só responde os números cadastrados</b> (você, esposa, filho). Estranho é ignorado.</li>
+<li>Lembretes de remédio e manutenção chegam sozinhos.</li></ol></div></div>
+
+<div class="secao" id="direitos"><span class="n">15 · </span>🛡️ Teus direitos</div>
+<div class="card"><b class="t">Inteligência interligada pra te proteger</b><div class="meta"><ol>
+<li><b>Teste da proveta é DIREITO teu</b> (ANP): o posto é obrigado a fazer de graça na tua frente.</li>
+<li><b>Bomba baixa?</b> Exige o balde aferidor de 20 L lacrado (tolerância 60 mL).</li>
+<li><b>Etanol:</b> densímetro 0,8075–0,8110; turvo ou bóia afundada = água.</li>
+<li><b>Denúncias:</b> ANP 0800 970 0267 · Procon RP (16) 3605-3310.</li>
+<li><b>Nota sem CPF?</b> Peça o CPF no caixa — vale pra NFP-SP.</li></ol></div></div>
+
+<div style="text-align:center;margin-top:20px"><a href="https://sparkbr.online/" style="color:#38bdf8">⚡ Voltar pros apps</a></div>
+</div>
+<button class="voltar" onclick="location.href='https://sparkbr.online/'" title="Voltar p/ área principal Spark">⚡</button>
+
+</body>
+</html>

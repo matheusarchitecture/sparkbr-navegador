@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <script defer src="/navegador/bridge/spark-bridge.js?v=2.1.0"></script>
+<meta charset="utf-8">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0f172a">
+<link rel="manifest" href="/financeiro/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/saude/icon-192.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/financeiro/sw.js").catch(function(){});});}</script>
+<title>Spark Financeiro — Junte seu dinheiro | Spark Apps</title>
+<meta name="description" content="Spark Financeiro: diga o valor e monte seu plano para juntar dinheiro. Checklist, comparador de contas, simulador e IA. Grátis e ilimitado. sparkbr.online">
+<style>
+body{font-family:system-ui;margin:0;background:#0f172a;color:#fff}
+.wrap{max-width:560px;margin:0 auto;padding:20px 14px 60px}
+h1{font-size:20px;margin:6px 0}
+.sub{color:#94a3b8;font-size:13px;margin-bottom:10px}
+.card{background:#fff;color:#0f172a;border-radius:14px;padding:12px;margin:8px 0}
+.card b{font-size:14px}
+.meta{font-size:11px;color:#475569;margin-top:3px}
+label{font-size:12px;font-weight:700;display:block;margin:8px 0 2px}
+input,select{width:100%;box-sizing:border-box;border:1px solid #cbd5e1;border-radius:10px;padding:10px;font-size:14px}
+.btn{display:block;width:100%;box-sizing:border-box;border:none;border-radius:10px;padding:12px;font-weight:800;cursor:pointer;font-size:14px;margin-top:8px}
+.go{background:#16a34a;color:#fff}
+.zap{background:#25D366;color:#fff;text-decoration:none;text-align:center}
+.chk{display:flex;gap:8px;align-items:flex-start;font-size:13px;padding:6px 0;border-bottom:1px solid #f1f5f9;cursor:pointer}
+.chk.done span{text-decoration:line-through;color:#94a3b8}
+.secao{font-size:13px;font-weight:800;color:#38bdf8;margin:16px 0 4px}
+.aviso{font-size:11px;color:#94a3b8;margin-top:14px}
+.foot{color:#64748b;font-size:11px;text-align:center;margin-top:16px}
+.foot a{color:#38bdf8;text-decoration:none}
+.res{font-size:22px;font-weight:800;color:#16a34a}
+table{width:100%;font-size:12px;border-collapse:collapse}
+td,th{border-bottom:1px solid #f1f5f9;padding:6px 4px;text-align:left}
+</style>
+
+
+<link rel="stylesheet" href="/assets/brand.css?v=20261013">
+<link rel="stylesheet" href="/assets/app-shell.css?v=20261013b">
+<script defer data-spark-rebrand src="/assets/app-shell.js?v=20261013b"></script>
+</head>
+<body data-spark-page="financeiro" data-spark-layout="simple">
+<div class="wrap">
+<div style="font-size:13px;color:#38bdf8;font-weight:800">⚡ SPARK APPS + IA</div>
+<h1>💰 Spark Financeiro</h1>
+<div class="sub">Fala o valor (R$ 1.000 ou mais) e eu monto teu plano. Grátis e ilimitado.</div>
+<div class="card">
+<label>Nome</label><input id="nome" placeholder="Seu nome">
+<label>Quanto quer juntar? (R$)</label><input id="valor" type="number" min="1000" value="10000">
+<label>Em quantos meses?</label><input id="meses" type="number" min="1" value="12">
+<label>Rendimento (% do CDI, ex: 100)</label><input id="cdi" type="number" min="0" value="100">
+<button class="btn go" onclick="plano()">🚀 Montar meu plano</button>
+<div id="saida" style="margin-top:8px"></div>
+</div>
+<div class="secao">✅ Checklist do plano</div>
+<div class="card" id="checks"></div>
+<div class="secao">🏦 Onde deixar rendendo (compare no app do banco)</div>
+<div class="card"><table>
+<tr><th>Conta</th><th>O que olhar</th></tr>
+<tr><td><b>Nubank (Caixinhas)</b></td><td>Rendimento diário, resgate na hora, 100% CDI nas caixinhas padrão.</td></tr>
+<tr><td><b>Inter (CDB +)</b></td><td>CDB com liquidez diária, compare o % do CDI.</td></tr>
+<tr><td><b>PicPay (Cofrinhos)</b></td><td>Rendimento diário, confira taxa e resgate.</td></tr>
+<tr><td><b>Mercado Pago</b></td><td>Conta rende automático, compare com CDI.</td></tr>
+<tr><td><b>C6 / Neon</b></td><td>CDBs e fundos, olhe liquidez e taxa.</td></tr>
+<tr><td><b>Tesouro Direto (Selic)</b></td><td>Título público, ideal p/ reserva de médio prazo.</td></tr>
+</table><div class="meta">Regra de ouro: acima de 100% do CDI com liquidez diária já é ótimo. Valores e taxas mudam — confirme sempre no app oficial do banco antes de aplicar.</div></div>
+<div class="secao">🤖 Recomendação da IA</div>
+<div class="card"><div class="meta">1) Quite dívidas caras primeiro (cartão/cheque especial). 2) Monte reserva de 3–6 meses de gastos. 3) Só então invista o resto no objetivo. Aporte todo mês, sem falhar.</div>
+<a class="btn zap" id="zapbtn" href="#">📲 Mandar meu plano no WhatsApp</a></div>
+<div class="secao">💸 Meus gastos (compras + tudo)</div>
+<div class="card"><div id="gastos-resumo" class="meta">Entre no Spark Mercado com a mesma conta para ver aqui.</div><div id="gastos-lista"></div></div>
+<div class="secao">➕ Lançar gasto (ex: combustível)</div>
+<div class="card">
+<label>Categoria</label><select id="g-cat"><option value="combustivel">⛽ Combustível</option><option value="mercado">🛒 Mercado</option><option value="farmacia">🏪 Farmácia</option><option value="outros">📌 Outros</option></select>
+<label>Descrição</label><input id="g-desc" placeholder="Ex: Gasolina 20L">
+<label>Valor (R$)</label><input id="g-valor" type="number" min="0" step="0.01">
+<label>Posto (se combustível)</label><select id="g-posto"><option value="">—</option></select>
+<button class="btn go" onclick="lancarGasto()">💾 Salvar gasto</button>
+</div>
+<div class="secao">🚗 Garagem — <span id="carro-modelo">Stilo 2004 1.8 8V</span></div>
+<div class="card"><div class="meta" id="carro-resumo">Carregando garagem...</div>
+<div class="meta" id="carro-dica"></div>
+<div id="carro-lista"></div>
+<label>KM atual</label><input id="c-km" type="number" min="0" step="1" placeholder="Ex: 168450">
+<button class="btn go" onclick="salvarKm()">💾 Salvar KM</button></div>
+<div class="secao">⛽ Flex — Etanol x Gasolina</div>
+<div class="card"><div class="meta" id="flex-txt">Calculando...</div></div>
+<div class="secao">🔧 Mecânico IA</div>
+<div class="card"><label>Sintoma do carro</label><input id="c-sint" placeholder="Ex: tec-tec no motor frio">
+<button class="btn go" onclick="diagCarro()">🔍 Diagnosticar</button>
+<div class="meta" id="c-laudo"></div></div>
+<div class="secao">⛽ Postos mais baratos (média colaborativa)</div>
+<div class="card"><div class="meta">Informe o preço na bomba e a média aparece para todos.</div><div id="postos-lista"></div>
+<label>Combustível</label><select id="f-tipo"><option value="gasolina comum">Gasolina comum</option><option value="etanol">Etanol</option><option value="diesel s10">Diesel S10</option></select>
+<label>Preço (R$/L)</label><input id="f-preco" type="number" min="0" step="0.001">
+<label>Posto</label><select id="f-posto"><option value="">—</option></select>
+<button class="btn go" onclick="informarPreco()">📢 Informar preço</button></div>
+<div class="secao">🤖 Dica da IA</div>
+<div class="card"><div id="ia-dica" class="meta">Carregando...</div></div>
+<div class="aviso">Conteúdo educativo, não é recomendação de investimento. Rentabilidade passada não garante futura. Em dúvida, fale com um planejador certificado.</div>
+<div class="foot">Tudo em <a href="https://sparkbr.online/">sparkbr.online</a></div>
+</div>
+<script>
+const CHECKS=["Quite dívidas caras (cartão/cheque especial)","Separe 3–6 meses de gastos (reserva)","Defina o valor e o prazo do objetivo","Automatize o aporte mensal (débito programado)","Deixe rendendo em 100%+ CDI com liquidez","Revise o plano todo mês"];
+let done=JSON.parse(localStorage.getItem('fin_checks')||'[]');
+function renderChecks(){
+  document.getElementById('checks').innerHTML=CHECKS.map((c,i)=>'<div class="chk'+(done.includes(i)?' done':'')+'" onclick="tog('+i+')"><input type="checkbox" '+(done.includes(i)?'checked':'')+'><span>'+c+'</span></div>').join('');
+}
+function tog(i){done=done.includes(i)?done.filter(x=>x!==i):done.concat([i]);localStorage.setItem('fin_checks',JSON.stringify(done));renderChecks();}
+function plano(){
+  const nome=(document.getElementById('nome').value||'você').trim();
+  const V=Math.max(1000,parseFloat(document.getElementById('valor').value||0));
+  const M=Math.max(1,parseInt(document.getElementById('meses').value||12));
+  const C=Math.max(0,parseFloat(document.getElementById('cdi').value||100));
+  const aporte=V/M;
+  const r=Math.pow(1+0.0075*C/100,1)-1;
+  let total=0;for(let i=0;i<M;i++)total=(total+aporte)*(1+r);
+  const ganho=Math.max(0,total-V);
+  document.getElementById('saida').innerHTML='<div class="meta">'+nome+', para juntar <b>R$ '+V.toLocaleString('pt-BR')+'</b> em '+M+' meses:</div><div class="res">R$ '+aporte.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})+'/mês</div><div class="meta">Projeção com '+C+'% do CDI: R$ '+total.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})+' (ganho ~R$ '+ganho.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})+'). Estimativa educativa.</div>';
+  const txt='Meu plano Spark Financeiro: juntar R$ '+V+' em '+M+' meses = R$ '+aporte.toFixed(2)+'/mês ('+C+'% CDI). Checklist: '+done.length+'/6.';
+  document.getElementById('zapbtn').href='https://wa.me/?text='+encodeURIComponent(txt);
+  try{localStorage.setItem('fin_plano',JSON.stringify({nome:nome,valor:V,meses:M,cdi:C}));}catch(e){}
+}
+function tk(){try{return localStorage.getItem('spark_token')||'';}catch(e){return '';}}
+async function carregarCarro(){
+  try{
+    const r=await api('/carro');
+    if(!r||!r.ok){document.getElementById('carro-resumo').innerText='Entre no Spark Mercado com a mesma conta.';return;}
+    document.getElementById('carro-modelo').innerText=r.modelo||'Stilo 2004 1.8 8V';
+    if(r.km)document.getElementById('c-km').value=Math.round(r.km);
+    document.getElementById('carro-resumo').innerText=r.modelo+' · '+Math.round(r.km||0).toLocaleString('pt-BR')+' km';
+    document.getElementById('carro-dica').innerText='💡 Dica do dia: '+(r.dica_do_dia||'');
+    const cor={ok:'#059669',atencao:'#D97706',vencido:'#DC2626',sem_registro:'#64748B'};
+    document.getElementById('carro-lista').innerHTML=(r.manutencoes||[]).map(m=>'<div class="meta">- <b style="color:'+(cor[m.estado]||'#64748B')+'">'+m.nome+'</b> - '+m.detalhe+' <button class="btn" data-t="'+m.tipo+'" onclick="regManut(this.dataset.t)">Registrar</button></div>').join('');
+  }catch(e){document.getElementById('carro-resumo').innerText='Garagem indisponível.';}
+}
+async function salvarKm(){
+  const v=parseFloat(document.getElementById('c-km').value||0);
+  if(!(v>0)){alert('KM inválido');return;}
+  const r=await api('/carro',{km:v});
+  if(r&&r.ok){carregarCarro();}else alert('Entre no Spark Mercado primeiro.');
+}
+async function regManut(tipo){
+  const v=parseFloat(document.getElementById('c-km').value||0);
+  const r=await api('/carro/manutencao',{tipo:tipo,km:v});
+  if(r&&r.ok){alert('Registrado! Próxima: '+(r.proxima_km?Math.round(r.proxima_km).toLocaleString('pt-BR')+' km':'por data'));carregarCarro();}else alert('Falhou. Tente de novo.');
+}
+async function diagCarro(){
+  const s=document.getElementById('c-sint').value||'';
+  if(s.trim().length<3){alert('Descreva o sintoma');return;}
+  document.getElementById('c-laudo').innerText='Analisando...';
+  const r=await api('/carro/diagnose',{sintoma:s});
+  document.getElementById('c-laudo').innerText=(r&&r.ok)?r.laudo:'Falhou. Tente de novo.';
+}
+async function carregarFlex(){
+  try{
+    const r=await api('/flex');
+    document.getElementById('flex-txt').innerText=(r&&r.ok)?('⛽ '+r.texto):'Flex indisponível.';
+  }catch(e){}
+}
+async function api(path,body){
+  const o={method:body===undefined?'GET':'POST',headers:{'Content-Type':'application/json'}};
+  const t=tk(); if(t)o.headers['Authorization']='Bearer '+t;
+  if(body!==undefined)o.body=JSON.stringify(body);
+  const r=await fetch('/spark-api'+path,o); return r.json();
+}
+function fmtV(v){return 'R$ '+parseFloat(v||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});}
+function fmtD(t){try{const d=new Date(t*1000);return d.toLocaleDateString('pt-BR');}catch(e){return '';}}
+async function carregarGastos(){
+  const t=tk();
+  if(!t){document.getElementById('ia-dica').innerText='Entre no Spark Mercado (mesma conta) para a IA analisar teus gastos.';return;}
+  try{
+    const c=await api('/compras'); const d=await api('/despesas');
+    const compras=(c&&c.compras)||[]; const desp=(d&&d.despesas)||[];
+    const now=new Date(); const mk=y=>y+'-'+String(now.getMonth()+1).padStart(2,'0');
+    const key=d=>{const x=new Date(d*1000);return x.getFullYear()+'-'+String(x.getMonth()+1).padStart(2,'0');};
+    const cur=mk();
+    let tc=0,td=0; const porCat={};
+    compras.forEach(x=>{if(key(x.criado)===cur)tc+=parseFloat(x.total||0);});
+    desp.forEach(x=>{if(key(x.criado)===cur){td+=parseFloat(x.valor||0);porCat[x.categoria]=(porCat[x.categoria]||0)+parseFloat(x.valor||0);}});
+    document.getElementById('gastos-resumo').innerHTML='Este mês: <b>'+fmtV(tc+td)+'</b> (mercado '+fmtV(tc)+' + outros '+fmtV(td)+')';
+    let h=compras.slice(0,30).map(x=>'<div class="meta">🛒 '+x.mercado+' — <b>'+fmtV(x.total)+'</b> · '+fmtD(x.criado)+'</div>').join('');
+    h+=desp.slice(0,30).map(x=>'<div class="meta">📌 '+(x.descricao||x.categoria)+' — <b>'+fmtV(x.valor)+'</b>'+(x.posto?' · '+x.posto:'')+' · '+fmtD(x.criado)+'</div>').join('');
+    document.getElementById('gastos-lista').innerHTML=h||'<div class="meta">Nada ainda. Finalize uma compra no Mercado ou lance abaixo.</div>';
+    let dica='Bom controle! ';
+    const top=Object.keys(porCat).sort((a,b)=>porCat[b]-porCat[a])[0];
+    if(top)dica+='Maior gasto: '+top+' ('+fmtV(porCat[top])+'). ';
+    if(tc>0)dica+='Mercado no mês: '+fmtV(tc)+'. ';
+    dica+='Mantenha combustível abaixo de 15% da renda e revise semanalmente.';
+    document.getElementById('ia-dica').innerText=dica;
+  }catch(e){document.getElementById('gastos-resumo').innerText='Falha de rede.';}
+}
+async function lancarGasto(){
+  const v=parseFloat(document.getElementById('g-valor').value||0);
+  if(!(v>0)){alert('Valor inválido');return;}
+  const r=await api('/despesas',{categoria:document.getElementById('g-cat').value,descricao:document.getElementById('g-desc').value,valor:v,posto:document.getElementById('g-posto').value});
+  if(r&&r.ok){alert('Gasto salvo!');carregarGastos();}else alert('Entre no Spark Mercado primeiro.');
+}
+let POSTOS=[];
+async function carregarPostos(){
+  try{
+    const r=await fetch('/spark-api/estabelecimentos').then(x=>x.json());
+    const locs=r.locais||r||[];
+    POSTOS=locs.filter(l=>(l.tipo||'')==='posto');
+    const opts=POSTOS.map(p=>'<option value="'+p.id+'">'+p.nome+' — '+p.bairro+'</option>').join('');
+    document.getElementById('g-posto').innerHTML='<option value="">—</option>'+opts;
+    document.getElementById('f-posto').innerHTML='<option value="">—</option>'+opts;
+    let h='';
+    for(const p of POSTOS){
+      let media='sem dados';
+      try{const m=await fetch('/spark-api/precos?item=gasolina comum').then(x=>x.json()); if(m&&m.media)media='média '+fmtV(m.media)+' ('+m.n+')';}catch(e){}
+      h+='<div class="meta">⛽ <b>'+p.nome+'</b> · '+p.bairro+' · '+media+' <a href="https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(p.nome+' Ribeirão Preto')+'">mapa</a></div>';
+      break;
+    }
+    try{
+      const g=await fetch('/spark-api/precos?item=gasolina comum').then(x=>x.json());
+      if(g&&g.media)h='<div class="meta">⛽ Gasolina comum: <b>média '+fmtV(g.media)+'</b> ('+g.n+' registros) — informe na bomba e ajude a região.</div>'+h;
+      else h='<div class="meta">⛽ Sem preços ainda — seja o primeiro a informar na bomba!</div>'+h;
+    }catch(e){}
+    document.getElementById('postos-lista').innerHTML=h;
+  }catch(e){}
+}
+async function informarPreco(){
+  const v=parseFloat(document.getElementById('f-preco').value||0);
+  const pid=document.getElementById('f-posto').value;
+  if(!(v>0)||!pid){alert('Preço e posto, por favor');return;}
+  const r=await fetch('/spark-api/precos',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({item:document.getElementById('f-tipo').value,valor:v,local_id:parseInt(pid)})}).then(x=>x.json()).catch(()=>null);
+  if(r&&r.ok){alert('Preço registrado!');carregarPostos();}else alert('Falhou. Tente de novo.');
+}
+(function(){
+  try{
+    const p=JSON.parse(localStorage.getItem('fin_plano')||'null');
+    if(p){document.getElementById('nome').value=p.nome||'';document.getElementById('valor').value=p.valor||10000;document.getElementById('meses').value=p.meses||12;}
+    const q=new URLSearchParams(location.search).get('valor');
+    if(q)document.getElementById('valor').value=q;
+  }catch(e){}
+  renderChecks();
+  try{carregarGastos();}catch(e){}
+  try{carregarPostos();}catch(e){}try{carregarCarro();}catch(e){}try{carregarFlex();}catch(e){}
+})();
+</script>
+<button onclick="location.href='https://sparkbr.online/'" title="Voltar p/ área principal Spark" style="position:fixed;bottom:142px;right:10px;z-index:9000;background:#f59e0b;color:#fff;border:none;border-radius:50%;width:44px;height:44px;font-size:20px;font-weight:800;box-shadow:0 2px 8px rgba(0,0,0,.25)">⚡</button>
+<script src="/navegador/bridge/spark-family.js?v=2.1.0"></script>
+</body>
+</html>

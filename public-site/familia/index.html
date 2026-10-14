@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <script defer src="/navegador/bridge/spark-bridge.js?v=2.1.0"></script>
+<meta charset="utf-8">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0f172a">
+<link rel="manifest" href="/familia/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/saude/icon-192.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/familia/sw.js").catch(function(){});});}</script>
+<title>Família Spark — Saúde, Metas e Prêmios | Spark Apps</title>
+<meta name="description" content="Perfil familiar Spark: saúde de todos, metas, gráficos, prêmios e IA integrada. sparkbr.online">
+<style>
+body{font-family:system-ui;margin:0;background:#0f172a;color:#fff}
+.wrap{max-width:560px;margin:0 auto;padding:20px 14px 60px}
+h1{font-size:20px;margin:6px 0}
+.sub{color:#94a3b8;font-size:13px;margin-bottom:10px}
+.card{background:#fff;color:#0f172a;border-radius:14px;padding:12px;margin:8px 0}
+.card b{font-size:14px}
+.meta{font-size:11px;color:#475569;margin-top:3px}
+.secao{font-size:13px;font-weight:800;color:#38bdf8;margin:16px 0 4px}
+.bar{height:10px;background:#e2e8f0;border-radius:6px;overflow:hidden;margin-top:4px}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,#16a34a,#38bdf8)}
+.btn{display:inline-block;border:none;border-radius:10px;padding:10px 14px;font-weight:800;font-size:13px;margin:4px 4px 0 0;text-decoration:none;cursor:pointer}
+.go{background:#16a34a;color:#fff}
+.zap{background:#25D366;color:#fff}
+.premio{font-size:26px}
+.foot{color:#64748b;font-size:11px;text-align:center;margin-top:16px}
+.foot a{color:#38bdf8;text-decoration:none}
+input{width:100%;box-sizing:border-box;border:1px solid #cbd5e1;border-radius:10px;padding:10px;font-size:14px}
+.dot{width:9px;height:9px;border-radius:50%;display:inline-block;margin-right:4px}
+.on{background:#16a34a}.off{background:#ef4444}
+</style>
+
+
+<link rel="stylesheet" href="/assets/brand.css?v=20261013">
+<link rel="stylesheet" href="/assets/app-shell.css?v=20261013b">
+<script defer data-spark-rebrand src="/assets/app-shell.js?v=20261013b"></script>
+</head>
+<body data-spark-page="familia" data-spark-layout="simple">
+<div class="wrap">
+<div style="font-size:13px;color:#38bdf8;font-weight:800">⚡ SPARK APPS + IA</div>
+<h1>👨‍👩‍👦 Família Spark</h1>
+<div class="sub">Saúde de todos, metas, prêmios e cérebro IA ativo.</div>
+<div class="card"><b>🧠 Cérebro Spark <span id="brain">testando...</span></b><div class="meta" id="brain-d"></div></div>
+<div class="secao">👥 Pessoas e pets</div>
+<div id="membros"></div>
+<div class="card"><b>➕ Adicionar pessoa ou pet (sem limite)</b><div class="meta">Vale na conta toda: Mercado, Saúde, Dose, treinos e metas.</div>
+<input id="m-nome" placeholder="Nome (ex: Ana)">
+<select id="m-tipo" style="width:100%;box-sizing:border-box;border:1px solid #cbd5e1;border-radius:10px;padding:10px;font-size:14px;margin-top:6px"><option value="pessoa">👤 Pessoa</option><option value="pet">🐾 Pet</option></select>
+<input id="m-det" placeholder="Detalhe (ex: 30 anos · 70kg)" style="margin-top:6px">
+<input id="m-nec" placeholder="Necessidades (ex: remédio pressão, alergia)" style="margin-top:6px">
+<div style="display:flex;gap:6px;margin-top:6px"><input id="m-peso" inputmode="decimal" placeholder="Peso kg (ex: 70)" style="flex:1"><input id="m-alt" inputmode="decimal" placeholder="Altura cm (ex: 170)" style="flex:1"><input id="m-idade" inputmode="numeric" placeholder="Idade" style="flex:1"><select id="m-sexo" style="flex:1;box-sizing:border-box;border:1px solid #cbd5e1;border-radius:10px;padding:10px;font-size:14px"><option value="">Sexo</option><option value="masculino">Masc</option><option value="feminino">Fem</option><option value="outro">Outro</option></select></div>
+<div class="meta">Peso/altura/idade alimentam a meta de cada um (cardápio, treino, dose). Pet não precisa.</div>
+<input type="hidden" id="m-id" value="">
+<button class="btn go" id="m-btn" onclick="saveMembro()">➕ Adicionar</button></div>
+<div class="secao">🎯 Metas da família</div>
+<div class="card"><div id="metas"></div>
+<input id="meta-nova" placeholder="Nova meta (ex: Vitor -0,5kg no mês)">
+<button class="btn go" onclick="addMeta()">➕ Adicionar meta</button></div>
+<div class="secao">🏆 Prêmios</div>
+<div class="card" id="premios"></div>
+<div class="secao">📊 Gastos (mês)</div>
+<div class="card"><div id="gastos"></div></div>
+<div class="secao">🏋️ Treinos de hoje (ao vivo)</div>
+<div class="card"><div id="treinos"></div><div class="meta">Catálogo com vídeo + passo a passo. Toque em FEITO ao concluir. <a href="https://sparkbr.online/saude/">Treino completo no Saúde</a></div></div>
+<div class="secao">🤖 Pergunte à IA</div>
+<div class="card"><input id="q" placeholder="Ex: 2kg de arroz • remedio paracetamol • juntar 5000">
+<button class="btn go" onclick="perguntar()">⚡ Perguntar</button><div id="resp" class="meta" style="margin-top:6px"></div></div>
+<div class="foot">Tudo em <a href="https://sparkbr.online/">sparkbr.online</a> · <a href="/saude/">Saúde</a> · <a href="/dose/">Dose</a> · <a href="/sparkpet/">Pet</a></div>
+</div>
+<script src="/saude/exercise-catalog.js"></script>
+<script>
+function hojeKey(){try{return new Date().toISOString().slice(0,10);}catch(e){return 'hoje';}}
+function treinosFeitos(){try{return JSON.parse(localStorage.getItem('fam_treinos')||'{}');}catch(e){return {};}}
+function renderTreinos(){
+  const cat=(window.SETUP_HUMAN_CATALOG||[]);
+  const box=document.getElementById('treinos');
+  if(!cat.length){box.innerHTML='<div class="meta">Catálogo indisponível offline.</div>';return;}
+  const dia=Math.floor(Date.now()/86400000);
+  const feitos=treinosFeitos(); const hk=hojeKey(); feitos[hk]=feitos[hk]||{};
+  const _mm=(typeof MEMBROS!=="undefined"&&MEMBROS)||[];const _pp=_mm.filter(function(m){return m.t!=="pet";}).map(function(m){return m.n;});const nomes=_pp.length?_pp.slice(0,10):['Matheus'];
+  let h='';
+  nomes.forEach((m,mi)=>{
+    const ex=cat[(dia+mi*7)%cat.length];
+    const ok=feitos[hk][m];
+    h+='<div style="font-size:13px;padding:6px 0;border-bottom:1px solid #f1f5f9"><b>'+m+'</b>: '+ex.title+' <span class="meta">('+ex.focus+')</span><br><button class="btn '+(ok?'':'go')+'" style="padding:6px 12px;font-size:12px;margin-top:4px" onclick="toggleTreino(\''+m+'\')">'+(ok?'✅ FEITO':'☐ Marcar FEITO')+'</button> <a class="meta" href="https://www.youtube.com/watch?v='+ex.videoId+'">ver vídeo</a></div>';
+  });
+  h+='<div class="meta">Pets: passeio diário 🐕 (marque na meta da família).</div>';
+  box.innerHTML=h;
+}
+function toggleTreino(m){
+  const feitos=treinosFeitos(); const hk=hojeKey(); feitos[hk]=feitos[hk]||{};
+  feitos[hk][m]=!feitos[hk][m];
+  try{localStorage.setItem('fam_treinos',JSON.stringify(feitos));}catch(e){}
+  renderTreinos();
+}
+renderTreinos();
+const MEMBROS_FALLBACK=[
+ {n:"Matheus",d:"38 anos · 77kg",e:"👨",apps:"/spark/ /sparkmat/ /sparkpet/ /saude/ /agua/ /dose/ /farmacia/ /financeiro/ /posto/"},
+ {n:"Tamiris",d:"34 anos · 65kg",e:"👩",apps:"/spark/ /sparkmat/ /sparkpet/ /saude/ /agua/ /dose/ /farmacia/ /financeiro/ /posto/"},
+ {n:"Vitor",d:"15 anos · 110kg · foco saúde",e:"🧑",apps:"/saude/ /dose/ /spark/ /financeiro/"},
+ {n:"Shih-tzu",d:"cão adulto pequeno",e:"🐶",apps:"/sparkpet/ /dose/"},
+ {n:"Labrador",d:"cão grande",e:"🐕",apps:"/sparkpet/ /dose/"},
+ {n:"Calopsita",d:"passarinho",e:"🐦",apps:"/sparkpet/"}
+];
+const APPS=[["🛒 Mercado","/spark/"],["🧱 Obra","/sparkmat/"],["🐾 Pet","/sparkpet/"],["💪 Saúde","/saude/"],["💧 Água","/agua/"],["💊 Dose","/dose/"],["🏪 Farmácia","/farmacia/"],["💰 Financeiro","/financeiro/"],["⛽ Posto","/posto/"]];
+var MEMBROS=[];
+MEMBROS=MEMBROS_FALLBACK.map(function(m,i){return {n:m.n,d:m.d,e:m.e,t:(m.e==="🐶"||m.e==="🐕"||m.e==="🐦")?"pet":"pessoa"};});
+function emojiTipo(t){return t==="pet"?"🐾":"👤";}
+async function carregarMembros(){
+  try{
+    const t=tk();
+    if(!t)throw 0;
+    const r=await fetch("/spark-api/familia/membros",{headers:{Authorization:"Bearer "+t}}).then(function(x){return x.json();});
+    if(r&&r.ok&&r.membros&&r.membros.length)MEMBROS=r.membros.map(function(m){return {id:m.id,n:m.nome,d:m.detalhe||"",nc:m.necessidades||"",e:emojiTipo(m.tipo),t:m.tipo,peso:m.peso||0,alt:m.altura||0,idade:m.idade||0,sexo:m.sexo||""};});
+  }catch(e){}
+  renderMembros();
+  try{renderTreinos();}catch(e2){}
+}
+function renderMembros(){
+  const apps="/spark/ /sparkmat/ /sparkpet/ /saude/ /agua/ /dose/ /farmacia/ /financeiro/ /posto/";
+  document.getElementById("membros").innerHTML=MEMBROS.map(function(m){
+    return "<div class=\"card\"><b>"+m.e+" "+m.n+"</b><div class=\"meta\">"+m.d+((m.peso||m.alt||m.idade)?("<br>📏 "+(m.peso?m.peso+"kg ":"")+(m.alt?m.alt+"cm ":"")+(m.idade?m.idade+" anos":"")):"")+"<br>Apps: "+apps+"</div>"+(m.nc?"<br>Necessidades: "+m.nc:"")+(m.id?"<br><button class=\"btn\" data-id=\""+m.id+"\" onclick=\"editMembro(this.dataset.id)\">Editar</button> <button class=\"btn\" data-id=\""+m.id+"\" onclick=\"delMembro(this.dataset.id)\">Excluir</button>":"")+"</div>";
+  }).join("");
+}
+async function saveMembro(){
+  const n=document.getElementById("m-nome").value.trim();
+  const t=document.getElementById("m-tipo").value;
+  const d=document.getElementById("m-det").value.trim();
+  const nc=document.getElementById("m-nec").value.trim();
+  const eid=document.getElementById("m-id").value;
+  if(n.length<2){alert("Nome curto");return;}
+  const tk2=tk();
+  if(!tk2){alert("Entre na conta primeiro.");return;}
+  let url="/spark-api/familia/membro", body={nome:n,tipo:t,detalhe:d,necessidades:nc};
+  try{
+    const pv=parseFloat((document.getElementById("m-peso").value||"").replace(",","."));
+    const al=parseFloat((document.getElementById("m-alt").value||"").replace(",","."));
+    const id2=parseInt(document.getElementById("m-idade").value||"0");
+    const sx=document.getElementById("m-sexo").value;
+    if(pv>0)body.peso=pv; if(al>0)body.altura=al; if(id2>0)body.idade=id2; if(sx)body.sexo=sx;
+  }catch(e){}
+  if(eid){url="/spark-api/familia/membro/editar";body.id=parseInt(eid);}
+  const r=await fetch(url,{method:"POST",headers:{"Content-Type":"application/json",Authorization:"Bearer "+tk2},body:JSON.stringify(body)}).then(function(x){return x.json();});
+  if(r&&r.ok){document.getElementById("m-nome").value="";document.getElementById("m-det").value="";document.getElementById("m-nec").value="";document.getElementById("m-id").value="";try{document.getElementById("m-peso").value="";document.getElementById("m-alt").value="";document.getElementById("m-idade").value="";document.getElementById("m-sexo").value="";}catch(e){}document.getElementById("m-btn").innerText="Adicionar";carregarMembros();}
+  else alert("Falhou. Tente de novo.");
+}
+function editMembro(id){
+  const m=MEMBROS.filter(function(x){return String(x.id)===String(id);})[0];
+  if(!m)return;
+  document.getElementById("m-nome").value=m.n;
+  document.getElementById("m-det").value=m.d;
+  document.getElementById("m-nec").value=m.nc||"";
+  try{document.getElementById("m-peso").value=m.peso||"";document.getElementById("m-alt").value=m.alt||"";document.getElementById("m-idade").value=m.idade||"";document.getElementById("m-sexo").value=m.sexo||"";}catch(e){}
+  document.getElementById("m-id").value=m.id;
+  document.getElementById("m-btn").innerText="Salvar edição";
+  window.scrollTo(0,0);
+}
+async function delMembro(id){
+  await fetch("/spark-api/familia/membro/excluir",{method:"POST",headers:{"Content-Type":"application/json",Authorization:"Bearer "+tk()},body:JSON.stringify({id:parseInt(id)})});
+  carregarMembros();
+}
+renderMembros();
+carregarMembros();
+let metas=JSON.parse(localStorage.getItem('fam_metas')||'[{"t":"Compra da semana no Atacadão","ok":true},{"t":"Vitor: -0,5kg no mês","ok":false},{"t":"Caminhada 3x na semana","ok":false}]');
+function renderMetas(){
+  document.getElementById('metas').innerHTML=metas.map((m,i)=>'<div style="font-size:13px;padding:5px 0;border-bottom:1px solid #f1f5f9;cursor:pointer" onclick="togM('+i+')">'+(m.ok?'✅ ':'⬜ ')+m.t+'</div>').join('');
+  const ok=metas.filter(m=>m.ok).length;
+  const pr=ok>=3?'🏆🏆🏆 Família Ouro!':ok>=1?'🏆 Bom caminho!':'🎯 Bora começar!';
+  document.getElementById('premios').innerHTML='<div style="font-size:13px">'+pr+'</div><div class="meta">'+ok+'/'+metas.length+' metas · gráfico abaixo</div><div class="bar"><i style="width:'+(metas.length?Math.round(ok/metas.length*100):0)+'%"></i></div>';
+  try{localStorage.setItem('fam_metas',JSON.stringify(metas));}catch(e){}
+}
+function togM(i){metas[i].ok=!metas[i].ok;renderMetas();}
+function addMeta(){const v=document.getElementById('meta-nova').value.trim();if(!v)return;metas.push({t:v,ok:false});document.getElementById('meta-nova').value='';renderMetas();}
+renderMetas();
+function tk(){try{return localStorage.getItem('spark_token')||'';}catch(e){return '';}}
+(async function gastos(){
+  const t=tk(); if(!t){document.getElementById('gastos').innerHTML='<div class="meta">Entre no Spark Mercado para ver aqui.</div>';return;}
+  try{
+    const h={'Authorization':'Bearer '+t};
+    const c=await fetch('/spark-api/compras',{headers:h}).then(x=>x.json());
+    const d=await fetch('/spark-api/despesas',{headers:h}).then(x=>x.json());
+    const tc=((c&&c.compras)||[]).reduce((a,x)=>a+parseFloat(x.total||0),0);
+    const td=((d&&d.despesas)||[]).reduce((a,x)=>a+parseFloat(x.valor||0),0);
+    document.getElementById('gastos').innerHTML='<div class="meta">Total geral: <b>R$ '+(tc+td).toFixed(2).replace('.',',')+'</b> (mercado R$ '+tc.toFixed(2).replace('.',',')+' + outros R$ '+td.toFixed(2).replace('.',',')+')</div><div class="bar"><i style="width:'+Math.min(100,Math.round((tc+td)/1000*100))+'%"></i></div>';
+  }catch(e){}
+})();
+(async function brain(){
+  const testes=[['Lista IA','/spark-api/ia/entender','POST',{"texto":"2kg de arroz"}],['Remédios Anvisa','/api/catalogo/publico?q=dipirona'],['Alimentos','/saude-api/alimentos?v=4']];
+  let ok=0,det=[];
+  for(const t of testes){
+    try{
+      const o=t[3]?{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(t[3])}:{};
+      const r=await fetch(t[1],o); const j=await r.json();
+      const n=j.total!==undefined?j.total:((j.results||j.itens||[]).length);
+      if(r.ok&&(j.ok||n>0)){ok++;det.push(t[0]+' ✅');}else det.push(t[0]+' ⚠️');
+    }catch(e){det.push(t[0]+' ⚠️');}
+  }
+  document.getElementById('brain').innerHTML=ok+'/'+testes.length+' <span class="dot '+(ok===testes.length?'on':'off')+'"></span>';
+  document.getElementById('brain-d').innerText=det.join(' · ');
+})();
+async function perguntar(){
+  const q=document.getElementById('q').value.trim(); if(!q)return;
+  const box=document.getElementById('resp'); box.innerText='Pensando...';
+  const tl=q.toLowerCase();
+  try{
+    if(/remedio|bula|farmacia|dose|tomar/.test(tl)){
+      const r=await fetch('/api/catalogo/publico?q='+encodeURIComponent(q.replace(/remedio|bula|farmacia|dose|tomar|de|para|o|a/g,' ').trim().split(/\s+/).pop()||q)).then(x=>x.json());
+      const it=(r.results||[])[0];
+      box.innerHTML=it?'<b>'+it.nome+'</b> · '+(it.principio||'')+' · <a href="https://sparkbr.online/farmacia/">ver na Farmácia</a> · <a href="https://sparkbr.online/dose/">lembrete no Dose</a>':'Nada na base Anvisa. Tenta outra palavra. <a href="https://sparkbr.online/farmacia/">Farmácia</a>';
+    } else if(/juntar|invest|poupar|dinheiro|junta/.test(tl)){
+      box.innerHTML='Monta teu plano aqui: <a href="https://sparkbr.online/financeiro/">Spark Financeiro</a> 💰';
+    } else if(/conta|boleto|vence|fatura|pagar/.test(tl)){
+      box.innerHTML='Contas? <a href="https://sparkbr.online/contas/">Contas da Casa</a> 🧾 com aviso de vencimento.';
+    } else if(/janta|cardapio|comer|receita|semana/.test(tl)){
+      box.innerHTML='Janta? <a href="https://sparkbr.online/cardapio/">Cardápio da Semana</a> 🍽 sugere com o que tem na despensa.';
+    } else if(/obra|cimento|areia|tijolo/.test(tl)){
+      box.innerHTML='Obra? Vai de <a href="https://sparkbr.online/sparkmat/">SparkMat</a> 🧱';
+    } else if(/pet|cao|gato|racao|banho|passarinho|calopsita/.test(tl)){
+      box.innerHTML='Pets? <a href="https://sparkbr.online/sparkpet/">SparkPet</a> 🐾 com ranking de pet shops.';
+    } else if(/saude|dieta|treino|peso|emagrecer/.test(tl)){
+      box.innerHTML='Saúde? <a href="https://sparkbr.online/saude/">Spark Saúde</a> 💪 com IA Coach.';
+    } else {
+      const r=await fetch('/spark-api/ia/entender',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({texto:q})}).then(x=>x.json());
+      const it=(r.itens||[]).map(i=>i.qtd+'x '+i.nome).join(', ');
+      box.innerHTML=it?('Entendi: <b>'+it+'</b> · <a href="https://sparkbr.online/spark/">abrir no Mercado</a>'):'Hmm, reformula? Ou fala comigo no <a href="https://wa.me/?text='+encodeURIComponent(q)+'">WhatsApp</a> 🤖';
+    }
+  }catch(e){box.innerText='Sem conexão. Tenta de novo.';}
+}
+</script>
+<button onclick="location.href='https://sparkbr.online/'" title="Voltar p/ área principal Spark" style="position:fixed;bottom:142px;right:10px;z-index:9000;background:#f59e0b;color:#fff;border:none;border-radius:50%;width:44px;height:44px;font-size:20px;font-weight:800;box-shadow:0 2px 8px rgba(0,0,0,.25)">⚡</button>
+<script src="/navegador/bridge/spark-family.js?v=2.1.0"></script>
+</body>
+</html>

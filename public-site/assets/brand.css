@@ -1,0 +1,9 @@
+@font-face{font-family:Manrope;src:url('/assets/manrope.woff2') format('woff2');font-weight:200 800;font-style:normal;font-display:swap}
+@font-face{font-family:Fraunces;src:url('/assets/fraunces.woff2') format('woff2');font-weight:100 900;font-style:normal;font-display:swap}
+:root{--brand-paper:#f6f7f2;--brand-evergreen:#173f35;--brand-deep:#113b32;--brand-ink:#203b33;--brand-lime:#dbeaac;--brand-coral:#f4b38b;--brand-line:#dce4dc;--brand-muted:#64766c;--brand-radius:24px;--brand-font:Manrope,system-ui,sans-serif;--brand-serif:Fraunces,Georgia,serif;--brand-shadow:0 12px 36px rgba(23,63,53,.06)}
+body[data-spark-page]{--spark-ink:var(--brand-ink);--spark-deep:var(--brand-deep);--spark-muted:var(--brand-muted);--spark-line:var(--brand-line);--spark-paper:var(--brand-paper);--spark-green:var(--brand-evergreen);--spark-green-dark:var(--brand-deep);--spark-mint:#edf3e3;--spark-radius:var(--brand-radius);--spark-shadow:var(--brand-shadow);font-family:var(--brand-font)!important;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+body[data-spark-page] ::selection{background:var(--brand-lime);color:var(--brand-deep)}
+body[data-spark-page] input,body[data-spark-page] select,body[data-spark-page] textarea,body[data-spark-page] button{font-family:inherit}
+body[data-spark-page] :where(a,button,input,textarea,select,summary):focus-visible{outline:3px solid #437766;outline-offset:4px}
+body[data-spark-page] :where(a,button){-webkit-tap-highlight-color:transparent}
+@media(prefers-reduced-motion:reduce){body[data-spark-page] *,body[data-spark-page] *::before,body[data-spark-page] *::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}

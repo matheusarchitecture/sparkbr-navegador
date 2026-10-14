@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Painel Admin — Spark Saúde</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:#0f172a;color:#e2e8f0}
+.top{background:linear-gradient(135deg,#7c3aed,#db2777);padding:20px;text-align:center}.top h1{margin:0;font-size:20px;font-weight:900}
+.wrap{max-width:720px;margin:0 auto;padding:14px 12px 60px}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.tabs button{flex:1 1 auto;background:#1e293b;color:#cbd5e1;border:1px solid #334155;border-radius:12px;padding:10px 6px;font-weight:800;font-size:12px;cursor:pointer}
+.tabs button.on{background:#7c3aed;color:#fff;border-color:#7c3aed}
+.card{background:#1e293b;border:1px solid #334155;border-radius:16px;padding:14px;margin-bottom:12px}
+.card h3{margin:0 0 10px;font-size:14px}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.kpi{background:#0f172a;border-radius:12px;padding:10px;text-align:center}.kpi b{display:block;font-size:20px}.kpi span{font-size:10px;color:#94a3b8}
+input,select{width:100%;padding:10px;border-radius:10px;border:1px solid #475569;background:#0f172a;color:#fff;font-size:14px;margin-bottom:8px}
+button.go{background:#7c3aed;color:#fff;border:0;border-radius:10px;padding:10px 14px;font-weight:800;cursor:pointer;font-size:13px}
+button.ok{background:#059669}button.no{background:#dc2626}button.sm{padding:7px 10px;font-size:12px;margin:2px 4px 2px 0}
+.row{border-bottom:1px solid #334155;padding:9px 0;font-size:13px}.row small{color:#94a3b8}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.dot{display:inline-block;width:9px;height:9px;border-radius:99px;background:#22c55e;margin-right:6px}
+pre{background:#0f172a;border-radius:10px;padding:10px;font-size:11px;overflow-x:auto;white-space:pre-wrap}
+.hidden{display:none}
+</style>
+
+<link rel="stylesheet" href="/assets/brand.css?v=20261013">
+<link rel="stylesheet" href="/assets/app-shell.css?v=20261013b">
+<script defer data-spark-rebrand src="/assets/app-shell.js?v=20261013b"></script>
+</head>
+<body data-spark-page="saude-admin" data-spark-layout="auxiliary">
+<div class="top"><h1>👑 Painel Admin — Spark Saúde</h1></div>
+<div class="wrap">
+<div id="login" class="card"><h3>Entrar como admin</h3>
+<input id="l-email" type="email" placeholder="E-mail" autocomplete="username">
+<input id="l-senha" type="password" placeholder="Senha" autocomplete="current-password">
+<button class="go" onclick="doLogin()">Entrar</button>
+<p id="l-err" style="color:#f87171;font-size:12px"></p></div>
+<div id="painel" class="hidden">
+<div class="tabs">
+<button id="t-resumo" onclick="tab('resumo')">Resumo</button>
+<button id="t-usuarios" onclick="tab('usuarios')">Usuários</button>
+<button id="t-pedidos" onclick="tab('pedidos')">Pedidos</button>
+<button id="t-codigos" onclick="tab('codigos')">Códigos</button>
+<button id="t-planos" onclick="tab('planos')">Planos</button>
+<button id="t-online" onclick="tab('online')">Online</button>
+<button id="t-afiliados" onclick="tab('afiliados')">Afiliados</button>
+<button onclick="sair()">Sair</button>
+</div>
+<div id="c-resumo" class="card"><h3>Resumo</h3><div class="kpis" id="kpis"></div>
+<div style="margin-top:10px"><button class="go sm" onclick="loadResumo()">Atualizar</button></div></div>
+<div id="c-usuarios" class="card hidden"><h3>Usuários</h3>
+<input id="uq" placeholder="Buscar nome, apelido ou e-mail..." oninput="loadUsuarios()">
+<div id="ulist"></div></div>
+<div id="c-pedidos" class="card hidden"><h3>Pedidos pendentes</h3><div id="plist"></div>
+<div style="margin-top:8px"><button class="go sm" onclick="loadPedidos('ativo')">Ver ativos</button>
+<button class="go sm" onclick="loadPedidos('pendente')">Ver pendentes</button></div></div>
+<div id="c-codigos" class="card hidden"><h3>Gerar códigos de acesso</h3>
+<div class="grid2"><div><input id="nc-dias" type="number" value="30" min="1" max="3650" placeholder="Dias"></div>
+<div><input id="nc-qtd" type="number" value="5" min="1" max="100" placeholder="Qtd"></div></div>
+<div class="grid2"><div><input id="nc-usos" type="number" value="1" min="1" placeholder="Usos por código"></div>
+<div><input id="nc-pref" value="SETUP" maxlength="8" placeholder="Prefixo"></div></div>
+<button class="go" onclick="novoCodigo()">Gerar</button>
+<pre id="codes-out">Os códigos aparecem aqui.</pre>
+<h3 style="margin-top:12px">Últimos códigos</h3><div id="clist"></div></div>
+<div id="c-planos" class="card hidden"><h3>Planos de venda</h3><div id="pllist"></div>
+<h3 style="margin-top:10px">Novo/editar plano</h3>
+<input id="np-id" placeholder="id (ex: semestral)">
+<input id="np-titulo" placeholder="Título (ex: Spark Saúde Semestral)">
+<div class="grid2"><div><input id="np-dias" type="number" placeholder="Dias"></div>
+<div><input id="np-valor" type="number" step="0.01" placeholder="Valor R$"></div></div>
+<button class="go" onclick="savePlano()">Salvar plano</button></div>
+<div id="c-online" class="card hidden"><h3>Quem está online</h3><div id="olist"></div></div>
+<div id="c-afiliados" class="card hidden"><h3>Afiliados (status + ativação manual)</h3>
+<p style="font-size:11px;color:#94a3b8">Novos cadastros entram como <b>pendente</b> sem acesso. Ative manualmente aqui. Pendente/bloqueado não loga. Senha mínima 8.</p>
+<div id="aflist"></div>
+<div style="margin-top:8px"><button class="go sm" onclick="loadAfiliados()">Atualizar lista</button></div>
+<h3 style="margin-top:12px">Definir / resetar senha</h3>
+<input id="af-ap" placeholder="apelido ex: daniel">
+<input id="af-pw" type="text" placeholder="nova senha (mín 8)" autocomplete="off">
+<button class="go" onclick="afSenha()">Salvar senha</button>
+<p style="font-size:11px;color:#94a3b8">Anote e envie ao afiliado por canal seguro. Não criamos conta falsa.</p></div>
+<div class="card"><h3>Liberar acesso / bônus (dias)</h3>
+<input id="lb-email" type="email" placeholder="e-mail do usuário">
+<div class="grid2"><div><input id="lb-dias" type="number" value="30" min="1" max="3650"></div>
+<div><button class="go" style="width:100%" onclick="liberar()">Liberar</button></div></div>
+<p style="font-size:11px;color:#94a3b8">Semanal 7 · quinzenal 15 · mensal 30 · trimestral 90 · anual 365 — ou qualquer número de dias.</p></div>
+</div>
+</div>
+<script>
+let TOK = '';
+try { TOK = sessionStorage.getItem('setuppro-admin') || ''; } catch (e) {}
+async function api(path, body) {
+  const r = await fetch('/saude-api' + path, {
+    method: body === undefined ? 'GET' : 'POST',
+    headers: Object.assign({ 'Content-Type': 'application/json' }, TOK ? { Authorization: 'Bearer ' + TOK } : {}),
+    body: body === undefined ? undefined : JSON.stringify(body)
+  });
+  let j = null; try { j = await r.json(); } catch (e) {}
+  return { ok: r.ok, data: j };
+}
+function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+async function doLogin() {
+  const r = await api('/login', { email: document.getElementById('l-email').value.trim(), senha: document.getElementById('l-senha').value });
+  if (!r.ok) { document.getElementById('l-err').innerText = 'E-mail ou senha inválidos.'; return; }
+  const me = await (async () => {
+    const rr = await fetch('/saude-api/me', { headers: { Authorization: 'Bearer ' + r.data.token } });
+    return rr.json();
+  })();
+  if (!me.perfil || !me.perfil.admin) { document.getElementById('l-err').innerText = 'Esta conta não é admin.'; return; }
+  TOK = r.data.token;
+  try { sessionStorage.setItem('setuppro-admin', TOK); } catch (e) {}
+  document.getElementById('login').classList.add('hidden');
+  document.getElementById('painel').classList.remove('hidden');
+  tab('resumo');
+}
+function sair() { TOK = ''; try { sessionStorage.removeItem('setuppro-admin'); } catch (e) {} location.reload(); }
+function tab(t) {
+  ['resumo', 'usuarios', 'pedidos', 'codigos', 'planos', 'online', 'afiliados'].forEach(k => {
+    document.getElementById('c-' + k).classList.toggle('hidden', k !== t);
+    const b = document.getElementById('t-' + k); if (b) b.classList.toggle('on', k === t);
+  });
+  if (t === 'resumo') loadResumo();
+  if (t === 'usuarios') loadUsuarios();
+  if (t === 'pedidos') loadPedidos('pendente');
+  if (t === 'codigos') loadCodigos();
+  if (t === 'planos') loadPlanos();
+  if (t === 'online') loadOnline();
+  if (t === 'afiliados') loadAfiliados();
+}
+async function loadResumo() {
+  const r = await api('/admin/resumo', {});
+  if (!r.ok) return sair();
+  const d = r.data;
+  document.getElementById('kpis').innerHTML =
+    '<div class="kpi"><b>' + d.usuarios + '</b><span>usuários</span></div>' +
+    '<div class="kpi"><b>' + d.pro + '</b><span>PRO</span></div>' +
+    '<div class="kpi"><b>' + d.pedidos_pendentes + '</b><span>pedidos</span></div>' +
+    '<div class="kpi"><b>' + d.msgs_chat + '</b><span>msgs</span></div>' +
+    '<div class="kpi"><b>' + d.ia_hoje + '</b><span>IA hoje</span></div>' +
+    '<div class="kpi"><b>' + d.admins + '</b><span>admins</span></div>';
+}
+async function loadUsuarios() {
+  const q = document.getElementById('uq').value || '';
+  const r = await api('/admin/usuarios', { q: q });
+  if (!r.ok) return;
+  document.getElementById('ulist').innerHTML = (r.data.items || []).map(u => {
+    const pro = u.pro_ate && u.pro_ate > Date.now() / 1000;
+    return '<div class="row"><b>' + esc(u.apelido) + '</b> ' + (u.is_admin ? '👑' : '') + (pro ? '💎' : '') +
+      '<br><small>' + esc(u.nome) + ' · ' + esc(u.email) + (pro ? ' · PRO até ' + new Date(u.pro_ate * 1000).toLocaleDateString('pt-BR') : '') + '</small><br>' +
+      '<button class="go sm" onclick="acaoUser(\'' + esc(u.email) + '\',\'liberar\')">+dias</button>' +
+      (u.is_admin ? '' : '<button class="go sm" onclick="acaoUser(\'' + esc(u.email) + '\',\'admin_on\')">admin</button>') +
+      (pro ? '<button class="no sm" onclick="acaoUser(\'' + esc(u.email) + '\',\'remover_pro\')">tirar PRO</button>' : '') +
+      '</div>';
+  }).join('') || '<p style="color:#94a3b8">Nada aqui.</p>';
+}
+async function acaoUser(email, acao) {
+  let dias = 30;
+  if (acao === 'liberar') {
+    dias = parseInt(prompt('Quantos dias liberar para ' + email + '? (7/15/30/90/365...)', '30') || '30', 10) || 30;
+  }
+  if (!confirm('Confirmar "' + acao + '" para ' + email + '?')) return;
+  const r = await api('/admin/usuario', { email: email, acao: acao, dias: dias });
+  alert(r.ok ? 'Feito!' : 'Falha');
+  loadUsuarios(); loadResumo();
+}
+async function loadPedidos(st) {
+  const r = await api('/admin/pedidos', { status: st || 'pendente' });
+  if (!r.ok) return;
+  document.getElementById('plist').innerHTML = (r.data.items || []).map(p =>
+    '<div class="row"><b>' + esc(p.email) + '</b> · ' + esc(p.plano) + ' · R$ ' + p.valor +
+    '<br><small>' + p.id + ' · ' + new Date(p.criado * 1000).toLocaleString('pt-BR') + '</small><br>' +
+    (p.status === 'pendente' ? '<button class="go sm ok" onclick="pedido(\'' + p.id + '\',\'confirmar\')">Confirmar</button><button class="no sm" onclick="pedido(\'' + p.id + '\',\'recusar\')">Recusar</button>' : '<small>' + p.status + '</small>') + '</div>'
+  ).join('') || '<p style="color:#94a3b8">Nada aqui.</p>';
+}
+async function pedido(id, acao) {
+  if (!confirm('Confirmar ação "' + acao + '"?')) return;
+  await api('/admin/pedido', { id: id, acao: acao });
+  loadPedidos('pendente'); loadResumo();
+}
+async function novoCodigo() {
+  const r = await api('/admin/codigo/novo', {
+    dias: parseInt(document.getElementById('nc-dias').value || '30', 10),
+    qtd: parseInt(document.getElementById('nc-qtd').value || '1', 10),
+    usos: parseInt(document.getElementById('nc-usos').value || '1', 10),
+    prefixo: document.getElementById('nc-pref').value || 'SETUP', plano: ''
+  });
+  if (!r.ok) { alert('Falha'); return; }
+  document.getElementById('codes-out').innerText = (r.data.codigos || []).map(c => c.code + '  (' + c.dias + 'd, ' + c.usos_max + ' uso(s))').join('\n');
+  loadCodigos(); loadResumo();
+}
+async function loadCodigos() {
+  const r = await api('/admin/codigos', {});
+  if (!r.ok) return;
+  document.getElementById('clist').innerHTML = (r.data.items || []).slice(0, 20).map(c =>
+    '<div class="row"><b>' + c.code + '</b> · ' + c.dias + 'd · ' + c.usos + '/' + c.usos_max +
+    (c.ativo ? '' : ' · OFF') + ' <button class="no sm" onclick="codigoOff(\'' + c.code + '\')">off</button></div>'
+  ).join('');
+}
+async function codigoOff(code) {
+  if (!confirm('Desativar ' + code + '?')) return;
+  await api('/admin/codigo/off', { code: code });
+  loadCodigos();
+}
+async function loadPlanos() {
+  const r = await api('/admin/planos', {});
+  if (!r.ok) return;
+  document.getElementById('pllist').innerHTML = (r.data.items || []).map(p =>
+    '<div class="row"><b>' + esc(p.id) + '</b> · ' + esc(p.titulo) + ' · ' + p.dias + 'd · R$ ' + p.valor + (p.ativo ? '' : ' · OFF') + '</div>'
+  ).join('');
+}
+async function savePlano() {
+  const r = await api('/admin/plano', {
+    id: document.getElementById('np-id').value.trim().toLowerCase(),
+    titulo: document.getElementById('np-titulo').value.trim(),
+    dias: parseInt(document.getElementById('np-dias').value || '30', 10),
+    valor: parseFloat(document.getElementById('np-valor').value || '0'),
+    ativo: true
+  });
+  alert(r.ok ? 'Plano salvo!' : 'Falha');
+  loadPlanos();
+}
+async function loadOnline() {
+  const r = await api('/admin/online', {});
+  if (!r.ok) return;
+  document.getElementById('olist').innerHTML = (r.data.items || []).map(o =>
+    '<div class="row"><span class="dot"></span><b>' + esc(o.apelido) + '</b><br><small>' + esc(o.nome || '') + ' · ' + esc(o.email || '') + (o.cidade ? ' · ' + esc(o.cidade) : '') + '</small></div>'
+  ).join('') || '<p style="color:#94a3b8">Ninguém online.</p>';
+}
+async function loadAfiliados() {
+  const r = await api('/admin/afiliados', {});
+  if (!r.ok) return;
+  document.getElementById('aflist').innerHTML = (r.data.items || []).map(a =>
+    '<div class="row"><b>' + esc(a.apelido) + '</b> · ' + esc(a.status||'pendente') + (a.tem_google ? ' · G' : '') +
+    '<br><small>' + esc(a.nome||'') + (a.email ? ' · ' + esc(a.email) : '') + '</small><br>' +
+    (a.status !== 'ativo' ? '<button class="go sm ok" onclick="afStatus(\'' + esc(a.apelido) + '\',\'ativo\')">ativar</button>' : '') +
+    (a.status !== 'bloqueado' ? '<button class="no sm" onclick="afStatus(\'' + esc(a.apelido) + '\',\'bloqueado\')">bloquear</button>' : '') +
+    (a.status !== 'pendente' ? '<button class="go sm" onclick="afStatus(\'' + esc(a.apelido) + '\',\'pendente\')">pendente</button>' : '') +
+    '</div>'
+  ).join('') || '<p style="color:#94a3b8">Nenhum afiliado.</p>';
+}
+async function afStatus(apelido, status) {
+  if (!confirm('Mudar ' + apelido + ' para ' + status + '?')) return;
+  const r = await api('/admin/afiliado/status', { apelido: apelido, status: status });
+  alert(r.ok ? 'Feito!' : 'Falha');
+  loadAfiliados();
+}
+async function afSenha() {
+  const ap = document.getElementById('af-ap').value.trim().toLowerCase();
+  const pw = document.getElementById('af-pw').value;
+  if (!ap || !pw || pw.length < 8) { alert('Apelido + senha mín 8'); return; }
+  if (!confirm('Definir nova senha para ' + ap + '?')) return;
+  const r = await api('/admin/afiliado/senha', { apelido: ap, nova_senha: pw });
+  alert(r.ok ? 'Senha salva!' : 'Falha');
+  document.getElementById('af-pw').value='';
+}
+async function liberar() {
+  const em = document.getElementById('lb-email').value.trim();
+  const dias = parseInt(document.getElementById('lb-dias').value || '30', 10);
+  if (!em) { alert('Informe o e-mail'); return; }
+  const r = await api('/admin/usuario', { email: em, acao: 'liberar', dias: dias });
+  alert(r.ok ? 'Liberado ' + dias + ' dias para ' + em : 'Falha (e-mail existe?)');
+  loadResumo();
+}
+(async function () {
+  if (!TOK) return;
+  const r = await api('/admin/resumo', {});
+  if (r.ok) {
+    document.getElementById('login').classList.add('hidden');
+    document.getElementById('painel').classList.remove('hidden');
+    tab('resumo');
+  }
+})();
+</script>
+</body>
+</html>

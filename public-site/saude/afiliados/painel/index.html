@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Painel do Afiliado — Spark Saúde</title>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<style>
+:root{--bg:#070b08;--green:#22c55e;--txt:#e8f5e9;--mut:#9fb3a3;--line:#1e2d22}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(900px 500px at 50% -10%,#12351f,var(--bg)) fixed,var(--bg);color:var(--txt);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+.wrap{max-width:860px;margin:0 auto;padding:16px}
+.card{background:#0f1a11cc;border:1px solid var(--line);border-radius:16px;padding:16px;margin:12px 0}
+h1{font-size:22px;margin:6px 0}h2{color:var(--green);font-size:17px;margin:10px 0 6px}.mut{color:var(--mut);font-size:13px;line-height:1.55}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}@media(max-width:560px){.grid{grid-template-columns:1fr 1fr}}
+.kpi{background:#0b130d;border:1px solid var(--line);border-radius:12px;padding:12px}.kpi b{font-size:20px;color:var(--green);display:block}.kpi span{font-size:12px;color:var(--mut)}
+input{width:100%;padding:12px;border-radius:10px;border:1px solid var(--line);background:#0f1510;color:var(--txt);font-size:16px;margin:6px 0}
+.btn{display:block;width:100%;background:var(--green);color:#06130a;border:0;border-radius:10px;padding:13px;font-weight:900;font-size:16px;cursor:pointer}
+.btn2{display:inline-block;background:#0f1a11;color:var(--green);border:1px solid var(--green);border-radius:10px;padding:10px 14px;font-weight:700;text-decoration:none;margin:6px 6px 0 0;cursor:pointer}
+table{width:100%;border-collapse:collapse;font-size:13px}th,td{border-bottom:1px solid var(--line);padding:8px 6px;text-align:left}th{color:var(--green);font-size:11px;text-transform:uppercase}
+a{color:var(--green)}code{background:#0b130d;padding:2px 6px;border-radius:6px;word-break:break-all}
+.linkbox{background:#0b130d;border:1px dashed var(--green);border-radius:10px;padding:12px;margin-top:10px;word-break:break-all}
+canvas{width:100%;height:160px;background:#0b130d;border:1px solid var(--line);border-radius:12px}
+img.qr{background:#fff;border-radius:10px;padding:8px;width:150px;height:150px}
+.hidden{display:none!important}
+#gbtn{display:flex;justify-content:center;margin-top:10px}
+.err{color:#f87171;font-size:13px;min-height:18px}
+</style>
+
+<link rel="stylesheet" href="/assets/brand.css?v=20261013">
+<link rel="stylesheet" href="/assets/app-shell.css?v=20261013b">
+<script defer data-spark-rebrand src="/assets/app-shell.js?v=20261013b"></script>
+</head>
+<body data-spark-page="saude-afiliados-painel" data-spark-layout="auxiliary">
+<div class="wrap">
+<div class="card"><h1>📊 Painel do Afiliado</h1><p class="mut"><a href="/setup/afiliados/">← landing</a> · <a href="/setup/afiliados/materiais/">materiais →</a> · Pix manual · mínimo R$50 · garantia 7 dias</p>
+<p class="mut">Acesso protegido: entre com seu apelido e senha de afiliado. Conta nova entra como pendente e precisa da nossa ativação manual.</p></div>
+<div class="card" id="loginCard"><h2>🔐 Entrar</h2>
+<input id="af_apelido" placeholder="seu apelido ex: daniel" autocomplete="username" maxlength="20">
+<input id="af_senha" type="password" placeholder="sua senha de afiliado" autocomplete="current-password">
+<button class="btn" id="af_go">Entrar</button>
+<p class="mut" style="text-align:center;margin:10px 0 4px">ou</p>
+<div id="gbtn"><div id="g_id_signin"></div></div>
+<p class="mut" id="g_hint" style="text-align:center">Entrar com Google (mesma conta do cadastro)</p>
+<p class="err" id="af_err"></p>
+<p class="mut">Sem conta? <a href="/setup/afiliados/#cadastrar">Cadastre-se grátis</a> — você entra em pendente e liberamos manualmente.</p></div>
+<div id="dash" class="hidden">
+<div class="card"><h2>👋 Olá, <span id="af_nome"></span></h2><p class="mut">Sessão de afiliado válida por 30 dias neste aparelho.</p><p><button class="btn2" id="af_out">Sair</button> <button class="btn2" id="copyLink">📋 Copiar meu link</button> <button class="btn2" id="csv">⬇ Exportar CSV</button></p></div>
+<div class="card"><h2>📈 Meus números</h2><div class="grid">
+<div class="kpi"><b id="k_pagos">0</b><span>vendas pagas</span></div>
+<div class="kpi"><b id="k_cliques">0</b><span>cliques</span></div>
+<div class="kpi"><b id="k_conv">0%</b><span>conversão</span></div>
+<div class="kpi"><b id="k_vendas">0</b><span>vendas rastreadas</span></div>
+<div class="kpi"><b id="k_pend">R$0</b><span>comissão pendente (30%)</span></div>
+<div class="kpi"><b id="k_paga">R$0</b><span>comissão paga</span></div>
+</div><div style="margin-top:10px"><canvas id="cv" width="640" height="160"></canvas></div></div>
+<div class="card"><h2>🔗 Meu link + QR</h2><div id="orig" class="linkbox"></div><p id="qrbox"></p></div>
+<div class="card"><h2>🧾 Recibos (minhas vendas)</h2><div id="rec"><p class="mut">Carregando…</p></div></div>
+<div class="card"><h2>💬 Recuperação</h2><div id="recup"><p class="mut">—</p></div></div>
+</div>
+<div class="card"><h2>🏆 Ranking (público)</h2><div id="rank"><p class="mut">Carregando ranking…</p></div></div>
+</div>
+<script>
+var AP='',TOKEN='',DATA=null,GCID='';
+function ls(k,v){try{if(v===undefined)return localStorage.getItem(k)||'';localStorage.setItem(k,v)}catch(e){return ''}}
+function err(t){document.getElementById('af_err').textContent=t||''}
+function showLogin(on){document.getElementById('loginCard').classList.toggle('hidden',!on);document.getElementById('dash').classList.toggle('hidden',on)}
+async function fetchCID(){try{var r=await fetch('/saude-api/afiliados/google-client-id');var j=await r.json();if(j&&j.client_id){GCID=j.client_id;initGIS()}}catch(e){}}
+function initGIS(){
+  try{
+    if(!window.google||!google.accounts||!google.accounts.id)return setTimeout(initGIS,800);
+    google.accounts.id.initialize({client_id:GCID,callback:onGoogle,auto_select:false});
+    google.accounts.id.renderButton(document.getElementById('g_id_signin'),{theme:'outline',size:'large',text:'continue_with',width:260});
+  }catch(e){}
+}
+async function onGoogle(resp){
+  err('');
+  try{
+    var idt=(resp&&resp.credential)||'';
+    if(!idt){err('Google não retornou credencial.');return}
+    var r=await fetch('/saude-api/afiliados/google',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id_token:idt})});
+    var j=await r.json();
+    if(!r.ok||!j.ok){err(j&&j.error==='pendente'?'Conta pendente: aguarde nossa ativação manual.':j&&j.error==='bloqueado'?'Conta bloqueada. Fale conosco.':'Google não vinculado ou não ativo. Use apelido+senha.');return}
+    TOKEN=j.token;AP=j.apelido;ls('setup_af_token',TOKEN);ls('setup_af_apelido',AP);await loadResumo();
+  }catch(e){err('Falha de rede no login Google.')}
+}
+async function doLogin(){
+  err('');
+  var a=document.getElementById('af_apelido').value.trim().toLowerCase();
+  var p=document.getElementById('af_senha').value;
+  if(!/^[a-z0-9_]{3,20}$/.test(a)){err('Apelido 3-20 [a-z0-9_].');return}
+  if(!p||p.length<4){err('Informe sua senha.');return}
+  try{
+    var r=await fetch('/saude-api/afiliados/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({apelido:a,senha:p})});
+    var j=await r.json();
+    if(r.status===403&&(j.error==='pendente')){err('Conta pendente: aguarde nossa ativação manual.');return}
+    if(r.status===403){err('Conta bloqueada. Fale conosco.');return}
+    if(!r.ok||!j.ok){err('Apelido ou senha inválidos.');return}
+    TOKEN=j.token;AP=j.apelido;ls('setup_af_token',TOKEN);ls('setup_af_apelido',AP);document.getElementById('af_senha').value='';await loadResumo();
+  }catch(e){err('Sem conexão.')}
+}
+async function loadResumo(){
+  if(!TOKEN){showLogin(true);return}
+  if(!AP)AP=ls('setup_af_apelido');
+  try{
+    var r=await fetch('/saude-api/afiliados/resumo?apelido='+encodeURIComponent(AP),{headers:{Authorization:'Bearer '+TOKEN}});
+    var j=await r.json();
+    if(r.status===401||r.status===403){logout(true);if(r.status===403)err('Acesso negado.');return}
+    if(!j.ok){err('Erro ao carregar resumo.');return}
+    DATA=j;document.getElementById('af_nome').textContent=AP;showLogin(false);render(j);
+  }catch(e){err('Sem conexão com o resumo.')}
+}
+function logout(silent){TOKEN='';AP='';DATA=null;try{localStorage.removeItem('setup_af_token');localStorage.removeItem('setup_af_apelido')}catch(e){}showLogin(true);if(!silent)err('')}
+function render(j){
+  document.getElementById('k_pagos').textContent=j.pagos;
+  document.getElementById('k_cliques').textContent=j.cliques;
+  var cv=j.cliques?Math.round(100*j.pagos/Math.max(1,j.cliques)):0;document.getElementById('k_conv').textContent=cv+'%';
+  document.getElementById('k_vendas').textContent=(j.vendas||[]).length;
+  document.getElementById('k_pend').textContent='R$'+(j.comissao_pendente||0).toFixed(2);
+  document.getElementById('k_paga').textContent='R$'+(j.comissao_paga||0).toFixed(2);
+  var link='https://sparkbr.online/setup/pro/?ref='+AP,qr='https://api.qrserver.com/v1/create-qr-code/?size=300x300&data='+encodeURIComponent(link);
+  document.getElementById('orig').innerHTML='<code>'+link+'</code>';
+  document.getElementById('qrbox').innerHTML='<img class="qr" src="'+qr+'" alt="QR"><br><a class="btn2" target="_blank" href="'+qr+'">Abrir QR</a>';
+  draw();recibos(j);recup(j);
+}
+function draw(){var c=document.getElementById('cv'),x=c.getContext('2d');x.clearRect(0,0,c.width,c.height);var days=[];for(var i=6;i>=0;i--){var d=new Date(Date.now()-i*864e5);days.push({k:d.toISOString().slice(0,10),l:d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'}),v:0})}var mp={};days.forEach(function(d){mp[d.k]=d});(DATA.vendas||[]).forEach(function(v){try{var k=new Date((v.data||0)*1000).toISOString().slice(0,10);if(mp[k]&&v.status==='ativo')mp[k].v++}catch(e){}});var mx=Math.max(1,...days.map(function(d){return d.v}));var bw=c.width/7;days.forEach(function(d,i){var h=(c.height-40)*(d.v/mx);x.fillStyle=d.v?'#22c55e':'#1e2d22';x.fillRect(i*bw+14,c.height-24-h,bw-28,h);x.fillStyle='#9fb3a3';x.font='11px system-ui';x.fillText(d.l,i*bw+14,c.height-8);x.fillStyle='#e8f5e9';x.fillText(d.v,i*bw+22,c.height-30-h)});}
+function recibos(j){var el=document.getElementById('rec');if(!(j.vendas||[]).length){el.innerHTML='<p class="mut">Nada ainda — divulgue seu link.</p>';return}el.innerHTML='<table><tr><th>Pedido</th><th>Plano</th><th>Valor</th><th>Comissão</th><th>Status</th></tr>'+j.vendas.map(function(v){return '<tr><td><code>'+v.pedido+'</code></td><td>'+v.plano+'</td><td>R$'+v.valor.toFixed(2)+'</td><td>R$'+v.comissao.toFixed(2)+'</td><td>'+v.status+'</td></tr>'}).join('')+'</table>'}
+function recup(j){var el=document.getElementById('recup');var leads=Math.max(0,(j.cliques||0)-(j.pagos||0));if(leads<=0){el.innerHTML='<p class="mut">Sem leads pendentes.</p>';return}var txt='Oi! Vi que você clicou no meu link do Spark Saúde. Quer seu plano grátis de 12 meses + 7 dias PRO? '+('https://sparkbr.online/setup/pro/?ref='+AP);el.innerHTML='<p>Você tem <b>'+leads+'</b> cliques sem venda.</p><div class="linkbox">'+txt+'</div>'}
+async function rank(){try{var r=await fetch('/saude-api/afiliados/ranking');var j=await r.json();var el=document.getElementById('rank');if(!(j.ranking||[]).length){el.innerHTML='<p class="mut">Ranking vazio ainda — seja o primeiro!</p>';return}el.innerHTML='<table><tr><th>#</th><th>Afiliado</th><th>Pagos</th><th>Comissão est.</th></tr>'+j.ranking.map(function(x,i){return '<tr><td>'+(i+1)+'</td><td><code>'+x.apelido_mask+'</code></td><td>'+x.pagos+'</td><td>R$'+x.comissao_estimada.toFixed(2)+'</td></tr>'}).join('')+'</table>'}catch(e){document.getElementById('rank').innerHTML='<p class="mut">Sem ranking agora.</p>'}}
+document.getElementById('af_go').onclick=doLogin;
+document.getElementById('af_out').onclick=function(){logout(false)};
+document.getElementById('csv').onclick=function(){if(!DATA)return alert('Carregue primeiro');var rows=[['pedido','plano','valor','comissao','status','data']];DATA.vendas.forEach(function(v){rows.push([v.pedido,v.plano,v.valor,v.comissao,v.status,new Date(v.data*1000).toISOString()])});var s=rows.map(function(r){return r.join(';')}).join('\n');var b=new Blob([s],{type:'text/csv'});var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='afiliado-'+AP+'.csv';a.click()};
+document.getElementById('copyLink').onclick=function(){if(!AP)return;var l='https://sparkbr.online/setup/pro/?ref='+AP;if(navigator.clipboard)navigator.clipboard.writeText(l).then(function(){alert('Copiado: '+l)})};
+(function(){TOKEN=ls('setup_af_token');AP=ls('setup_af_apelido');if(TOKEN&&AP){loadResumo()}else{showLogin(true)}rank();fetchCID();})();
+</script>
+</body>
+</html>

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <script defer src="/navegador/bridge/spark-bridge.js?v=2.1.0"></script>
+<meta charset="utf-8">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0f172a">
+<link rel="manifest" href="/posto/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/saude/icon-192.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/posto/sw.js").catch(function(){});});}</script>
+<title>Spark Posto — Combustível barato e perto | Spark Apps</title>
+<meta name="description" content="Spark Posto: postos mais baratos e perto, preço médio colaborativo, nota e gastos. sparkbr.online">
+<style>
+body{font-family:system-ui;margin:0;background:#0f172a;color:#fff}
+.wrap{max-width:560px;margin:0 auto;padding:20px 14px 60px}
+h1{font-size:20px;margin:6px 0}
+.sub{color:#94a3b8;font-size:13px;margin-bottom:10px}
+.card{background:#fff;color:#0f172a;border-radius:14px;padding:12px;margin:8px 0}
+.card b{font-size:14px}
+.meta{font-size:11px;color:#475569;margin-top:3px}
+.secao{font-size:13px;font-weight:800;color:#38bdf8;margin:16px 0 4px}
+.btn{display:block;width:100%;box-sizing:border-box;border:none;border-radius:10px;padding:12px;font-weight:800;font-size:14px;margin-top:8px;cursor:pointer}
+.go{background:#16a34a;color:#fff}
+.zap{background:#25D366;color:#fff;text-decoration:none;text-align:center}
+label{font-size:12px;font-weight:700;display:block;margin:8px 0 2px}
+input,select{width:100%;box-sizing:border-box;border:1px solid #cbd5e1;border-radius:10px;padding:10px;font-size:14px}
+.tag{display:inline-block;font-size:10px;font-weight:800;border-radius:8px;padding:2px 8px;background:#dcfce7;color:#166534}
+.aviso{font-size:11px;color:#94a3b8;margin-top:14px}
+.foot{color:#64748b;font-size:11px;text-align:center;margin-top:16px}
+.foot a{color:#38bdf8;text-decoration:none}
+</style>
+
+
+<link rel="stylesheet" href="/assets/brand.css?v=20261013">
+<link rel="stylesheet" href="/assets/app-shell.css?v=20261013b">
+<script defer data-spark-rebrand src="/assets/app-shell.js?v=20261013b"></script>
+</head>
+<body data-spark-page="posto" data-spark-layout="simple">
+<div class="wrap">
+<div style="font-size:13px;color:#38bdf8;font-weight:800">⚡ SPARK APPS + IA</div>
+<h1>⛽ Spark Posto</h1>
+<div class="sub">Mais barato e perto. Preço médio da galera. Nota vira gasto sozinho.</div>
+<div class="card"><label>Combustível</label><select id="comb"><option value="gasolina comum">Gasolina comum (R$/L)</option><option value="etanol">Etanol (R$/L)</option><option value="diesel s10">Diesel S10 (R$/L)</option><option value="diesel s500">Diesel S500 (R$/L)</option><option value="gasolina aditivada">Gasolina aditivada (R$/L)</option><option value="etanol aditivado">Etanol aditivado (R$/L)</option><option value="glp">GLP (R$/kg)</option><option value="gnv">GNV (R$/m³)</option></select><div class="meta" id="carro"></div>
+<div class="meta" id="media"></div></div>
+<div class="secao">🏆 Mais baratos perto de você</div>
+<div class="card"><label>Cidade</label><select id="f-cidade"><option value="">Todas</option></select><div id="postos">Buscando...</div>
+<button class="btn go" onclick="gps()">📍 Usar minha localização</button></div>
+<div class="secao">📢 Informar preço da bomba</div>
+<div class="card"><label>Posto</label><select id="p-posto"></select>
+<label id="l-preco">Preço (R$/L)</label><input id="p-preco" type="number" min="0" step="0.001">
+<label>Litros (p/ lançar gasto)</label><input id="p-litros" type="number" min="0" step="0.1">
+<button class="btn go" onclick="informar()">💾 Salvar preço + gasto</button></div>
+<div class="secao">🚗 Compensa ir mais longe?</div>
+<div class="card"><label>Preço no posto de sempre (R$/L)</label><input id="d-local" type="number" min="0" step="0.001" value="6.54">
+<label>Preço no posto distante (R$/L)</label><input id="d-dist" type="number" min="0" step="0.001" value="6.44">
+<label>Distância ida e volta (km)</label><input id="d-km" type="number" min="0" step="0.1" value="11.2">
+<label>Litros a abastecer</label><input id="d-litros" type="number" min="0" step="1" value="58">
+<button class="btn go" onclick="comparar()">🧮 Calcular (Stilo 9,2 km/L)</button>
+<div class="meta" id="d-res"></div></div>
+<div class="secao">🧪 Teste da proveta (direito teu)</div>
+<div class="card"><div class="meta">O posto é obrigado a fazer de graça na tua frente: 50 mL gasolina + 50 mL água com sal. Marca a fase da água abaixo:</div>
+<label>Fase aquosa final (mL)</label><input id="p-fase" type="range" min="50" max="85" step="0.5" value="63" oninput="proveta()">
+<div class="meta" id="p-val">63,0 mL</div>
+<div class="meta" id="p-laudo"></div>
+<div class="meta">Conforme: 63,0–63,5 mL (27%). Densímetro do etanol: 0,8075–0,8110. Bomba baixa? Exige o balde aferidor de 20 L. ANP 0800 970 0267 · Procon (16) 3605-3310.</div></div>
+<div class="secao">🤖 IA</div>
+<div class="card"><div class="meta" id="ia">Calculando paridade...</div><div class="meta" id="stilo"></div></div>
+<div class="foot">Tudo em <a href="https://sparkbr.online/">sparkbr.online</a> · <a href="/financeiro/">Gastos</a></div>
+</div>
+<script>
+let POSTOS=[]; let GEO=null; let CARRO=null;
+const UNITS={"gasolina comum":"/L","etanol":"/L","diesel s10":"/L","diesel s500":"/L","gasolina aditivada":"/L","etanol aditivado":"/L","glp":"/kg","gnv":"/m³"};
+async function carregaCarro(){try{var tk="";try{tk=localStorage.getItem("spark_token")||"";}catch(e){} if(!tk)return; var r=await fetch("/spark-api/carro",{headers:{"Authorization":"Bearer "+tk}}).then(x=>x.json()); if(!r||!r.ok)return; CARRO=r; var mapa={gasolina:"gasolina comum",etanol:"etanol",diesel:"diesel s10",gnv:"gnv",flex:"gasolina comum"}; var alvo=mapa[String(r.combustivel||"").toLowerCase()]||"gasolina comum"; try{document.getElementById("comb").value=alvo;}catch(e){} atualizaCarro(); rankear();}catch(e){}}
+function atualizaCarro(){try{var c=document.getElementById("comb").value; var un=UNITS[c]||"/L"; try{document.getElementById("l-preco").innerText="Preço (R$"+un+")";}catch(e){} var msg=""; if(CARRO&&CARRO.modelo){msg="🚗 "+CARRO.modelo+(CARRO.combustivel?" · "+CARRO.combustivel:""); if(String(CARRO.combustivel||"").toLowerCase()==="gasolina"&&c.indexOf("etanol")===0)msg+=" — ⚠️ <b>só gasolina nele!</b>";} try{document.getElementById("carro").innerHTML=msg;}catch(e){}}catch(e){}}
+function fmtV(v){return 'R$ '+parseFloat(v).toFixed(2).replace('.',',');}
+async function carregarParidade(){
+  try{
+    const r=await fetch('/spark-api/flex').then(x=>x.json());
+    if(r&&r.ok){
+      document.getElementById('ia').innerHTML='<b>Paridade:</b> '+r.texto+'<br><span class="meta">Fonte: '+r.fonte+'</span>';
+      document.getElementById('stilo').innerHTML='⚠️ <b>Stilo 1.8 só gasolina:</b> NÃO use etanol nele. Flex da família economiza com etanol.';
+    }
+  }catch(e){}
+}
+async function comparar(){
+  const b={preco_local:parseFloat(document.getElementById('d-local').value||0),preco_dist:parseFloat(document.getElementById('d-dist').value||0),dist_km:parseFloat(document.getElementById('d-km').value||0),litros:parseFloat(document.getElementById('d-litros').value||0),consumo:(function(){try{if(CARRO&&CARRO.consumo)return parseFloat(CARRO.consumo)||9.2;}catch(e){}return 9.2;})()};
+  document.getElementById('d-res').innerText='Calculando...';
+  try{
+    const r=await fetch('/spark-api/posto/comparar',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)}).then(x=>x.json());
+    document.getElementById('d-res').innerText=(r&&r.ok)?r.texto:'Confira os números.';
+  }catch(e){document.getElementById('d-res').innerText='Sem conexão.';}
+}
+async function proveta(){
+  const v=parseFloat(document.getElementById('p-fase').value||63);
+  document.getElementById('p-val').innerText=String(v).replace('.',',')+' mL';
+  try{
+    const r=await fetch('/spark-api/proveta',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({fase_aquosa_ml:v})}).then(x=>x.json());
+    document.getElementById('p-laudo').innerText=(r&&r.ok)?(r.estado+': '+r.texto):'Medida inválida.';
+  }catch(e){}
+}
+async function carregar(){
+  try{
+    const r=await fetch('/spark-api/estabelecimentos').then(x=>x.json());
+    const locs=r.locais||r||[];
+    POSTOS=locs.filter(l=>(l.tipo||'')==='posto');
+    document.getElementById('p-posto').innerHTML=POSTOS.map(p=>'<option value="'+p.id+'">'+p.nome+' — '+p.bairro+'</option>').join('');
+    var cids=[...new Set(POSTOS.map(p=>p.cidade||'').filter(Boolean))].sort();
+    document.getElementById('f-cidade').innerHTML='<option value="">Todas ('+POSTOS.length+')</option>'+cids.map(c=>'<option>'+c+'</option>').join('');
+    try{if(!document.getElementById('f-cidade').dataset.l)document.getElementById('f-cidade').addEventListener('change',rankear),document.getElementById('f-cidade').dataset.l='1';}catch(e){}
+    carregaCarro();
+    Promise.resolve(rankear()).then(function(){try{carregarParidade()}catch(e){}});
+  }catch(e){document.getElementById('postos').innerHTML='Sem conexão.';}
+}
+async function precoMedio(item,lid){
+  try{
+    let u='/spark-api/precos?item='+encodeURIComponent(item);
+    if(lid)u+='&local_id='+lid;
+    const r=await fetch(u).then(x=>x.json());
+    return (r&&r.media)?{media:r.media,n:r.n}:null;
+  }catch(e){return null;}
+}
+async function rankear(){
+  const comb=document.getElementById('comb').value;
+  const un=UNITS[comb]||'/L';
+  const g=await precoMedio(comb);
+  document.getElementById('media').innerHTML=g?('Média geral: <b>'+fmtV(g.media)+un+'</b> ('+g.n+' registros) — informe na bomba e ajude!'):'Sem preços ainda — seja o primeiro! ⛽';
+  let arr=[];
+  var fc='';try{fc=document.getElementById('f-cidade').value||'';}catch(e){}
+  var TM={},TA={};try{var TJ=await fetch('/spark-api/precos/tudo?item='+encodeURIComponent(comb)).then(x=>x.json());TM=(TJ&&TJ.map)||{};TA=(TJ&&TJ.anp)||{};}catch(e){TM={};TA={};}
+  for(const p of POSTOS){
+    if(fc&&(p.cidade||'')!==fc)continue;
+    const m=TM[String(p.id)]||null;
+    const an=TA[String(p.id)]||null;
+    let dist='',dKm=null; 
+    if(GEO&&p.lat&&p.lng){const d=Math.sqrt(Math.pow(p.lat-GEO.lat,2)+Math.pow(p.lng-GEO.lng,2))*111;dKm=d;dist=' · '+d.toFixed(1)+'km';}
+    var eff=null; if(m&&dKm!=null&&un==='/L'){eff=m.media+(2*dKm*1.5)/20;}
+    arr.push({p:p,m:m,an:an,dist:dist,dKm:dKm,eff:eff});
+  }
+  arr.sort((a,b)=>((a.eff!=null?a.eff:(a.m?a.m.media+999:9999))-(b.eff!=null?b.eff:(b.m?b.m.media+999:9999))));
+  document.getElementById('postos').innerHTML='<div class="meta">'+arr.length+' postos'+(fc?' em '+fc:'')+' — top '+Math.min(60,arr.length)+'</div>'+arr.slice(0,60).map((x,ix)=>{
+    const pr=x.m?('<span class="tag">'+fmtV(x.m.media)+un+'</span> <span class="meta">('+x.m.n+')</span>'+(x.eff!=null?' <span class="tag">💰 '+fmtV(x.eff)+' ef.</span>':'')):'<span class="meta">sem preço — informe!</span>';
+    const anp=x.an?(' <span class="tag">✓ ANP '+fmtV(x.an.media)+'</span>'):((x.p.fonte==='ANP')?' <span class="meta">ANP</span>':'');
+    const band=x.p.bandeira?(' · '+x.p.bandeira):'';
+    var mapq=x.p.lat&&x.p.lng?(x.p.lat+','+x.p.lng):(x.p.nome+' '+(x.p.cidade||''));var links='<a href="https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(mapq)+'">mapa</a>';if(x.p.lat&&x.p.lng)links+=' · <a href="https://www.google.com/maps/dir/?api=1&destination='+x.p.lat+','+x.p.lng+'">rota 🧭</a>';return '<div style="font-size:13px;padding:6px 0;border-bottom:1px solid #f1f5f9">'+(ix===0&&x.m?'🏆 ':'⛽ ')+'<b>'+x.p.nome+'</b> <span class="meta">'+x.p.bairro+band+x.dist+'</span><br>'+pr+anp+' '+links+'</div>';
+  }).join('');
+  const ge=await precoMedio('etanol'); const gg=await precoMedio('gasolina comum');
+  if(ge&&gg){const r=ge.media/gg.media;document.getElementById('ia').innerHTML=r<=0.7?('✅ Etanol a '+Math.round(r*100)+'% da gasolina — <b>vale o etanol</b>!'):('⚠️ Etanol a '+Math.round(r*100)+'% — <b>vai de gasolina</b>.');}
+  else document.getElementById('ia').innerHTML='Informe preços e a IA compara etanol x gasolina sozinha.';
+}
+function gps(){
+  if(!navigator.geolocation){alert('Sem GPS');return;}
+  navigator.geolocation.getCurrentPosition(function(pos){GEO={lat:pos.coords.latitude,lng:pos.coords.longitude};rankear();},function(){alert('Permita a localização.');},{timeout:12000});
+}
+document.getElementById('comb').addEventListener('change',function(){atualizaCarro();rankear();});
+async function informar(){
+  const pid=document.getElementById('p-posto').value;
+  const v=parseFloat(document.getElementById('p-preco').value||0);
+  const lt=parseFloat(document.getElementById('p-litros').value||0);
+  if(!(v>0)||!pid){alert('Preço e posto');return;}
+  const comb=document.getElementById('comb').value;
+  var _fr='';
+  try{var _rp=await fetch('/spark-api/precos',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({item:comb,valor:v,local_id:parseInt(pid)})}).then(x=>x.json());
+  if(_rp&&_rp.alerta_fraude)_fr='\n⚠️ '+_rp.alerta_fraude;}catch(e){}
+  let msg='Preço registrado! ✅';
+  try{
+    const tk=localStorage.getItem('spark_token')||'';
+    if(tk&&lt>0){
+      const nome=(POSTOS.find(p=>String(p.id)===String(pid))||{}).nome||'Posto';
+      await fetch('/spark-api/despesas',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+tk},body:JSON.stringify({categoria:'combustivel',descricao:comb+' '+lt+'L',valor:Math.round(v*lt*100)/100,posto:nome})});
+      msg='Preço + gasto de '+fmtV(v*lt)+' salvos! ✅ Veja no Financeiro.';
+    }
+  }catch(e){}
+  alert(msg+_fr); rankear(); carregarParidade();
+}
+carregar();
+</script>
+<button onclick="location.href='https://sparkbr.online/'" title="Voltar p/ área principal Spark" style="position:fixed;bottom:142px;right:10px;z-index:9000;background:#f59e0b;color:#fff;border:none;border-radius:50%;width:44px;height:44px;font-size:20px;font-weight:800;box-shadow:0 2px 8px rgba(0,0,0,.25)">⚡</button>
+<script src="/navegador/bridge/spark-family.js?v=2.1.0"></script>
+</body>
+</html>

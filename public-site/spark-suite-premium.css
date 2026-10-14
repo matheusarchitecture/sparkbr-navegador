@@ -1,0 +1,55 @@
+/* SparkBR premium visual layer — preserves existing app structure and behavior. */
+:root{
+  --spark-ink:#14231d;
+  --spark-deep:#0c1713;
+  --spark-muted:#63736a;
+  --spark-line:#dfe7df;
+  --spark-paper:#f3f4ee;
+  --spark-green:#32c895;
+  --spark-green-dark:#187653;
+  --spark-mint:#e3f4e9;
+  --spark-shadow:0 16px 40px rgba(22,43,31,.08);
+  --spark-radius:22px;
+  color-scheme:light;
+}
+body[data-spark-page]{background:radial-gradient(ellipse at 50% -25%,#e8eee4 0,transparent 55%),var(--spark-paper)!important;color:var(--spark-ink)!important}
+body[data-spark-page] ::selection{background:#b7edce;color:#14231d}
+body[data-spark-page] .wrap>h1{font-size:clamp(30px,3.5vw,46px);font-weight:820;letter-spacing:-.055em;line-height:1.02}
+body[data-spark-page] .wrap>.sub{max-width:760px;font-size:15px;color:#5e7064}
+body[data-spark-page] .wrap>.topbar{padding:14px 18px;margin:4px 0 3px;border:1px solid #e0e7df;border-radius:17px;background:#ffffffd9;box-shadow:0 5px 20px #182a1a08;backdrop-filter:blur(14px)}
+body[data-spark-page] .wrap>.topbar a{color:var(--spark-green-dark)}
+body[data-spark-page] .wrap>.secao{padding-top:15px;color:#557262;font-weight:800}
+body[data-spark-page] .wrap>.card{border-color:#e0e7df;border-radius:20px;padding:21px;background:linear-gradient(150deg,#fff,#fcfdf9);box-shadow:0 8px 25px rgba(22,43,31,.055);transition:transform .2s,border-color .2s,box-shadow .2s}
+body[data-spark-page] .wrap>.card:hover{transform:translateY(-2px);border-color:#c7dfcf;box-shadow:0 15px 34px rgba(22,43,31,.09)}
+body[data-spark-page] .wrap>.card.hero{background:linear-gradient(125deg,#10251b,#1b4935 70%,#286047);border-color:#315c43;color:#fff;box-shadow:0 20px 42px rgba(14,45,28,.18)}
+body[data-spark-page] .wrap>.card.hero .meta,body[data-spark-page] .wrap>.card.hero .hint{color:#e0ebdf}
+body[data-spark-page] .wrap>.card.hero a{color:#d2f4c1}
+body[data-spark-page] .wrap .meta,body[data-spark-page] .wrap .hint{font-size:13px;color:#66766c}
+body[data-spark-page] .wrap .btn,body[data-spark-page] .wrap button.btn,body[data-spark-page] .wrap .go{font-weight:750;box-shadow:0 8px 20px rgba(18,118,82,.16)}
+body[data-spark-page] .wrap input,body[data-spark-page] .wrap select,body[data-spark-page] .wrap textarea{min-height:43px;border-color:#d7e2d8;background:#fff;color:#14231d}
+body[data-spark-page] .wrap input::placeholder,body[data-spark-page] .wrap textarea::placeholder{color:#829087;opacity:1}
+body[data-spark-page] .wrap .foot{color:#758279}
+body[data-spark-page="spark"] .top-header,body[data-spark-page="sparkmat"] .top-header,body[data-spark-page="sparkpet"] .top{background:linear-gradient(112deg,#0c1713 0%,#163023 57%,#1e4936 100%);border-bottom:1px solid #ffffff1c}
+body[data-spark-page="spark"] .brand-badge,body[data-spark-page="sparkmat"] .eco-badge{background:#e8bb70;color:#192219;border-color:#f7d49a}
+body[data-spark-page="spark"] .market-chip.active,body[data-spark-page="sparkmat"] .store-chip.active{background:#e4f4e9;border-color:#bbdfc4;color:#176344}
+body[data-spark-page="spark"] .card,body[data-spark-page="sparkmat"] .card{background:linear-gradient(150deg,#fff,#fcfdf9);border-color:#e0e7df;box-shadow:0 8px 24px rgba(22,43,31,.055)}
+body[data-spark-page="spark"] .summary-strip,body[data-spark-page="sparkmat"] .summary-strip{background:linear-gradient(115deg,#153322,#24563c);border:1px solid #ffffff20}
+body[data-spark-page="spark"] .bottom-nav,body[data-spark-page="sparkmat"] .bottom-nav{background:rgba(253,254,250,.96);border-color:#e0e7df}
+body[data-spark-page="spark"] .nav-item.active,body[data-spark-page="sparkmat"] .nav-item.active{background:#e5f3e8;color:#176344}
+body[data-spark-page="sparkpet"] .market-chip.active{background:#e4f4e9;color:#176344;border-color:#bbdfc4}
+body[data-spark-page="sparkpet"] .nav button.active{color:#d3f4c2}
+body[data-spark-page="dose"] .as-topbar{background:linear-gradient(112deg,#0c1713,#1c4935)!important}
+body[data-spark-page="dose"] .app-sidebar{background:#fbfcf8;border-color:#e0e7df}
+body[data-spark-page="saude"] .app-container{border:1px solid #e2e8df;border-radius:24px;overflow:hidden}
+body[data-spark-page="saude"] .view{background:radial-gradient(ellipse at 92% 0,#eff4e9,transparent 42%),#f8f9f5}
+body[data-spark-page="agua"] .wrap>.card.hero{background:linear-gradient(135deg,#123c31,#1c7055);border-color:#2e765b;color:#fff}
+body[data-spark-page="agua"] .wrap>.card.hero .meta,body[data-spark-page="agua"] .wrap>.card.hero .hint{color:#e0f2e6}
+body[data-spark-page="familia"] #membros .card,body[data-spark-page="farmacia"] #rems .card,body[data-spark-page="farmacia"] #farms .card{background:linear-gradient(150deg,#fff,#fcfdf9);border-color:#e0e7df;box-shadow:0 8px 24px rgba(22,43,31,.055)}
+body[data-spark-page] button,body[data-spark-page] .btn,body[data-spark-page] .go{min-height:40px}
+body[data-spark-page] a:focus-visible,body[data-spark-page] button:focus-visible,body[data-spark-page] input:focus-visible,body[data-spark-page] select:focus-visible{outline-color:#b4864e}
+@media(max-width:760px){
+  body[data-spark-page] .wrap>.topbar{padding:12px 13px}
+  body[data-spark-page] .wrap>.card{padding:17px}
+  body[data-spark-page] .wrap>h1{font-size:clamp(29px,8vw,38px)}
+}
+@media(prefers-reduced-motion:reduce){body[data-spark-page] *,body[data-spark-page] *:before,body[data-spark-page] *:after{scroll-behavior:auto!important;transition-duration:.01ms!important}}

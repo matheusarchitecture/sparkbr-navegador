@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0f172a">
+<title>Instalar o Spark · Spark Apps</title>
+<meta name="description" content="Spark no Windows, Android e iPhone: instale como app em 1 minuto. Grátis para sempre.">
+<style>
+body{font-family:system-ui;margin:0;background:#0f172a;color:#fff}
+.wrap{max-width:560px;margin:0 auto;padding:20px 14px 60px}
+h1{font-size:20px;margin:6px 0}
+.sub{color:#94a3b8;font-size:13px;margin-bottom:10px}
+.card{background:#fff;color:#0f172a;border-radius:14px;padding:12px;margin:8px 0}
+.card b{font-size:14px}
+.meta{font-size:11px;color:#475569;margin-top:3px}
+.secao{font-size:13px;font-weight:800;color:#38bdf8;margin:16px 0 4px}
+.btn{display:inline-block;border:none;border-radius:10px;padding:10px 14px;font-weight:800;font-size:13px;margin:4px 4px 0 0;text-decoration:none;cursor:pointer}
+.go{background:#16a34a;color:#fff}
+.back{font-size:13px;color:#38bdf8;font-weight:800;text-decoration:none}
+.foot{color:#64748b;font-size:11px;text-align:center;margin-top:16px}
+.foot a{color:#38bdf8;text-decoration:none}
+ol{font-size:13px;padding-left:20px;margin:6px 0}
+li{margin-bottom:6px}
+</style>
+
+<link rel="stylesheet" href="/assets/brand.css?v=20261013">
+<link rel="stylesheet" href="/assets/app-shell.css?v=20261013b">
+<script defer data-spark-rebrand src="/assets/app-shell.js?v=20261013b"></script>
+</head>
+<body data-spark-page="instalar" data-spark-layout="simple">
+<div class="wrap">
+<a class="back" href="/">← sparkbr.online</a>
+<div style="font-size:13px;color:#38bdf8;font-weight:800;margin-top:8px">⚡ SPARK APPS + IA</div>
+<h1>📲 Instalar o Spark</h1>
+<div class="sub">Vira app de verdade no Windows, Android e iPhone. Grátis, sem loja, em 1 minuto.</div>
+<div class="card"><button class="btn go" id="inst">📲 Instalar agora</button><div class="meta" id="inst-msg">Se o botão não aparecer, siga o passo do seu aparelho abaixo.</div></div>
+<div class="secao">🪟 Windows (Chrome ou Edge)</div>
+<div class="card"><ol><li>Abra <b>sparkbr.online</b> no Chrome ou Edge.</li><li>Clique no ícone <b>Instalar</b> na barra de endereço (ou menu ⋮ → Instalar/Salvar).</li><li>Pronto: abre em janela própria, com ícone na barra de tarefas.</li></ol></div>
+<div class="secao">🤖 Android (Chrome)</div>
+<div class="card"><ol><li>Abra <b>sparkbr.online</b> no Chrome.</li><li>Menu ⋮ → <b>Instalar app</b> (ou Adicionar à tela inicial).</li><li>Use os atalhos: Mercado, Saúde, Contas e Cardápio direto no ícone.</li></ol></div>
+<div class="secao">🍎 iPhone (Safari)</div>
+<div class="card"><ol><li>Abra <b>sparkbr.online</b> no Safari.</li><li>Toque em <b>Compartilhar</b> ⎙ → <b>Adicionar à Tela de Início</b> ➕.</li><li>Abra pelo ícone 💧/⚡ e ative os lembretes dentro de cada app.</li></ol></div>
+<div class="foot">Grátis para sempre · <a href="/">todos os apps</a> · <a href="/zero-ads/">Zero Ads</a></div>
+</div>
+<script>
+(function(){
+  var ev=null;
+  window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();ev=e;var m=document.getElementById('inst-msg');if(m)m.textContent='Pronto para instalar no seu aparelho!';});
+  document.getElementById('inst').onclick=function(){
+    if(ev){ev.prompt();ev.userChoice.then(function(){ev=null;});}
+    else{var m=document.getElementById('inst-msg');if(m)m.textContent='Siga o passo do seu aparelho acima — leva 1 minuto.';}
+  };
+})();
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4bc70e2c01a94c73b74392e4234840661791215815920" integrity="sha512-L0ha0OXavK/8okipN9F8BtP84dg9DUhPERbBXzwI6dgTA55d2+yweo3pn5CSFYs45/r8md2+xvUPtTdvTNRfjA==" data-cf-beacon='{"version":"2024.11.0","token":"cc22a6c72bdb41eeb10dc4b72cd38410","r":1,"spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>

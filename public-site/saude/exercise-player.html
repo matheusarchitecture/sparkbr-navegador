@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<title>Spark Saúde · demonstração do exercício</title>
+<style>html,body{margin:0;width:100%;height:100%;background:#0f172a;overflow:hidden}#player,iframe{width:100%;height:100%;border:0;display:block}#feedback{position:absolute;inset:0;display:none;align-items:center;justify-content:center;padding:24px;color:#fff;font:13px system-ui;text-align:center;box-sizing:border-box}</style>
+
+<link rel="stylesheet" href="/assets/brand.css?v=20261013">
+<link rel="stylesheet" href="/assets/app-shell.css?v=20261013b">
+<script defer data-spark-rebrand src="/assets/app-shell.js?v=20261013b"></script>
+</head>
+<body data-spark-page="exercise-player" data-spark-layout="auxiliary">
+<div id="player"></div><div id="feedback" role="status"></div>
+<script>
+'use strict';
+var query = new URLSearchParams(location.search), id = query.get('video') || '';
+var player = null, ready = false, desired = query.get('autoplay') === '1' ? 'play' : 'pause', rate = 1;
+function send(type, fields) { parent.postMessage(Object.assign({channel:'setup-human-player',type:type},fields || {}),'*'); }
+function fail(code) { var box=document.getElementById('feedback'); box.style.display='flex'; box.textContent='Não foi possível carregar a demonstração.'; send('error',{code:code}); }
+function onYouTubeIframeAPIReady() {
+ if (!/^[a-zA-Z0-9_-]{11}$/.test(id)) { fail('invalid-video'); return; }
+ player = new YT.Player('player', {
+  host:'https://www.youtube-nocookie.com', width:'100%', height:'100%', videoId:id,
+  playerVars:{autoplay:desired==='play'?1:0,mute:1,playsinline:1,controls:1,loop:1,playlist:id,rel:0,origin:location.origin},
+  events:{onReady:function(event){
+    ready=true; var frame=event.target.getIframe(); frame.referrerPolicy='strict-origin-when-cross-origin';
+    event.target.mute(); event.target.setPlaybackRate(rate); send('ready');
+    if(desired==='play') event.target.playVideo();
+   },onStateChange:function(event){send('state',{state:event.data});},onError:function(event){send('error',{code:event.data});},onAutoplayBlocked:function(){send('autoplay-blocked');}}
+ });
+}
+window.addEventListener('message',function(event){
+ if(event.source!==parent || !event.data || event.data.channel!=='setup-human-player')return;
+ var data=event.data;
+ if(data.action==='play'||data.action==='pause')desired=data.action;
+ if(data.action==='rate' && [0.5,0.75,1].indexOf(Number(data.value))>=0)rate=Number(data.value);
+ if(!ready||!player)return;
+ if(data.action==='play')player.playVideo();
+ if(data.action==='pause')player.pauseVideo();
+ if(data.action==='rate')player.setPlaybackRate(rate);
+});
+if(!/^[a-zA-Z0-9_-]{11}$/.test(id))fail('invalid-video');
+else { var script=document.createElement('script');script.src='https://www.youtube.com/iframe_api';script.onerror=function(){fail('network');};document.head.appendChild(script); }
+</script>
+</body>
+</html>
