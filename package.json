@@ -1,7 +1,7 @@
 {
   "name": "sparkbr-navegador",
   "productName": "SparkBR Navegador",
-  "version": "2.2.2",
+  "version": "2.2.3",
   "private": true,
   "description": "Navegador SparkBR com 23 aplicativos, conta principal existente e compartilhamento familiar.",
   "author": "SparkBR (Matheus Barcellos)",

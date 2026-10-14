@@ -7,6 +7,20 @@ const path=require('node:path');
 const START_URL=process.env.SPARK_START_URL||'https://sparkbr.online/';
 const REMOTE_AI='https://sparkbr.online/spark-api/ia/chat';
 let mainWindow;
+let authWindow=null;
+function isGoogleAuth(url){try{const u=new URL(url);return u.protocol==='https:'&&(u.hostname==='accounts.google.com'||u.hostname.endsWith('.accounts.google.com'))}catch{return false}}
+function openAuthWindow(url){ /* LOGIN-GOOGLE: popup do Google em janela propria com UA Chrome */
+  try{
+    if(authWindow&&!authWindow.isDestroyed()){authWindow.loadURL(url);authWindow.focus();return}
+    authWindow=new BrowserWindow({parent:mainWindow,modal:false,width:520,height:700,minWidth:400,minHeight:500,autoHideMenuBar:true,title:'Entrar com o Google',backgroundColor:'#ffffff',webPreferences:{partition:'persist:sparkbr-apps',nodeIntegration:false,contextIsolation:true,sandbox:true}});
+    try{authWindow.webContents.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36')}catch{}
+    const done=(url2)=>{try{const u=new URL(url2);if(u.hostname==='sparkbr.online'){setTimeout(()=>{try{authWindow&&!authWindow.isDestroyed()&&authWindow.close()}catch{};try{mainWindow&&!mainWindow.isDestroyed()&&mainWindow.webContents.reload()}catch{}},800)}}catch{}};
+    authWindow.webContents.on('did-navigate',(_e,url2)=>done(url2));
+    authWindow.webContents.on('did-redirect-navigation',(_e,url2)=>done(url2));
+    authWindow.on('closed',()=>{authWindow=null;try{mainWindow&&!mainWindow.isDestroyed()&&mainWindow.webContents.reload()}catch{}});
+    authWindow.loadURL(url);
+  }catch{}
+}
 function securePermission(wc,permission,cb,details){
   let origin;try{origin=new URL(details?.requestingUrl||wc.getURL())}catch{return cb(false)}
   if(origin.protocol!=='https:'||origin.hostname!=='sparkbr.online')return cb(false);
@@ -29,7 +43,9 @@ function createWindow(){
     });
     contents.on('will-navigate',(event,url)=>{try{if(contents.getType()==='webview'){const u=new URL(url);const localDev=!!process.env.SPARK_START_URL&&u.protocol==='http:'&&['localhost','127.0.0.1'].includes(u.hostname);if(u.protocol!=='https:'&&!localDev)event.preventDefault()}}catch{event.preventDefault()}});
     contents.setWindowOpenHandler(({url})=>{
-      try{const u=new URL(url);if(u.protocol==='https:')shell.openExternal(u.href)}catch{}
+      try{
+        if(isGoogleAuth(url)){openAuthWindow(url);return{action:'deny'}}
+        const u=new URL(url);if(u.protocol==='https:')shell.openExternal(u.href)}catch{}
       return{action:'deny'};
     });
   });
