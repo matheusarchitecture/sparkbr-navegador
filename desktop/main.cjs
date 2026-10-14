@@ -28,8 +28,10 @@ function securePermission(wc,permission,cb,details){
   if(!labels[permission])return cb(false);
   dialog.showMessageBox(mainWindow,{type:'question',buttons:['Não permitir','Permitir uma vez'],defaultId:0,cancelId:0,title:'Permissão do SparkBR',message:`Permitir ${labels[permission]} para ${origin.hostname}?`,detail:'Ative apenas quando um aplicativo precisar deste recurso.'}).then(r=>cb(r.response===1)).catch(()=>cb(false));
 }
+const CHROME_UA='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36';
 function createWindow(){
   app.on('web-contents-created',(_event,contents)=>{
+    try{contents.setUserAgent(CHROME_UA)}catch{} /* UA-CHROME: app se apresenta como Chrome (login Google e bancos) */
     contents.on('will-attach-webview',(event,preferences,params)=>{
       delete preferences.preload;
       preferences.nodeIntegration=false;
