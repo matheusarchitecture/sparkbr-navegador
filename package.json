@@ -4,6 +4,7 @@
   "version": "2.2.2",
   "private": true,
   "description": "Navegador SparkBR com 23 aplicativos, conta principal existente e compartilhamento familiar.",
+  "author": "SparkBR (Matheus Barcellos)",
   "type": "module",
   "main": "desktop/main.cjs",
   "scripts": {
